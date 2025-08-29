@@ -12,7 +12,7 @@ export default function Header({ data }) {
 	return (
 		<>
 			<header className="px-contain h-header fixed top-0 left-0 z-10 flex w-full items-center justify-center bg-black py-2.5 leading-none">
-				<Link href="/" title={siteTitle} className="w-40 text-white">
+				<Link href="/" title={siteTitle} className="w-24 text-white">
 					<LogoSvg />
 				</Link>
 
