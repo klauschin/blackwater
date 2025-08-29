@@ -1,254 +1,109 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import './base.css';
+@import './utilities.css';
+@import './components.css';
+@import 'tw-animate-css';
+@plugin 'tailwind-scrollbar';
+@custom-variant dark (&:is(.dark *));
 
-@layer base {
-	:root {
-		--s-contain: Max(4vw, 20px);
-		--s-contain-max: 2000px;
-		--s-contain-dynamic: Max(
-			var(--s-contain),
-			calc((100vw - var(--s-contain-max)) / 2)
-		);
-	}
+/*
+ * @theme vs @theme inline - Critical Difference for CSS Variable Injection
+ *
+ * WITHOUT inline (@theme):
+ * - Variables are injected at :root level globally
+ * - Can be overridden by other CSS rules with same or higher specificity
+ * - Example: :root { --color-primary: #3b82f6; }
+ * - Allows for runtime overrides and theming flexibility
+ *
+ * WITH inline (@theme inline):
+ * - Variables are injected directly where they're being used (scoped injection)
+ * - Cannot be easily overridden due to higher specificity in generated CSS
+ * - Provides stronger encapsulation but less flexibility
+ * - Better performance as variables are resolved at build time
+ *
+ * Reference: https://stackoverflow.com/questions/79705933/should-i-use-theme-or-theme-inline
+ */
 
-	input[type='number']::-webkit-inner-spin-button,
-	input[type='number']::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-}
+@theme inline {
+	/* To completely disable the default theme and use only custom values, set the global theme variable namespace to initial: */
+	/* --*: initial; */
 
-@layer utilities {
-	:root {
-		--cr-white: 255, 255, 255;
-		--cr-black: 0, 0, 0;
-		--scrollbar-size: 10px;
-	}
+	/* Configure Tailwind Theme Variables */
 
-	.object-fit,
-	.object-contain {
-		--offset: 1px;
+	/* Brand Colors */
+	/* For OKLCH color preview support in VS Code, install this extension:
+	https://marketplace.visualstudio.com/items?itemName=SwiftlyDaniel.oklch-color-visualiser */
+	--color-black: oklch(0 0 0);
+	--color-white: oklch(1 0 0);
+	--color-gray: oklch(0.5897 0 0);
+	--color-cream: oklch(0.9865 0.013 82.4);
+	--color-cream-dark: oklch(0.9669 0.0272 83.54);
+	--color-orange: oklch(0.5657 0.1602 37.87);
+	--color-orange-dark: oklch(0.3696 0.1153 31.86);
+	--color-blue: oklch(0.6631 0.0437 241.72);
 
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-		top: 50%;
-		left: 50%;
-		transform: translate3d(-50%, -50%, 0);
-		overflow: hidden;
-		-o-user-select: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		user-select: none;
+	/* Semantic Colors */
+	--color-accent: var(--color-orange);
+	--color-subtle: color-mix(in oklab, var(--color-gray) 20%, transparent);
+	--color-placeholder: color-mix(in oklab, var(--color-gray) 80%, transparent);
 
-		> *:not(picture),
-		> picture > img {
-			position: absolute;
-			max-width: unset;
-			top: 50%;
-			left: 50%;
-			transform: translate3d(-50%, -50%, 0);
-			-webkit-backface-visibility: hidden;
-		}
-	}
+	--spacing-contain: var(--s-contain);
+	--spacing-contain-dynamic: var(--s-contain-dynamic);
+	--spacing-section: var(--s-section);
+	--spacing-section-half: var(--s-section-half);
+	--spacing-header: var(--h-header);
+	--spacing-contain-max: var(--s-contain-max);
 
-	.object-fit > *:not(picture),
-	.object-fit > picture > img {
-		width: calc(100% + var(--offset) * 2) !important;
-		height: calc(100% + var(--offset) * 2) !important;
-		object-fit: cover;
-	}
+	--shadow-default: 0px 12px 64px rgba(0, 0, 0, 0.12);
 
-	.object-contain > *:not(picture),
-	.object-contain > picture > img {
-		width: 100% !important;
-		height: 100% !important;
-		object-fit: contain;
-	}
+	--height-header: var(--h-header);
+	--height-footer: var(--h-footer);
+	--height-main: var(--h-main);
 
-	.child-fit > *,
-	.child-cover > *,
-	.child-contain > * {
-		width: 100%;
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-	}
+	--aspect-16/9: 16 / 9;
+	--aspect-4/3: 4 / 3;
+	--aspect-3/4: 3 / 4;
 
-	.child-fit > *,
-	.child-cover > * {
-		height: 101%;
-		object-fit: cover;
-	}
+	--ease-sin-in-out: cubic-bezier(0.37, 0, 0.63, 1);
+	--ease-quad-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+	--ease-cubic-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+	--ease-quart-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+	--ease-quint-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+	--ease-expo-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+	--ease-circ-in-out: cubic-bezier(0.85, 0, 0.15, 1);
 
-	.child-contain > * {
-		height: 100%;
-		object-fit: contain;
-	}
+	--duration-200: 200ms;
+	--duration-400: 400ms;
+	--duration-600: 600ms;
+	--duration-800: 800ms;
+	--duration-1000: 1000ms;
+	--duration-1200: 1200ms;
 
-	.p-fill {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-	}
+	--delay-200: 200ms;
+	--delay-400: 400ms;
+	--delay-600: 600ms;
+	--delay-800: 800ms;
+	--delay-1000: 1000ms;
+	--delay-1200: 1200ms;
 
-	.p-center {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate3d(-50%, -50%, 0);
-	}
-	.icon-close,
-	.icon-plus,
-	.icon-minus {
-		--thickness: 1px;
-		--size: 0.75rem;
-		position: relative;
-		display: inline-block;
-		width: var(--size);
-		height: var(--size);
-
-		&:before,
-		&:after {
-			content: '';
-			display: block;
-			position: absolute;
-			width: 100%;
-			top: 50%;
-			left: 50%;
-		}
-
-		&:before {
-			border-top: var(--thickness) solid;
-		}
-
-		&:after {
-			border-bottom: var(--thickness) solid;
-		}
-
-		&.icon-close {
-			&:before {
-				transform: translate3d(-50%, -50%, 0) rotate(45deg);
-			}
-			&:after {
-				transform: translate3d(-50%, -50%, 0) rotate(-45deg);
-			}
-		}
-
-		&.icon-plus,
-		&.icon-minus {
-			&:before {
-				transform: translate3d(-50%, -50%, 0) rotate(90deg);
-			}
-			&:after {
-				transform: translate3d(-50%, -50%, 0);
-			}
-		}
-
-		&.icon-minus:before {
-			display: none;
-		}
-	}
-
-	.icon-caret,
-	.icon-arrow {
-		&,
-		&-left,
-		&-right,
-		&-top,
-		&-bottom {
-			--thickness: 1px;
-
-			position: relative;
-			display: inline-block;
-			width: 0.75em;
-			height: 0.75em;
-
-			&:before {
-				content: '';
-				display: block;
-				position: absolute;
-				width: 65%;
-				height: 65%;
-				top: 50%;
-				left: 50%;
-				border-top: var(--thickness) solid;
-				border-left: var(--thickness) solid;
-				transform: translate3d(-50%, -50%, 0) rotate(45deg);
-			}
-
-			&[class*='icon-arrow'] {
-				&:after {
-					content: '';
-					display: block;
-					position: absolute;
-					width: 95%;
-					top: 50%;
-					left: 50%;
-					border-top: var(--thickness) solid;
-					transform: translate3d(-50%, -50%, 0);
-				}
-
-				&:before {
-					width: 45%;
-					height: 45%;
-				}
-			}
-
-			&[class*='icon-arrow-left']:before {
-				left: 32%;
-			}
-
-			&[class*='icon-arrow-right']:before {
-				left: 69%;
-			}
-
-			&[class*='icon-arrow-top']:after,
-			&[class*='icon-arrow-bottom']:after {
-				transform: translate3d(-50%, -50%, 0) rotate(-90deg);
-			}
-
-			&[class*='icon-arrow-top']:before {
-				top: 32%;
-			}
-
-			&[class*='icon-arrow-bottom']:before {
-				top: 69%;
-			}
-		}
-
-		&-left:before {
-			transform: translate3d(-50%, -50%, 0) rotate(315deg);
-		}
-
-		&-right:before {
-			transform: translate3d(-50%, -50%, 0) rotate(135deg);
-		}
-
-		&-top:before {
-			top: 60%;
-			transform: translate3d(-50%, -50%, 0) rotate(45deg);
-		}
-
-		&-bottom:before {
-			top: 40%;
-			transform: translate3d(-50%, -50%, 0) rotate(225deg);
-		}
-	}
-	/* remove all visible spaces between elements */
-	.no-text-space {
-		font-size: 0;
-		line-height: 0;
-	}
-
-	/* no highlighting (via :selection), typically applied to clickable elements */
-	.user-select-disable {
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-o-user-select: none;
-		user-select: none;
-	}
+	--animate-fade-in: fade-in 0.6s var(--ease-circ-in-out);
+	--animate-fade-out: fade-out 0.6s var(--ease-circ-in-out);
+	--animate-slide-in-top: slide-in-top 0.6s var(--ease-circ-in-out);
+	--animate-slide-out-top: slide-out-top 0.6s var(--ease-circ-in-out);
+	--animate-slide-in-right: slide-in-right 0.6s var(--ease-circ-in-out);
+	--animate-slide-out-right: slide-out-right 0.6s var(--ease-circ-in-out);
+	--animate-slide-in-bottom: slide-in-bottom 0.6s var(--ease-circ-in-out);
+	--animate-slide-out-bottom: slide-out-bottom 0.6s var(--ease-circ-in-out);
+	--animate-slide-in-left: slide-in-left 0.6s var(--ease-circ-in-out);
+	--animate-slide-out-left: slide-out-left 0.6s var(--ease-circ-in-out);
+	--animate-rotate: rotate 2s linear infinite;
+	--animate-rotate-center: rotate-center 4s linear infinite;
+	--animate-rotate-center-inverse: rotate-center-inverse 4s linear infinite;
+	--animate-slide-in-right: slide-in-right 0.4s cubic-bezier(0.65, 0, 0.35, 1)
+		both;
+	--animate-slide-out-right: slide-out-right 0.4s cubic-bezier(0.65, 0, 0.35, 1)
+		both;
+	--animate-rotate-loader: rotate 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	--animate-accordion-down: accordion-down 0.4s ease-out;
+	--animate-accordion-up: accordion-up 0.4s ease-out;
 }

@@ -4,5 +4,26 @@
 	"semi": true,
 	"printWidth": 80,
 	"trailingComma": "es5",
-	"useTabs": true
+	"useTabs": true,
+	"plugins": [
+		"@trivago/prettier-plugin-sort-imports",
+		"prettier-plugin-tailwindcss"
+	],
+	"importOrderSortSpecifiers": true,
+	"importOrder": [
+		"^react$",
+		"^next",
+		"^@testing-library",
+		"<THIRD_PARTY_MODULES>",
+		"^@/app/api",
+		"^@/lib",
+		"^@/hooks",
+		"^@/providers",
+		"^@/layout",
+		"^@/app/\\(pages\\)",
+		"^@/components",
+		"^[./_components]",
+		"^[./]",
+		"^@/types"
+	]
 }
