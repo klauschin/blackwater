@@ -1,0 +1,254 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--s-contain: Max(4vw, 20px);
+		--s-contain-max: 2000px;
+		--s-contain-dynamic: Max(
+			var(--s-contain),
+			calc((100vw - var(--s-contain-max)) / 2)
+		);
+	}
+
+	input[type='number']::-webkit-inner-spin-button,
+	input[type='number']::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+}
+
+@layer utilities {
+	:root {
+		--cr-white: 255, 255, 255;
+		--cr-black: 0, 0, 0;
+		--scrollbar-size: 10px;
+	}
+
+	.object-fit,
+	.object-contain {
+		--offset: 1px;
+
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+		top: 50%;
+		left: 50%;
+		transform: translate3d(-50%, -50%, 0);
+		overflow: hidden;
+		-o-user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+
+		> *:not(picture),
+		> picture > img {
+			position: absolute;
+			max-width: unset;
+			top: 50%;
+			left: 50%;
+			transform: translate3d(-50%, -50%, 0);
+			-webkit-backface-visibility: hidden;
+		}
+	}
+
+	.object-fit > *:not(picture),
+	.object-fit > picture > img {
+		width: calc(100% + var(--offset) * 2) !important;
+		height: calc(100% + var(--offset) * 2) !important;
+		object-fit: cover;
+	}
+
+	.object-contain > *:not(picture),
+	.object-contain > picture > img {
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: contain;
+	}
+
+	.child-fit > *,
+	.child-cover > *,
+	.child-contain > * {
+		width: 100%;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	.child-fit > *,
+	.child-cover > * {
+		height: 101%;
+		object-fit: cover;
+	}
+
+	.child-contain > * {
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.p-fill {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+
+	.p-center {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate3d(-50%, -50%, 0);
+	}
+	.icon-close,
+	.icon-plus,
+	.icon-minus {
+		--thickness: 1px;
+		--size: 0.75rem;
+		position: relative;
+		display: inline-block;
+		width: var(--size);
+		height: var(--size);
+
+		&:before,
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			width: 100%;
+			top: 50%;
+			left: 50%;
+		}
+
+		&:before {
+			border-top: var(--thickness) solid;
+		}
+
+		&:after {
+			border-bottom: var(--thickness) solid;
+		}
+
+		&.icon-close {
+			&:before {
+				transform: translate3d(-50%, -50%, 0) rotate(45deg);
+			}
+			&:after {
+				transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+			}
+		}
+
+		&.icon-plus,
+		&.icon-minus {
+			&:before {
+				transform: translate3d(-50%, -50%, 0) rotate(90deg);
+			}
+			&:after {
+				transform: translate3d(-50%, -50%, 0);
+			}
+		}
+
+		&.icon-minus:before {
+			display: none;
+		}
+	}
+
+	.icon-caret,
+	.icon-arrow {
+		&,
+		&-left,
+		&-right,
+		&-top,
+		&-bottom {
+			--thickness: 1px;
+
+			position: relative;
+			display: inline-block;
+			width: 0.75em;
+			height: 0.75em;
+
+			&:before {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 65%;
+				height: 65%;
+				top: 50%;
+				left: 50%;
+				border-top: var(--thickness) solid;
+				border-left: var(--thickness) solid;
+				transform: translate3d(-50%, -50%, 0) rotate(45deg);
+			}
+
+			&[class*='icon-arrow'] {
+				&:after {
+					content: '';
+					display: block;
+					position: absolute;
+					width: 95%;
+					top: 50%;
+					left: 50%;
+					border-top: var(--thickness) solid;
+					transform: translate3d(-50%, -50%, 0);
+				}
+
+				&:before {
+					width: 45%;
+					height: 45%;
+				}
+			}
+
+			&[class*='icon-arrow-left']:before {
+				left: 32%;
+			}
+
+			&[class*='icon-arrow-right']:before {
+				left: 69%;
+			}
+
+			&[class*='icon-arrow-top']:after,
+			&[class*='icon-arrow-bottom']:after {
+				transform: translate3d(-50%, -50%, 0) rotate(-90deg);
+			}
+
+			&[class*='icon-arrow-top']:before {
+				top: 32%;
+			}
+
+			&[class*='icon-arrow-bottom']:before {
+				top: 69%;
+			}
+		}
+
+		&-left:before {
+			transform: translate3d(-50%, -50%, 0) rotate(315deg);
+		}
+
+		&-right:before {
+			transform: translate3d(-50%, -50%, 0) rotate(135deg);
+		}
+
+		&-top:before {
+			top: 60%;
+			transform: translate3d(-50%, -50%, 0) rotate(45deg);
+		}
+
+		&-bottom:before {
+			top: 40%;
+			transform: translate3d(-50%, -50%, 0) rotate(225deg);
+		}
+	}
+	/* remove all visible spaces between elements */
+	.no-text-space {
+		font-size: 0;
+		line-height: 0;
+	}
+
+	/* no highlighting (via :selection), typically applied to clickable elements */
+	.user-select-disable {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+	}
+}

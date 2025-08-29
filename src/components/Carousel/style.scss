@@ -1,0 +1,117 @@
+.c-carousel {
+	--dot-size: 10px;
+	--dot-gap: 5px;
+
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+
+	&.is-draggable {
+		cursor: grab;
+	}
+
+	&.is-dragging {
+		cursor: grabbing;
+	}
+
+	&__container {
+		display: flex;
+		align-items: flex-start;
+		user-select: none;
+		-webkit-tap-highlight-color: transparent;
+		transition: height 0.4s;
+
+		&>* {
+			min-width: 0;
+			flex: 0 0 var(--item-width);
+			margin-right: var(--item-gap);
+		}
+
+		.is-fade & {
+			position: relative;
+			height: 100%;
+			overflow: hidden;
+
+			&>* {
+				transition: calc(var(--t-duration) * 1ms) linear;
+				opacity: 0;
+			}
+		}
+
+		.is-fade.is-ready & {
+			transform: none !important;
+
+			&>* {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0 !important;
+				right: 0 !important;
+				pointer-events: none;
+				transform: none !important;
+
+				&.is-snapped {
+					opacity: 1;
+					pointer-events: auto;
+				}
+			}
+		}
+	}
+
+	&__buttons {
+		font-size: 50px;
+	}
+
+	&__button {
+		&:disabled {
+			opacity: 0.3;
+			cursor: not-allowed;
+			background-color: transparent;
+		}
+
+		@media (hover: none) and (pointer: coarse) {
+			touch-action: manipulation;
+		}
+	}
+
+	&__dots {
+		gap: var(--dot-gap);
+	}
+
+	&__dot {
+		position: relative;
+		width: var(--dot-size);
+		height: var(--dot-size);
+		border-radius: 100%;
+		background-color: var(--cr-black);
+		border: none;
+		box-shadow: none;
+		outline: none;
+		user-select: none;
+		transition: 0.3s;
+		cursor: pointer;
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			width: calc(var(--dot-size) + var(--dot-gap));
+			height: calc(var(--dot-size) + var(--dot-gap));
+			top: 50%;
+			left: 50%;
+			transform: translate3d(-50%, -50%, 0);
+		}
+
+		&:not(.is-selected) {
+			opacity: 0.3;
+		}
+
+		@media (hover: hover) {
+			&:hover {
+				opacity: 0.6;
+			}
+		}
+	}
+}
