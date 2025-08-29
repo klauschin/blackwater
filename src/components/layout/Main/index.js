@@ -1,8 +1,7 @@
-import { m } from 'motion/react';
-import { usePathname } from 'next/navigation';
 import React from 'react';
-
+import { usePathname } from 'next/navigation';
 import { pageTransitionFade } from '@/lib/animate';
+import { m } from 'motion/react';
 
 export default function Main({ children }) {
 	const pathname = usePathname();
@@ -13,7 +12,6 @@ export default function Main({ children }) {
 			initial="initial"
 			animate="animate"
 			variants={pageTransitionFade}
-			className="min-h-main py-[0.1px]"
 		>
 			{children}
 		</m.main>
