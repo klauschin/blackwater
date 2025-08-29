@@ -1,29 +1,26 @@
 @layer base {
 	:root {
-		--font-inter: var(--font-inter), 'Arial', 'Helvetica Neue', 'sans-serif';
-		--font-montagu-slab: var(--font-montagu-slab), 'Georgia', 'serif';
-		--font-dm-sans:
-			var(--font-dm-sans), 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif';
+		--font-gestalt: var(--font-gestalt), 'Arial', 'Helvetica Neue', 'sans-serif';
 
-		--t-h-1: 300 72px/1 var(--font-montagu-slab);
-		--t-h-2: 300 56px/1 var(--font-montagu-slab);
-		--t-h-3: 300 42px/1 var(--font-montagu-slab);
-		--t-h-4: 300 36px/1 var(--font-montagu-slab);
-		--t-h-5: 300 32px/1 var(--font-montagu-slab);
-		--t-h-6: 300 28px/1.15 var(--font-montagu-slab);
-		--t-h-7: 300 24px/1 var(--font-montagu-slab);
-		--t-h-8: 300 20px/1.2 var(--font-montagu-slab);
-		--t-h-9: 300 16px/1.5 var(--font-montagu-slab);
+		--t-h-1: 300 72px/1 var(--font-gestalt);
+		--t-h-2: 300 56px/1 var(--font-gestalt);
+		--t-h-3: 300 42px/1 var(--font-gestalt);
+		--t-h-4: 300 36px/1 var(--font-gestalt);
+		--t-h-5: 300 32px/1 var(--font-gestalt);
+		--t-h-6: 300 28px/1.15 var(--font-gestalt);
+		--t-h-7: 300 24px/1 var(--font-gestalt);
+		--t-h-8: 300 20px/1.2 var(--font-gestalt);
+		--t-h-9: 300 16px/1.5 var(--font-gestalt);
 
-		--t-b-1: 400 28px/1.3 var(--font-inter);
-		--t-b-2: 300 20px/1.6 var(--font-dm-sans);
-		--t-b-3: 300 20px/1.2 var(--font-inter);
-		--t-b-4: 300 16px/1 var(--font-dm-sans);
-		--t-b-5: 400 12px/1.5 var(--font-inter);
+		--t-b-1: 400 28px/1.3 var(--font-gestalt);
+		--t-b-2: 300 20px/1.6 var(--font-gestalt);
+		--t-b-3: 300 20px/1.2 var(--font-gestalt);
+		--t-b-4: 300 16px/1 var(--font-gestalt);
+		--t-b-5: 400 12px/1.5 var(--font-gestalt);
 
-		--t-l-1: 400 16px/1 var(--font-inter);
-		--t-l-2: 400 12px/1 var(--font-inter);
-		--t-l-3: 400 10px/1 var(--font-inter);
+		--t-l-1: 400 16px/1 var(--font-gestalt);
+		--t-l-2: 400 12px/1 var(--font-gestalt);
+		--t-l-3: 400 10px/1 var(--font-gestalt);
 
 		--s-sm: 1100px;
 		--s-md: 1200px;
@@ -31,10 +28,8 @@
 		--s-max: 2000px;
 
 		--s-contain: max(3vw, 15px);
-		--s-contain-dynamic: max(
-			var(--s-contain),
-			calc((100vw - var(--s-max)) / 2)
-		);
+		--s-contain-dynamic: max(var(--s-contain),
+				calc((100vw - var(--s-max)) / 2));
 
 		--width-sm: Min(100vw - calc(var(--s-contain) * 2), var(--s-sm));
 		--width-md: Min(100vw - calc(var(--s-contain) * 2), var(--s-md));
@@ -45,7 +40,7 @@
 		--padding-md: calc((100vw - var(--width-md)) / 2);
 		--padding-lg: calc((100vw - var(--width-lg)) / 2);
 		--padding-max: calc((100vw - var(--width-max)) / 2);
-
+		--h-header: 70px;
 		--s-section: 70px;
 		--s-section-half: calc(var(--s-section) / 2);
 
@@ -65,19 +60,17 @@
 
 	@variant md {
 		:root {
-			--t-h-1: 300 80px/1 var(--font-montagu-slab);
-			--t-h-2: 300 64px/1 var(--font-montagu-slab);
-			--t-h-3: 300 48px/1 var(--font-montagu-slab);
-			--t-h-4: 300 40px/1 var(--font-montagu-slab);
+			--t-h-1: 300 80px/1 var(--font-gestalt);
+			--t-h-2: 300 64px/1 var(--font-gestalt);
+			--t-h-3: 300 48px/1 var(--font-gestalt);
+			--t-h-4: 300 40px/1 var(--font-gestalt);
 		}
 	}
 
 	html {
-		@apply bg-cream text-black;
+		@apply bg-black text-white;
 		scroll-behavior: smooth;
-		scroll-padding-top: calc(
-			var(--h-announcement, 0px) + var(--h-header, 0px) + 20px
-		);
+		scroll-padding-top: calc(var(--h-announcement, 0px) + var(--h-header, 0px) + 20px);
 	}
 
 	html::selection {

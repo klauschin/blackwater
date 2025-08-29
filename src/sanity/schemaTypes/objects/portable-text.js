@@ -36,6 +36,7 @@ export const portableText = defineType({
 					title: 'Heading 6',
 					value: 'h6',
 				},
+				{ title: 'Label', value: 'label' },
 				{ title: 'Quote', value: 'blockquote' },
 			],
 			lists: [

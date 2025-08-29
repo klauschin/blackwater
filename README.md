@@ -4,7 +4,7 @@
 
 ## ⚙️ Set Up
 
-Clone this repository from your GitHub or Click [Use this template](https://github.com/View-Source-Dev/starter-next-js-sanity/generate).
+Clone this repository from your GitHub or Click [Use this template](https://github.com/View-Source-Dev/blackwater/generate).
 
 ### 1. Sanity
 

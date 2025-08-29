@@ -60,7 +60,7 @@ const devPlugins = [
 
 export default defineConfig({
 	basePath: '/sanity',
-	title: '[STARTER]',
+	title: 'Blackwater',
 	projectId,
 	dataset,
 	plugins: isDev ? devPlugins : commonPlugins,

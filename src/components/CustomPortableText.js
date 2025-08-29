@@ -17,6 +17,7 @@ export default function CustomPortableText({ blocks, hasPTag = true }) {
 			h4: ({ children }) => <h4>{children}</h4>,
 			h5: ({ children }) => <h5>{children}</h5>,
 			h6: ({ children }) => <h6>{children}</h6>,
+			label: ({ children }) => <p className="text-sm uppercase">{children}</p>,
 		},
 		list: {
 			bullet: ({ children }) => <ul>{children}</ul>,

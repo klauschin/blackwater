@@ -58,7 +58,7 @@ export function Layout({ children, siteData }) {
 			<Announcement data={announcement} />
 			<Header data={headerData} />
 			<Main>{children}</Main>
-			<Footer siteData={siteData} data={footer} />
+			{/* <Footer siteData={siteData} data={footer} /> */}
 		</LazyMotion>
 	);
 }

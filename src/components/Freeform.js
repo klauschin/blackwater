@@ -44,7 +44,7 @@ export default function Freeform({ data, className }) {
 	return (
 		<section
 			className={cn(
-				'mx-auto wysiwyg',
+				'wysiwyg px-contain mx-auto',
 				textAlign,
 				maxWidthClasses,
 				...spacingClasses

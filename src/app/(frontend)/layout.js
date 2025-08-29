@@ -16,37 +16,16 @@ import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
 import { handleError } from '../client-utils';
 import { Toaster } from 'sonner';
 
-// const fontFontName1 = localFont({
-// 	src: [
-// 		{
-// 			path: '../../public/fonts/font-name-weight.woff2',
-// 			weight: '400',
-// 			style: 'normal',
-// 		},
-// 		{
-// 			path: '../../public/fonts/font-name-weight-italic.woff2',
-// 			weight: '400',
-// 			style: 'italic',
-// 		},
-// 	],
-// 	variable: '--font-[fontName]',
-// });
-
-// const fontFontName2 = localFont({
-// 	src: [
-// 		{
-// 			path: '../../public/fonts/font-name-weight.woff2',
-// 			weight: '400',
-// 			style: 'normal',
-// 		},
-// 		{
-// 			path: '../../public/fonts/font-name-weight-italic.woff2',
-// 			weight: '400',
-// 			style: 'italic',
-// 		},
-// 	],
-// 	variable: '--font-[fontName]',
-// });
+const fontGestalt = localFont({
+	src: [
+		{
+			path: '../../public/fonts/font-gestalt.woff2',
+			weight: '400',
+			style: 'normal',
+		},
+	],
+	variable: '--font-gestalt',
+});
 
 // Then assign variable in base.scss: --t-h-1: 400 60px/1 var(--font-[fontName]), sans-serif;
 
@@ -160,11 +139,7 @@ export default async function RootLayout({ children }) {
 	return (
 		<StoreProvider>
 			<ReactQueryProvider>
-				<html
-					lang="en"
-					className={`${inter.variable} ${montagu_slab.variable} ${dm_sans.variable}`}
-					// className={`${fontFontName1.variable} ${fontFontName2.variable}`}
-				>
+				<html lang="en" className={`${fontGestalt.variable}`}>
 					<head>
 						<meta
 							httpEquiv="Content-Type"
