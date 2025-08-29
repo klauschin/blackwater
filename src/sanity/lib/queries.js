@@ -204,6 +204,7 @@ export const pageHomeQuery = defineQuery(`
 	*[_type == "pHome"][0]{
 		${baseFields},
 		"isHomepage": true,
+		landingTitle,
 		pageModules[]{
 			${pageModuleFields}
 		}

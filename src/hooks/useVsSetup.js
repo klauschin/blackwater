@@ -3,23 +3,6 @@
 import { useEffect, useState } from 'react';
 
 export function siteSetup() {
-	// site credit
-	console.log(
-		'%cSite by View Source \n%cview-source.com',
-		[
-			'margin: 20px 0 0;',
-			'font-size: 12px',
-			'font-family: Helvetica, sans-serif',
-			'font-weight: 700',
-		].join(';'),
-		[
-			'margin: -5px 0 20px;',
-			'font-size: 12px',
-			'font-family: Helvetica, sans-serif',
-			'font-weight: 400',
-		].join(';')
-	);
-
 	// enable the possibility for browser-specific CSS
 	document.documentElement.setAttribute('data-useragent', navigator.userAgent);
 
