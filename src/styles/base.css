@@ -27,7 +27,7 @@
 		--s-lg: 1800px;
 		--s-max: 2000px;
 
-		--s-contain: max(3vw, 15px);
+		--s-contain: 16px;
 		--s-contain-dynamic: max(var(--s-contain),
 				calc((100vw - var(--s-max)) / 2));
 

@@ -14,9 +14,15 @@ export const pHome = defineType({
 		title({ initialValue: 'Homepage' }),
 		slug({ initialValue: { _type: 'slug', current: '/' }, readOnly: true }),
 		{
-			title: 'Landing title',
+			title: 'Landing Title',
 			name: 'landingTitle',
-			type: 'text',
+			type: 'string',
+		},
+		{
+			title: 'Text Color',
+			name: 'textColor',
+			type: 'reference',
+			to: [{ type: 'settingsBrandColors' }],
 		},
 		{
 			title: 'Page Modules',

@@ -1,106 +1,163 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { buildRgbaCssString, cn } from '@/lib/utils';
+import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { motion, useInView } from 'motion/react';
 
 export function TextReveal({
 	text,
+	textColor,
 	className = '',
-	splitMethod = 'words',
-	maxWordsPerLine = 6,
 	htmlTag,
+	handleAnimationComplete,
 }) {
 	const CompTag = htmlTag || 'span';
-	const isHeroSection = htmlTag === 'h1';
-	const animationDelay = isHeroSection ? 0.6 : 0;
 
-	const lineVariants = {
-		hidden: {
-			clipPath: 'inset(0 100% 0 0)',
-			opacity: 0,
-		},
-		visible: (custom) => ({
-			clipPath: 'inset(0 0% 0 0)',
-			opacity: 1,
-			transition: {
-				duration: 0.6,
-				ease: [0.25, 0.46, 0.45, 0.94],
-				delay: custom * 0.5 + animationDelay,
-			},
+	const { isMobileScreen } = useWindowDimensions();
+
+	const animationConfig = useMemo(
+		() => ({
+			delay: isMobileScreen ? 0.2 : 0.36,
+			duration: isMobileScreen ? 0.2 : 0.3,
 		}),
-	};
+		[isMobileScreen]
+	);
 
-	const [textLines, setTextLines] = useState([]);
-	const splitTextIntoLines = (inputText) => {
-		if (!inputText) return [];
+	const [lines, setLines] = useState([text]);
+	const containerRef = useRef(null);
+	const measureRef = useRef(null);
+	const isInView = useInView(containerRef, {
+		once: true,
+		margin: '0px 0px -10% 0px', // Trigger slightly before fully in view
+	});
 
-		switch (splitMethod) {
-			case 'sentences':
-				// Split by sentences (periods, exclamation marks, question marks)
-				return inputText
-					.split(/[.!?]+/)
-					.filter((sentence) => sentence.trim().length > 0)
-					.map((sentence) => sentence.trim());
+	const textColorStyle = useMemo(
+		() => (textColor ? buildRgbaCssString(textColor) : null),
+		[textColor]
+	);
 
-			case 'manual':
-				// Split by pipe character or newlines for manual control
-				return inputText
-					.split(/\||\n/)
-					.filter((line) => line.trim().length > 0)
-					.map((line) => line.trim());
+	const splitTextIntoLines = (text, maxWidth) => {
+		if (!measureRef.current || maxWidth <= 0) return [text];
 
-			case 'words':
-			default:
-				// Smart word-based splitting
-				const words = inputText.split(' ');
-				const lines = [];
-				let currentLine = '';
+		const words = text.split(' ');
+		const lines = [];
+		let currentLine = '';
 
-				words.forEach((word, index) => {
-					const testLine = currentLine ? `${currentLine} ${word}` : word;
+		for (const word of words) {
+			const testLine = currentLine ? `${currentLine} ${word}` : word;
 
-					// If adding this word would exceed max words per line, start new line
-					if (currentLine && testLine.split(' ').length > maxWordsPerLine) {
-						lines.push(currentLine.trim());
-						currentLine = word;
-					} else {
-						currentLine = testLine;
-					}
+			// Measure the width of the test line
+			measureRef.current.textContent = testLine;
+			const lineWidth = measureRef.current.getBoundingClientRect().width;
 
-					// If this is the last word, add the current line
-					if (index === words.length - 1) {
-						lines.push(currentLine.trim());
-					}
-				});
-
-				return lines.filter((line) => line.length > 0);
+			if (lineWidth <= maxWidth) {
+				currentLine = testLine;
+			} else {
+				// If current line is not empty, push it and start new line
+				if (currentLine) {
+					lines.push(currentLine);
+					currentLine = word;
+				} else {
+					// Single word is too long, just add it anyway
+					lines.push(word);
+				}
+			}
 		}
+
+		// Add the last line if it exists
+		if (currentLine) {
+			lines.push(currentLine);
+		}
+
+		return lines.length > 0 ? lines : [text];
 	};
 
-	// Set up text lines on component mount or when text changes
 	useEffect(() => {
-		const lines = splitTextIntoLines(text);
-		setTextLines(lines);
-	}, [text, splitMethod, maxWordsPerLine]);
+		const updateLines = () => {
+			if (!containerRef.current || !measureRef.current) return;
+
+			const containerWidth = containerRef.current.getBoundingClientRect().width;
+			const availableWidth = containerWidth - 30;
+			const newLines = splitTextIntoLines(text, availableWidth);
+			setLines(newLines);
+		};
+
+		// Initial calculation with a small delay to ensure DOM is ready
+		const timeoutId = setTimeout(updateLines, 0);
+
+		// Update on resize
+		const resizeObserver = new ResizeObserver(() => {
+			// Use requestAnimationFrame to debounce resize events
+			requestAnimationFrame(updateLines);
+		});
+
+		if (containerRef.current) {
+			resizeObserver.observe(containerRef.current);
+		}
+
+		return () => {
+			clearTimeout(timeoutId);
+			resizeObserver.disconnect();
+		};
+	}, [text]);
 
 	return (
-		<div className={cn(className)}>
+		<div
+			className={cn('relative overflow-hidden', className, {
+				'text-cream': !textColor,
+			})}
+			ref={containerRef}
+			style={{
+				color: textColorStyle,
+			}}
+		>
 			<CompTag className="sr-only">{text}</CompTag>
-			{textLines.map((line, index, array) => {
+			{/* Invisible measuring element with same styles */}
+			<span
+				ref={measureRef}
+				className={cn(
+					'pointer-events-none absolute -top-full left-0 whitespace-nowrap opacity-0'
+				)}
+				aria-hidden="true"
+			/>
+
+			{/* Rendered lines */}
+			{lines.map((line, index, array) => {
+				const isLast = index == array.length - 1;
+				const delayBasis = index * animationConfig.delay;
 				return (
-					<motion.span
-						className="block"
-						key={index}
-						initial="hidden"
-						animate="visible"
-						whileInView="visible"
-						variants={lineVariants}
-						viewport={{ once: true, amount: 1 }}
-						custom={index + 0.3}
-					>
-						{line}
-					</motion.span>
+					<div key={index} className="relative inline-block overflow-hidden">
+						<motion.div
+							key={index}
+							className="absolute inset-0 z-20"
+							style={{
+								backgroundColor: textColorStyle || 'var(--color-cream)',
+							}}
+							initial={{ x: '-101%' }}
+							animate={{ x: isInView ? '101%' : '-101%' }}
+							transition={{
+								duration: animationConfig.duration + 0.2,
+								ease: [0.0, 0.5, 0.5, 1.0],
+								delay: delayBasis + 0.8,
+							}}
+						/>
+						<motion.span
+							initial={{ opacity: 0 }}
+							animate={{ opacity: isInView ? 1 : 0 }}
+							transition={{
+								duration: animationConfig.duration,
+								delay: delayBasis + 1,
+							}}
+							onAnimationComplete={() => {
+								if (isLast) {
+									handleAnimationComplete && handleAnimationComplete(true);
+								}
+							}}
+						>
+							{line}
+						</motion.span>
+					</div>
 				);
 			})}
 		</div>

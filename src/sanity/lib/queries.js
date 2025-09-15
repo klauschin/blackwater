@@ -205,6 +205,7 @@ export const pageHomeQuery = defineQuery(`
 		${baseFields},
 		"isHomepage": true,
 		landingTitle,
+		"textColor": textColor->color,
 		pageModules[]{
 			${pageModuleFields}
 		}

@@ -18,9 +18,6 @@ export const settingsBrandColors = defineType({
 			title: 'Color',
 			name: 'color',
 			type: 'color',
-			options: {
-				disableAlpha: true,
-			},
 			validation: (Rule) => Rule.required(),
 		},
 	],
