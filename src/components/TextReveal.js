@@ -19,7 +19,7 @@ export function TextReveal({
 	const animationConfig = useMemo(
 		() => ({
 			delay: isMobileScreen ? 0.2 : 0.36,
-			duration: isMobileScreen ? 0.2 : 0.3,
+			duration: 0.2,
 		}),
 		[isMobileScreen]
 	);
@@ -127,10 +127,7 @@ export function TextReveal({
 				const isLast = index == array.length - 1;
 				const delayBasis = index * animationConfig.delay;
 				return (
-					<div
-						key={index}
-						className="-tracking-3 relative inline-block overflow-hidden"
-					>
+					<div key={index} className="relative inline-block overflow-hidden">
 						<motion.div
 							key={index}
 							className="absolute inset-0 z-20"
@@ -140,7 +137,7 @@ export function TextReveal({
 							initial={{ x: '-101%' }}
 							animate={{ x: isInView ? '101%' : '-101%' }}
 							transition={{
-								duration: animationConfig.duration + 0.2,
+								duration: animationConfig.duration + 0.1,
 								ease: [0.0, 0.5, 0.5, 1.0],
 								delay: delayBasis + 0.8,
 							}}

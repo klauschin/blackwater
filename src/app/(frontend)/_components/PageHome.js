@@ -9,7 +9,7 @@ export default function PageHome({ data }) {
 			<TextReveal
 				text={landingTitle}
 				maxWordsPerLine={6}
-				className="px-contain mx-auto max-w-[340px] text-center text-[13px] -tracking-[0.03rem] text-balance uppercase sm:max-w-6xl"
+				className="px-contain mx-auto max-w-[340px] text-center text-sm text-balance uppercase sm:max-w-6xl"
 				htmlTag="h1"
 				splitMethod="manual"
 			/>
