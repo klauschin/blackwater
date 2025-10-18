@@ -16,18 +16,16 @@ import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
 import { handleError } from '../client-utils';
 import { Toaster } from 'sonner';
 
-const fontGestalt = localFont({
+const fontABCDisplayUnlicensedVariable = localFont({
 	src: [
 		{
-			path: '../../public/fonts/font-gestalt.woff2',
+			path: '../../public/fonts/font-abc-display-unlicensed-regular.woff2',
 			weight: '400',
 			style: 'normal',
 		},
 	],
-	variable: '--font-gestalt',
+	variable: '--font-ABC-Display-Unlicensed-Variable',
 });
-
-// Then assign variable in base.scss: --t-h-1: 400 60px/1 var(--font-[fontName]), sans-serif;
 
 export async function generateMetadata() {
 	const {
@@ -101,25 +99,6 @@ export async function generateMetadata() {
 		},
 	};
 }
-const inter = Inter({
-	subsets: ['latin'],
-	display: 'swap',
-	variable: '--font-inter',
-});
-
-const montagu_slab = Montagu_Slab({
-	subsets: ['latin'],
-	display: 'swap',
-	variable: '--font-montagu-slab',
-});
-
-const dm_sans = DM_Sans({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400', '500', '700'],
-	style: ['normal', 'italic'],
-	variable: '--font-dm-sans',
-});
 
 export default async function RootLayout({ children }) {
 	const { isEnabled } = await draftMode();
@@ -139,7 +118,10 @@ export default async function RootLayout({ children }) {
 	return (
 		<StoreProvider>
 			<ReactQueryProvider>
-				<html lang="en" className={`${fontGestalt.variable}`}>
+				<html
+					lang="en"
+					className={`${fontABCDisplayUnlicensedVariable.variable}`}
+				>
 					<head>
 						<meta
 							httpEquiv="Content-Type"

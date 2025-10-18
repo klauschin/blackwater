@@ -1,26 +1,6 @@
 @layer base {
 	:root {
-		--font-gestalt: var(--font-gestalt), 'Arial', 'Helvetica Neue', 'sans-serif';
-
-		--t-h-1: 300 72px/1 var(--font-gestalt);
-		--t-h-2: 300 56px/1 var(--font-gestalt);
-		--t-h-3: 300 42px/1 var(--font-gestalt);
-		--t-h-4: 300 36px/1 var(--font-gestalt);
-		--t-h-5: 300 32px/1 var(--font-gestalt);
-		--t-h-6: 300 28px/1.15 var(--font-gestalt);
-		--t-h-7: 300 24px/1 var(--font-gestalt);
-		--t-h-8: 300 20px/1.2 var(--font-gestalt);
-		--t-h-9: 300 16px/1.5 var(--font-gestalt);
-
-		--t-b-1: 400 28px/1.3 var(--font-gestalt);
-		--t-b-2: 300 20px/1.6 var(--font-gestalt);
-		--t-b-3: 300 20px/1.2 var(--font-gestalt);
-		--t-b-4: 300 16px/1 var(--font-gestalt);
-		--t-b-5: 400 12px/1.5 var(--font-gestalt);
-
-		--t-l-1: 400 16px/1 var(--font-gestalt);
-		--t-l-2: 400 12px/1 var(--font-gestalt);
-		--t-l-3: 400 10px/1 var(--font-gestalt);
+		--font-ABC-Display-Unlicensed-Variable: var(--font-ABC-Display-Unlicensed-Variable), 'Arial', 'Helvetica Neue', 'sans-serif';
 
 		--s-sm: 1100px;
 		--s-md: 1200px;
@@ -59,12 +39,7 @@
 	}
 
 	@variant md {
-		:root {
-			--t-h-1: 300 80px/1 var(--font-gestalt);
-			--t-h-2: 300 64px/1 var(--font-gestalt);
-			--t-h-3: 300 48px/1 var(--font-gestalt);
-			--t-h-4: 300 40px/1 var(--font-gestalt);
-		}
+		:root {}
 	}
 
 	html {

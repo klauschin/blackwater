@@ -127,7 +127,10 @@ export function TextReveal({
 				const isLast = index == array.length - 1;
 				const delayBasis = index * animationConfig.delay;
 				return (
-					<div key={index} className="relative inline-block overflow-hidden">
+					<div
+						key={index}
+						className="-tracking-3 relative inline-block overflow-hidden"
+					>
 						<motion.div
 							key={index}
 							className="absolute inset-0 z-20"

@@ -9,7 +9,7 @@ export default function PageGeneral({ data }) {
 		<>
 			{layout === 'editor' && hasArrayValue(content) && (
 				<section className="p-general">
-					{title && <h1 className="p-general__header t-h-1">{title}</h1>}
+					{title && <h1 className="p-general__header">{title}</h1>}
 					<div className="p-general__content wysiwyg-page">
 						<CustomPortableText blocks={content} />
 					</div>

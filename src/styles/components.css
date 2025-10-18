@@ -1,7 +1,8 @@
 @layer components {
+
 	.wysiwyg,
 	.wysiwyg-page {
-		> *:not(:last-child) {
+		>*:not(:last-child) {
 			margin-bottom: 20px;
 		}
 
@@ -10,13 +11,7 @@
 		h3,
 		h4,
 		h5,
-		h6,
-		.t-h-1,
-		.t-h-2,
-		.t-h-3,
-		.t-h-4,
-		.t-h-5,
-		.t-h-6 {
+		h6 {
 			&:not(:first-child) {
 				margin-top: 36px;
 			}
@@ -119,22 +114,9 @@
 
 	/** FONTS **/
 	body {
-		@apply t-b-1 antialiased;
+		@apply antialiased -tracking-3;
 	}
-	h1 {
-		@apply t-h-1;
-	}
-	h2 {
-		@apply t-h-2;
-	}
-	h3 {
-		@apply t-h-3;
-	}
-	h4,
-	h5,
-	h6 {
-		@apply t-h-4;
-	}
+
 	p,
 	ol,
 	ul {
@@ -159,7 +141,7 @@
 		cursor: pointer;
 		transition: background 0.2s;
 
-		~ label {
+		~label {
 			display: inline-block;
 			padding-left: 0.5em;
 			vertical-align: bottom;
@@ -190,6 +172,7 @@
 	.field-cols {
 		--field-gap: 10px;
 		--padding-h: 14px;
+
 		@variant sm {
 			--field-gap: 15px;
 			--height: 45px;
@@ -216,12 +199,15 @@
 		&::placeholder {
 			color: var(--color-placeholder);
 		}
+
 		&::-webkit-input-placeholder {
 			color: var(--color-placeholder);
 		}
+
 		&::-moz-placeholder {
 			color: var(--color-placeholder);
 		}
+
 		&:-ms-input-placeholder {
 			color: var(--color-placeholder);
 		}
@@ -248,7 +234,7 @@
 		}
 
 		.field.is-floating-label & {
-			~ label {
+			~label {
 				height: var(--height);
 				padding: calc((var(--height) - var(--line-height)) / 2) var(--padding-h);
 				font: var(--t-b-2);
@@ -264,16 +250,10 @@
 			&:not(select):focus,
 			&:placeholder-shown,
 			&.is-contain-value {
-				padding-top: calc(
-					(var(--height) - var(--line-height)) / 2 +
-						var(--floating-label-focus-offset)
-				);
-				padding-bottom: calc(
-					(var(--height) - var(--line-height)) / 2 -
-						var(--floating-label-focus-offset)
-				);
+				padding-top: calc((var(--height) - var(--line-height)) / 2 + var(--floating-label-focus-offset));
+				padding-bottom: calc((var(--height) - var(--line-height)) / 2 - var(--floating-label-focus-offset));
 
-				~ label {
+				~label {
 					top: var(--floating-label-focus-offset);
 					padding-top: 0;
 					padding-bottom: 0;
@@ -305,8 +285,7 @@
 
 		select {
 			padding-right: calc(var(--padding-h) + 8px + var(--padding-h));
-			background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 5'%3E%3Cpath fill-rule='evenodd' d='m3,5L6,0H0l3,5'/%3E%3C/svg%3E")
-				right var(--padding-h) center/8px no-repeat;
+			background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 5'%3E%3Cpath fill-rule='evenodd' d='m3,5L6,0H0l3,5'/%3E%3C/svg%3E") right var(--padding-h) center/8px no-repeat;
 			cursor: pointer;
 			-webkit-user-select: none;
 			-moz-user-select: none;
