@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { formatNewLineToBr } from '@/lib/utils';
+import { Button } from '@/components/Button';
 
 const INSTRUCTIONS_LIST = [
 	{
@@ -23,19 +24,7 @@ const INSTRUCTIONS_LIST = [
 	},
 ];
 
-/*--- Used for image with color variants
-const ICON_COLOR = [
-	'black',
-	'cream',
-	'gold',
-	'aube',
-	'laurel',
-	'moss',
-	'vert',
-	'kombu',
-	'red',
-];
-*/
+const ICON_COLOR = ['black', 'white'];
 
 export default function PageEmailSignature() {
 	const COPY_TEXT_INITIAL = 'Click to copy';
@@ -43,12 +32,12 @@ export default function PageEmailSignature() {
 	const clipboardRef = useRef();
 	const [buttonText, setButtonText] = useState(COPY_TEXT_INITIAL);
 
-	const [name, setName] = useState('Name');
-	const [position, setPosition] = useState('Position');
-	const [subtext, setSubtext] = useState('Subtext');
-	/*--- Used for image with color variants
+	const [name, setName] = useState('Hsiang Chin');
+	const [position, setPosition] = useState('CXO');
+	const [subtext, setSubtext] = useState(
+		'A running community exploring movement & meaning.'
+	);
 	const [iconColor, setIconColor] = useState('black');
-	*/
 
 	const SITE_URL = process.env.SITE_URL.replace(/\/$/, '');
 
@@ -80,18 +69,16 @@ export default function PageEmailSignature() {
 		setSubtext(e.target.value);
 	};
 
-	/*--- Used for image with color variants
 	const onHandleInputColor = (e) => {
 		setIconColor(e.target.value);
 	};
-	*/
 
 	return (
-		<div className="p-email-signature f-v f-a-c f-j-c gap-lg bg-stone text-black">
-			<div className="p-email-signature__form c-form">
-				<div className="c-form__fields">
-					<div className="c-field" data-size="1/2">
-						<label htmlFor="email-signature-name" className="c-field__label">
+		<div className="p-contain flex flex-col items-center justify-center gap-10 pt-[calc(var(--h-header)+60px)]">
+			<div className="flex max-w-md flex-col gap-4">
+				<div className="flex w-full flex-wrap gap-2">
+					<div className="flex flex-1 flex-col gap-1">
+						<label htmlFor="email-signature-name" className="t-l-2">
 							Name
 						</label>
 						<input
@@ -100,13 +87,11 @@ export default function PageEmailSignature() {
 							value={name}
 							placeholder="Enter your name"
 							onChange={onHandleInputName}
+							className="bg-alabaster rounded border border-white px-2 py-1"
 						/>
 					</div>
-					<div className="c-field" data-size="1/2">
-						<label
-							htmlFor="email-signature-position"
-							className="c-field__label"
-						>
+					<div className="flex flex-1 flex-col gap-1">
+						<label htmlFor="email-signature-position" className="t-l-2">
 							Position
 						</label>
 						<input
@@ -115,47 +100,55 @@ export default function PageEmailSignature() {
 							value={position}
 							placeholder="Enter your position"
 							onChange={onHandleInputPosition}
+							className="bg-alabaster rounded border border-white px-2 py-1"
 						/>
 					</div>
-					<div className="c-field" data-size="1">
-						<label htmlFor="email-signature-subtext" className="c-field__label">
-							Subtext
-						</label>
-						<textarea
-							id="email-signature-subtext"
-							value={subtext}
-							placeholder="Enter your subtext"
-							rows="3"
-							onChange={onHandleInputSubtext}
-						/>
-					</div>
-					{/*--- Used for image with color variants
-					<fieldset className="c-field c-field__checkboxes" data-size="1">
-						<legend className='c-field__label'>Icon Color</legend>
-						<div className="c-field__checkboxes__grid g g-2 gap-sm">
-							{ICON_COLOR.map((color, i) => (
-								<div key={i} className="c-field c-field__checkboxes__item">
-									<label htmlFor={`icon-color-${color}`} className='c-field__label f-h f-j-s f-a-c gap-sm'>
-										<input
-											type="radio"
-											id={`icon-color-${color}`}
-											name="icon-color"
-											value={color}
-											checked={iconColor === color}
-											onChange={onHandleInputColor}
-										/>
-										{color}
-									</label>
-								</div>
-							))}
-						</div>
-					</fieldset> */}
 				</div>
+				<div className="flex w-full flex-col gap-1">
+					<label htmlFor="email-signature-subtext" className="t-l-2">
+						Subtext
+					</label>
+					<textarea
+						id="email-signature-subtext"
+						value={subtext}
+						placeholder="Enter your subtext"
+						rows="2"
+						onChange={onHandleInputSubtext}
+						className="bg-alabaster min-h-12 rounded border border-white px-2 py-1"
+					/>
+				</div>
+				<fieldset className="w-full rounded border border-white p-4">
+					<legend className="t-l-2 bg-alabaster px-2">Icon Color</legend>
+					<div
+						className="grid grid-cols-3 items-center gap-3"
+						style={{ '--b-thickness': '3px' }}
+					>
+						{ICON_COLOR.map((color, i) => (
+							<div key={i} className="flex items-center">
+								<input
+									type="radio"
+									id={`icon-color-${color}`}
+									name="icon-color"
+									value={color}
+									checked={iconColor === color}
+									onChange={onHandleInputColor}
+									className="radius-full size-4 !min-h-0 !min-w-0 flex-none border border-white checked:!bg-black"
+								/>
+								<label
+									htmlFor={`icon-color-${color}`}
+									className="t-l-2 capitalize"
+								>
+									{color}
+								</label>
+							</div>
+						))}
+					</div>
+				</fieldset>
 			</div>
-			<div className="p-email-signature__result">
+			<div className="rounded bg-white p-5">
 				<table
 					ref={clipboardRef}
-					style={{ color: 'black', backgroundColor: 'transparent' }}
+					style={{ color: 'white', backgroundColor: 'transparent' }}
 					border="0"
 				>
 					<tbody>
@@ -169,8 +162,8 @@ export default function PageEmailSignature() {
 									<img
 										width="50"
 										height="50"
-										alt="Logo"
-										src={`${SITE_URL}/PATH_TO_LOGO.png`}
+										alt="View Source Logo"
+										src={`${SITE_URL}/blackwater_wordmark_RGB_blkwtr_wordmark_${iconColor}.png`}
 									/>
 								</a>
 							</td>
@@ -206,41 +199,38 @@ export default function PageEmailSignature() {
 								</a>
 								&nbsp;|&nbsp;
 								<a
-									href={`${SITE_URL}/newsletter?ref=email-sig`}
+									href="https://www.instagram.com/blackwater.rc/"
 									target="_blank"
 									rel="noreferrer"
 									style={{ color: 'black' }}
 								>
-									<u>Newsletter</u>
+									<u>IG</u>
 								</a>
-								{/* Other links here */}
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
-			<button
+			<Button
+				variant="sm"
 				aria-label="Click to copy email signature"
-				className="btn"
+				color="white"
 				onClick={onHandleCopy}
 			>
 				{buttonText}
-			</button>
+			</Button>
 
-			<div className="p-email-signature__instructions f-v f-a-c gap-md">
-				<p className="t-l-1 text-gray">Instructions</p>
-				<ul className="f-h f-w f-j-c gap-sm">
+			<div className="flex flex-col items-center gap-5">
+				<p>Instructions:</p>
+				<ul className="flex flex-wrap justify-center gap-5">
 					{INSTRUCTIONS_LIST.map((item, i) => (
 						<li key={i}>
-							<Link
-								href={item.url}
-								target="_blank"
-								rel="noreferrer"
-								className="btn"
-							>
-								{item.title}
-							</Link>
+							<Button asChild variant="sm" color="white">
+								<Link href={item.url} target="_blank" rel="noreferrer">
+									{item.title}
+								</Link>
+							</Button>
 						</li>
 					))}
 				</ul>
