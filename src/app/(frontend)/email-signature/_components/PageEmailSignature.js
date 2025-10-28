@@ -213,7 +213,7 @@ export default function PageEmailSignature() {
 									rel="noreferrer"
 									style={{ color: 'black' }}
 								>
-									<u>Linktree</u>
+									<u>Events</u>
 								</a>
 							</td>
 						</tr>
