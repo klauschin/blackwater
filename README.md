@@ -2,10 +2,6 @@
 
 > A example of a Vercel-deployable project with a [Next.js](https://nextjs.org/) frontend and a [Sanity Studio](https://www.sanity.io) on /sanity
 
-## ⚙️ Set Up
-
-Clone this repository from your GitHub or Click [Use this template](https://github.com/View-Source-Dev/blackwater/generate).
-
 ### 1. Sanity
 
 1. `npm install && npm create sanity@latest init --env`

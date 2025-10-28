@@ -117,7 +117,7 @@ export default function PageEmailSignature() {
 						className="bg-alabaster min-h-12 rounded border border-white px-2 py-1"
 					/>
 				</div>
-				<fieldset className="w-full rounded border border-white p-4">
+				<fieldset className="hidden w-full rounded border border-white p-4">
 					<legend className="t-l-2 bg-alabaster px-2">Icon Color</legend>
 					<div
 						className="grid grid-cols-3 items-center gap-3"
@@ -145,7 +145,7 @@ export default function PageEmailSignature() {
 					</div>
 				</fieldset>
 			</div>
-			<div className="rounded bg-white p-5">
+			<div className="rounded-xs bg-white p-3">
 				<table
 					ref={clipboardRef}
 					style={{ color: 'white', backgroundColor: 'transparent' }}
@@ -162,8 +162,8 @@ export default function PageEmailSignature() {
 									<img
 										width="50"
 										height="50"
-										alt="View Source Logo"
-										src={`${SITE_URL}/blackwater_wordmark_RGB_blkwtr_wordmark_${iconColor}.png`}
+										alt="Blackwater RC Logo"
+										src={`${SITE_URL}/blackwater_wordmark_white.jpg`}
 									/>
 								</a>
 							</td>
@@ -199,12 +199,21 @@ export default function PageEmailSignature() {
 								</a>
 								&nbsp;|&nbsp;
 								<a
-									href="https://www.instagram.com/blackwater.rc/"
+									href="https://www.instagram.com/blackwater.rc"
 									target="_blank"
 									rel="noreferrer"
 									style={{ color: 'black' }}
 								>
 									<u>IG</u>
+								</a>
+								&nbsp;|&nbsp;
+								<a
+									href="https://linktr.ee/blackwater.rc"
+									target="_blank"
+									rel="noreferrer"
+									style={{ color: 'black' }}
+								>
+									<u>Linktree</u>
 								</a>
 							</td>
 						</tr>
