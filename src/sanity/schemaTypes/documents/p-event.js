@@ -4,39 +4,34 @@ import title from '@/sanity/schemaTypes/objects/title';
 import { BookIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 
-export const pBlog = defineType({
-	title: 'Blog',
-	name: 'pBlog',
+export const pEvent = defineType({
+	title: 'Event',
+	name: 'pEvent',
 	type: 'document',
 	icon: BookIcon,
 	fields: [
 		title(),
 		slug(),
 		{
-			name: 'author',
-			type: 'reference',
-			to: [{ type: 'gAuthor' }],
-		},
-		{
 			name: 'categories',
 			type: 'array',
 			of: [
 				{
 					type: 'reference',
-					to: { type: 'pBlogCategory' },
+					to: { type: 'pEventCategory' },
 				},
 			],
 			validation: (Rule) => Rule.unique(),
 		},
-		// {
-		// 	name: 'publishDate',
-		// 	type: 'date',
-		// 	options: {
-		// 		dateFormat: 'MM/DD/YY',
-		// 		calendarTodayLabel: 'Today',
-		// 	},
-		// 	validation: (Rule) => Rule.required(),
-		// },
+		{
+			name: 'publishDate',
+			type: 'date',
+			options: {
+				dateFormat: 'MM/DD/YY',
+				calendarTodayLabel: 'Today',
+			},
+			validation: (Rule) => Rule.required(),
+		},
 		{
 			name: 'excerpt',
 			title: 'Excerpt',
@@ -49,7 +44,7 @@ export const pBlog = defineType({
 		},
 		{
 			title: 'Related Articles',
-			name: 'relatedBlogs',
+			name: 'relatedEvents',
 			type: 'array',
 			description:
 				'If left empty, will be pulled 2 articles from the same category',
@@ -57,7 +52,7 @@ export const pBlog = defineType({
 				{
 					name: 'articles',
 					type: 'reference',
-					to: [{ type: 'pBlog' }],
+					to: [{ type: 'pEvent' }],
 				},
 			],
 		},

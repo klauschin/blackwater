@@ -1,9 +1,9 @@
 import { BsPeopleFill } from 'react-icons/bs';
 import { defineType } from 'sanity';
 
-export const pBlogAuthor = defineType({
+export const gAuthor = defineType({
 	title: 'Author',
-	name: 'pBlogAuthor',
+	name: 'gAuthor',
 	type: 'document',
 	icon: BsPeopleFill,
 	fields: [

@@ -1,0 +1,31 @@
+import sharing from '@/sanity/schemaTypes/objects/sharing';
+import slug from '@/sanity/schemaTypes/objects/slug';
+import title from '@/sanity/schemaTypes/objects/title';
+import { TagsIcon } from '@sanity/icons';
+import { defineType } from 'sanity';
+
+export const pEventCategory = defineType({
+	title: 'Categories',
+	name: 'pEventCategory',
+	type: 'document',
+	icon: TagsIcon,
+	fields: [
+		title(),
+		slug(),
+		{
+			title: 'Category Color',
+			name: 'categoryColor',
+			type: 'reference',
+			to: [{ type: 'settingsBrandColors' }],
+		},
+		sharing(),
+	],
+	preview: {
+		select: {
+			title: 'title',
+		},
+		prepare: ({ title }) => ({
+			title,
+		}),
+	},
+});

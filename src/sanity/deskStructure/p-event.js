@@ -1,40 +1,40 @@
 import { apiVersion } from '@/sanity/env';
 import { BookIcon, TagsIcon, UserIcon } from '@sanity/icons';
 
-export const pageBlogCategory = (S) => {
+export const pageEventCategory = (S) => {
 	return S.listItem()
 		.title('Categories')
-		.child(S.documentTypeList('pBlogCategory').title('Categories'))
+		.child(S.documentTypeList('pEventCategory').title('Categories'))
 		.icon(TagsIcon);
 };
 
-export const pageBlogAuthor = (S) => {
+export const pageEventAuthor = (S) => {
 	return S.listItem()
 		.title('Authors')
 		.child(S.documentTypeList('gAuthor').title('Authors'))
 		.icon(UserIcon);
 };
 
-export const pageBlog = (S, context) => {
+export const pageEvent = (S, context) => {
 	return S.listItem()
-		.title('Blog')
+		.title('Event')
 		.child(
 			S.list()
-				.title('Blog')
+				.title('Event')
 				.items([
 					S.listItem()
-						.title('Blog Index Page')
+						.title('Event Index Page')
 						.child(
 							S.editor()
-								.id('pBlogIndex')
-								.title('Blog Index Page')
-								.schemaType('pBlogIndex')
-								.documentId('pBlogIndex')
+								.id('pEventIndex')
+								.title('Event Index Page')
+								.schemaType('pEventIndex')
+								.documentId('pEventIndex')
 						)
 						.icon(BookIcon),
 					S.listItem()
-						.title('Articles')
-						.child(S.documentTypeList('pBlog').title('Articles'))
+						.title('Events')
+						.child(S.documentTypeList('pEvent').title('Events'))
 						.icon(BookIcon),
 					S.listItem()
 						.title('Filters')
@@ -45,14 +45,14 @@ export const pageBlog = (S, context) => {
 									S.listItem()
 										.title('By Category')
 										.child(
-											S.documentTypeList('pBlogCategory')
-												.title('Blogs by Category')
+											S.documentTypeList('pEventCategory')
+												.title('Events by Category')
 												.child((categoryId) => {
 													return S.documentList()
-														.title('Blogs')
+														.title('Events')
 														.apiVersion(apiVersion)
 														.filter(
-															'_type == "pBlog" && $categoryId in category[]._ref'
+															'_type == "pEvent" && $categoryId in category[]._ref'
 														)
 														.params({ categoryId });
 												})
@@ -61,13 +61,13 @@ export const pageBlog = (S, context) => {
 										.title('By Author')
 										.child(
 											S.documentTypeList('gAuthor')
-												.title('Blogs by Author')
+												.title('Events by Author')
 												.child((authorId) =>
 													S.documentList()
-														.title('Blogs')
+														.title('Events')
 														.apiVersion(apiVersion)
 														.filter(
-															'_type == "pBlog" && $authorId == author._ref'
+															'_type == "pEvent" && $authorId == author._ref'
 														)
 														.params({ authorId })
 												)
@@ -75,8 +75,8 @@ export const pageBlog = (S, context) => {
 								])
 						),
 					S.divider(),
-					pageBlogAuthor(S),
-					pageBlogCategory(S, context),
+					pageEventAuthor(S),
+					pageEventCategory(S, context),
 				])
 		)
 		.icon(BookIcon);

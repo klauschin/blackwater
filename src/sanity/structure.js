@@ -2,6 +2,7 @@ import { colorsMenu } from './deskStructure/colors';
 import { globalMenu } from './deskStructure/global';
 import { menusMenu } from './deskStructure/menus';
 import { pageBlog } from './deskStructure/p-blog';
+import { pageEvent } from './deskStructure/p-event';
 import { otherPagesMenu, pagesMenu } from './deskStructure/pages';
 import { settingsMenu } from './deskStructure/settings';
 
@@ -13,7 +14,7 @@ export const structure = (S) =>
 			pagesMenu(S),
 			otherPagesMenu(S),
 			S.divider(),
-			pageBlog(S),
+			pageEvent(S),
 			S.divider(),
 			menusMenu(S),
 			colorsMenu(S),

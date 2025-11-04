@@ -29,7 +29,7 @@ const ROUTES = [
 	// 	skipParentPath: true,
 	// },
 	// {
-	// 	type: 'pBlogAuthor',
+	// 	type: 'gAuthor',
 	// 	slug: 'blog/author',
 	// 	changeFrequency: 'monthly',
 	// 	priority: 0.7,
