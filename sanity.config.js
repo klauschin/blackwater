@@ -17,6 +17,7 @@ import { settingsIntegration } from '@/sanity/schemaTypes/singletons/settings-in
 import { structure } from '@/sanity/structure';
 import { colorInput } from '@sanity/color-input';
 import { visionTool } from '@sanity/vision';
+import { LogoSvg } from '@/components/LogoSvg';
 import { defineConfig, isDev } from 'sanity';
 import { media } from 'sanity-plugin-media';
 import { noteField } from 'sanity-plugin-note-field';
@@ -61,6 +62,7 @@ const devPlugins = [
 export default defineConfig({
 	basePath: '/sanity',
 	title: 'Blackwater',
+	icon: LogoSvg,
 	projectId,
 	dataset,
 	plugins: isDev ? devPlugins : commonPlugins,

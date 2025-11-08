@@ -54,7 +54,7 @@
 		"react-redux": "^9.2.0",
 		"rxjs": "^7.8.2",
 		"sanitize-html": "^2.14.0",
-		"sanity": "^4.4.1",
+		"sanity": "^4.14.2",
 		"sanity-plugin-documents-pane": "^2.4.1",
 		"sanity-plugin-iframe-pane": "^4.0.0",
 		"sanity-plugin-media": "^4.0.0",

@@ -1,6 +1,5 @@
 import sharing from '@/sanity/schemaTypes/objects/sharing';
 import slug from '@/sanity/schemaTypes/objects/slug';
-import title from '@/sanity/schemaTypes/objects/title';
 import { BookIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 
@@ -10,8 +9,17 @@ export const pEvent = defineType({
 	type: 'document',
 	icon: BookIcon,
 	fields: [
-		title(),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug(),
+		{
+			name: 'eventDate',
+			type: 'date',
+			options: {
+				dateFormat: 'MM/DD/YY',
+				calendarTodayLabel: 'Today',
+			},
+			validation: (Rule) => Rule.required(),
+		},
 		{
 			name: 'categories',
 			type: 'array',
@@ -24,37 +32,19 @@ export const pEvent = defineType({
 			validation: (Rule) => Rule.unique(),
 		},
 		{
-			name: 'publishDate',
-			type: 'date',
-			options: {
-				dateFormat: 'MM/DD/YY',
-				calendarTodayLabel: 'Today',
-			},
-			validation: (Rule) => Rule.required(),
-		},
-		{
-			name: 'excerpt',
-			title: 'Excerpt',
-			type: 'text',
-			validation: (Rule) => Rule.required(),
+			name: 'status',
+			type: 'array',
+			of: [
+				{
+					type: 'reference',
+					to: { type: 'pEventCategory' },
+				},
+			],
+			validation: (Rule) => Rule.unique(),
 		},
 		{
 			name: 'content',
 			type: 'portableText',
-		},
-		{
-			title: 'Related Articles',
-			name: 'relatedEvents',
-			type: 'array',
-			description:
-				'If left empty, will be pulled 2 articles from the same category',
-			of: [
-				{
-					name: 'articles',
-					type: 'reference',
-					to: [{ type: 'pEvent' }],
-				},
-			],
 		},
 		sharing(),
 	],
@@ -65,11 +55,11 @@ export const pEvent = defineType({
 			categories: 'categories.0.title',
 		},
 		prepare({ title = 'Untitled', slug = {}, categories }) {
-			const path = `/blog/${slug?.current}`;
+			const path = `/event/${slug?.current}`;
 			const categoryTitle = categories ?? '';
-			const subtitle = `[${
+			const subtitle = `${slug?.current ? path : '(missing slug)'} - [${
 				categoryTitle ? categoryTitle : '(missing category)'
-			}] - ${slug.current ? path : '(missing slug)'}`;
+			}]`;
 
 			return {
 				title: title,
