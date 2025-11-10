@@ -257,6 +257,28 @@ export const pageContactQuery = defineQuery(`
 	}
 `);
 
+export const pEventIndexQuery = defineQuery(`
+	*[_type == "pEventIndex"][0]{
+		${baseFields},
+		"eventList": *[_type == "pEvent"] {
+			${baseFields},
+			date,
+			categories[]-> {
+				_id,
+				title,
+				"slug": slug.current,
+				categoryColor->{...color}
+			},
+			status[]-> {
+				_id,
+				title,
+				"slug": slug.current,
+				statusColor->{...color}
+			}
+		}
+	}
+`);
+
 // Blog queries with pagination
 export const getBlogPostData = (type) => {
 	const basePostFields = defineQuery(`

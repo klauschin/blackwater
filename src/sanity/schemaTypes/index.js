@@ -5,6 +5,7 @@ import { pBlogIndex } from './documents/p-blog-index';
 import { pEvent } from './documents/p-event';
 import { pEventCategory } from './documents/p-event-category';
 import { pEventIndex } from './documents/p-event-index';
+import { pEventStatus } from './documents/p-event-status';
 import { pGeneral } from './documents/p-general';
 // Objects
 import { formFields } from './objects/form-builder/form-fields';
@@ -50,6 +51,7 @@ export const schemaTypes = [
 	gAuthor,
 	pEventCategory,
 	pEventIndex,
+	pEventStatus,
 	pContact,
 
 	formFields,

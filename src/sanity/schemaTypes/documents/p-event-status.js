@@ -12,7 +12,7 @@ export const pEventStatus = defineType({
 		slug(),
 		{
 			title: 'Status Color',
-			name: 'StatusColor',
+			name: 'statusColor',
 			type: 'reference',
 			to: [{ type: 'settingsBrandColors' }],
 		},

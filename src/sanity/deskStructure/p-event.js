@@ -8,10 +8,10 @@ export const pageEventCategory = (S) => {
 		.icon(TagsIcon);
 };
 
-export const pageEventAuthor = (S) => {
+export const pageEventStatus = (S) => {
 	return S.listItem()
-		.title('Authors')
-		.child(S.documentTypeList('gAuthor').title('Authors'))
+		.title('Status')
+		.child(S.documentTypeList('pEventStatus').title('Status'))
 		.icon(UserIcon);
 };
 
@@ -58,24 +58,24 @@ export const pageEvent = (S, context) => {
 												})
 										),
 									S.listItem()
-										.title('By Author')
+										.title('By Status')
 										.child(
-											S.documentTypeList('gAuthor')
-												.title('Events by Author')
-												.child((authorId) =>
+											S.documentTypeList('pEventStatus')
+												.title('Events by Status')
+												.child((statusId) =>
 													S.documentList()
 														.title('Events')
 														.apiVersion(apiVersion)
 														.filter(
-															'_type == "pEvent" && $authorId == author._ref'
+															'_type == "pEvent" && $statusId in status[]._ref'
 														)
-														.params({ authorId })
+														.params({ statusId })
 												)
 										),
 								])
 						),
 					S.divider(),
-					pageEventAuthor(S),
+					pageEventStatus(S),
 					pageEventCategory(S, context),
 				])
 		)

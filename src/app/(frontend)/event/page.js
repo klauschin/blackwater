@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
-import { pageEventIndexQuery } from '@/sanity/lib/queries';
+import { pEventIndexQuery } from '@/sanity/lib/queries';
 import defineMetadata from '@/lib/defineMetadata';
-import PageEventIndex from './_components/PageEventIndex';
+import { PageEventIndex } from './_components/PageEventIndex';
 
 export async function generateMetadata() {
 	const { data } = await sanityFetch({
-		query: pageEventIndexQuery,
+		query: pEventIndexQuery,
 		tags: ['pEventIndex'],
 		stega: false,
 	});
@@ -15,7 +15,7 @@ export async function generateMetadata() {
 
 export default async function Page() {
 	const { data } = await sanityFetch({
-		query: pageEventIndexQuery,
+		query: pEventIndexQuery,
 		tags: ['pEventIndex'],
 	});
 

@@ -37,7 +37,7 @@ export const pEvent = defineType({
 			of: [
 				{
 					type: 'reference',
-					to: { type: 'pEventCategory' },
+					to: { type: 'pEventStatus' },
 				},
 			],
 			validation: (Rule) => Rule.unique(),

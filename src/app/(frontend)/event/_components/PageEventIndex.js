@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PageEventIndex({ data }) {
+export function PageEventIndex({ data }) {
 	const { title } = data || {};
 	return (
 		<section>

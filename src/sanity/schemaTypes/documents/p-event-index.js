@@ -13,40 +13,6 @@ export const pEventIndex = defineType({
 			initialValue: { _type: 'slug', current: 'event' },
 			readOnly: true,
 		}),
-		{
-			name: 'itemsPerPage',
-			type: 'number',
-			validation: (rule) => rule.min(4).required(),
-			initialValue: 4,
-		},
-		{
-			name: 'paginationMethod',
-			type: 'string',
-			options: {
-				list: [
-					{ title: 'Page numbers', value: 'page-numbers' },
-					{ title: 'Load more', value: 'load-more' },
-					{
-						title: 'Infinite scroll without load more button',
-						value: 'infinite-scroll',
-					},
-				],
-				layout: 'radio',
-			},
-			initialValue: 'page-numbers',
-		},
-		{
-			name: 'loadMoreButtonLabel',
-			title: 'Load more label',
-			type: 'string',
-			hidden: ({ parent }) => parent.paginationMethod !== 'load-more',
-		},
-		{
-			name: 'infiniteScrollCompleteLabel',
-			title: 'No more items to load message',
-			type: 'string',
-			hidden: ({ parent }) => parent.paginationMethod !== 'load-more',
-		},
 	],
 	preview: {
 		select: {
