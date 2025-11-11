@@ -113,13 +113,6 @@ const pageModuleFields = defineQuery(`
 	_type == 'freeform' => {
 		${freeformFields}
 	},
-	_type == 'carousel' => {
-		_type,
-		_key,
-		items[0...10], // Limit items for performance
-		autoplay,
-		autoplayInterval
-	},
 	_type == 'marquee' => {
 		_type,
 		_key,

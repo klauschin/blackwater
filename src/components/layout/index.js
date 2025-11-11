@@ -3,10 +3,8 @@
 import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import * as gtag from '@/lib/gtag';
-import { siteSetup } from '@/hooks/useVsSetup';
 import AdaSkip from './AdaSkip';
 import Announcement from './Announcement';
-import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
 import ProgressLoader from './ProgressLoader';
@@ -15,10 +13,6 @@ import { LazyMotion, domAnimation } from 'motion/react';
 export function Layout({ children, siteData }) {
 	const { announcement, header, footer } = siteData || {};
 	const pathname = usePathname();
-
-	useEffect(() => {
-		siteSetup();
-	}, []);
 
 	useEffect(() => {
 		if (siteData?.integrations?.gaID) {

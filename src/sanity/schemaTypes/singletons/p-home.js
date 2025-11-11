@@ -1,4 +1,3 @@
-import carousel from '@/sanity/schemaTypes/objects/carousel';
 import freeform from '@/sanity/schemaTypes/objects/freeform';
 import marquee from '@/sanity/schemaTypes/objects/marquee';
 import sharing from '@/sanity/schemaTypes/objects/sharing';
@@ -28,7 +27,7 @@ export const pHome = defineType({
 			title: 'Page Modules',
 			name: 'pageModules',
 			type: 'array',
-			of: [freeform(), carousel(), marquee()],
+			of: [freeform(), marquee()],
 		},
 		sharing(),
 	],
