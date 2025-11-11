@@ -1,5 +1,6 @@
 import React from 'react';
-import { hasArrayValue } from '@/lib/utils';
+import Link from 'next/link';
+import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 
 export function PageEventIndex({ data }) {
 	const { title, eventList } = data || {};
@@ -10,18 +11,47 @@ export function PageEventIndex({ data }) {
 			{hasArrayValue(eventList) && (
 				<ul>
 					{eventList.map((item) => {
-						const { slug, title, _id, status, eventDate, location } =
-							item || {};
+						const {
+							slug,
+							title,
+							_id,
+							status,
+							eventDate,
+							location,
+							locationLink,
+						} = item || {};
 
 						return (
-							<li className="flex border-b border-white py-5" key={_id}>
-								<p>{title}</p>
-								<date>{eventDate}</date>
-								<p>{location}</p>
+							<li
+								className="flex items-center border-b border-white py-5"
+								key={_id}
+							>
+								<p className="t-h-4 flex-2">{title}</p>
+								<date className="t-h-4 min-w-28">{eventDate}</date>
+								{locationLink ? (
+									<Link className="t-h-4 min-w-72 flex-1" href={locationLink}>
+										{location}
+									</Link>
+								) : (
+									<p className="t-h-4 min-w-72 flex-1">{location}</p>
+								)}
+
 								{hasArrayValue(status) && (
 									<div className="flex">
-										{status.map(({ _id, title }) => {
-											return <span key={_id}>{title}</span>;
+										{status.map((item) => {
+											const { _id, title, statusColor } = item || {};
+											console.log(item);
+											return (
+												<span
+													key={_id}
+													className="t-b-1 rounded-4xl p-2.5 text-white"
+													style={{
+														backgroundColor: buildRgbaCssString(statusColor),
+													}}
+												>
+													{title}
+												</span>
+											);
 										})}
 									</div>
 								)}

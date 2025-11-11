@@ -1,12 +1,11 @@
 import { VisualEditing } from 'next-sanity';
-import { DM_Sans, Inter, Montagu_Slab } from 'next/font/google';
 import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
+import '@/globals.css';
 import { imageBuilder } from '@/sanity/lib/image';
 import { sanityFetch } from '@/sanity/lib/live';
 import { SanityLive } from '@/sanity/lib/live';
 import { siteDataQuery } from '@/sanity/lib/queries';
-import '@/styles/globals.css';
 import ReactQueryProvider from '@/lib/providers/ReactQueryProvider';
 import StoreProvider from '@/lib/providers/StoreProvider';
 import DraftModeToast from '@/components/DraftModeToast';

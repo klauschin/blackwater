@@ -256,6 +256,8 @@ export const pEventIndexQuery = defineQuery(`
 		"eventList": *[_type == "pEvent"] {
 			${baseFields},
 			eventDate,
+			location,
+			locationLink,
 			categories[]-> {
 				_id,
 				title,

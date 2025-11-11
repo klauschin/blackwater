@@ -21,6 +21,15 @@ export const pEvent = defineType({
 			validation: (Rule) => Rule.required(),
 		},
 		{
+			name: 'location',
+			type: 'string',
+			validation: (Rule) => Rule.required(),
+		},
+		{
+			name: 'locationLink',
+			type: 'url',
+		},
+		{
 			name: 'categories',
 			type: 'array',
 			of: [

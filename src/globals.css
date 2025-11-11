@@ -1,7 +1,4 @@
 @import 'tailwindcss';
-@import './base.css';
-@import './utilities.css';
-@import './components.css';
 @import 'tw-animate-css';
 @plugin 'tailwind-scrollbar';
 @custom-variant dark (&:is(.dark *));
@@ -23,6 +20,11 @@
  *
  * Reference: https://stackoverflow.com/questions/79705933/should-i-use-theme-or-theme-inline
  */
+
+
+:root {
+	--font-main: var(--font-ABC-Display-Unlicensed-Variable), 'Arial', 'Helvetica Neue', 'sans-serif';
+}
 
 @theme inline {
 	/* To completely disable the default theme and use only custom values, set the global theme variable namespace to initial: */
@@ -47,18 +49,14 @@
 	--color-subtle: color-mix(in oklab, var(--color-gray) 20%, transparent);
 	--color-placeholder: color-mix(in oklab, var(--color-gray) 80%, transparent);
 
-	--spacing-contain: var(--s-contain);
-	--spacing-contain-dynamic: var(--s-contain-dynamic);
-	--spacing-section: var(--s-section);
-	--spacing-section-half: var(--s-section-half);
-	--spacing-header: var(--h-header);
-	--spacing-contain-max: var(--s-contain-max);
-
+	--height-header: 70px;
+	--spacing-contain: Min(3vw, 20px);
+	--spacing-header: var(--height-header);
 	--shadow-default: 0px 12px 64px rgba(0, 0, 0, 0.12);
 
-	--height-header: var(--h-header);
-	--height-footer: var(--h-footer);
-	--height-main: var(--h-main);
+	--z-overlay: 50;
+	--z-dialog: calc(var(--z-overlay) + 1);
+	--z-popover: 50;
 
 	--aspect-16/9: 16 / 9;
 	--aspect-4/3: 4 / 3;
@@ -105,4 +103,188 @@
 	--animate-rotate-loader: rotate 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 	--animate-accordion-down: accordion-down 0.4s ease-out;
 	--animate-accordion-up: accordion-up 0.4s ease-out;
+}
+
+html {
+	@apply bg-black text-white;
+	scroll-behavior: smooth;
+	scroll-padding-top: calc(var(--h-announcement, 0px) + var(--h-header, 0px) + 20px);
+}
+
+html::selection {
+	@apply text-cream bg-black [text-shadow:none];
+}
+
+html::-moz-selection {
+	@apply text-cream bg-black [text-shadow:none];
+}
+
+body {
+	@apply antialiased -tracking-3;
+	font-family: var(--font-main);
+}
+
+p,
+ol,
+ul {
+	@apply text-pretty;
+}
+
+@layer components {
+
+	.wysiwyg,
+	.wysiwyg-page {
+		>*:not(:last-child) {
+			margin-bottom: 20px;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			&:not(:first-child) {
+				margin-top: 36px;
+			}
+
+			a {
+				text-decoration: underline;
+			}
+		}
+
+		.btn,
+		.btn-outline,
+		.btn-underline {
+			text-decoration: unset;
+
+			&:not(:first-child) {
+				margin-top: 20px;
+			}
+		}
+
+		p,
+		ol,
+		ul {
+			font: var(--t-b-2);
+
+			a {
+				text-decoration: underline;
+			}
+		}
+
+		ul,
+		ol {
+			padding-left: 1em;
+
+			li:not(:last-child) {
+				margin-bottom: 0.4em;
+			}
+
+			ul,
+			li {
+				margin-top: 0.4em;
+			}
+		}
+
+		ol {
+			list-style-type: decimal;
+		}
+
+		ul {
+			list-style-type: disc;
+		}
+
+		blockquote {
+			margin: 30px auto;
+			quotes: '\201C' '\201D' '\2018' '\2019';
+
+			&,
+			p {
+				font: var(--t-h-2);
+			}
+
+			p {
+				display: inline;
+				margin: 0;
+			}
+
+			&:before {
+				content: open-quote;
+				display: inline;
+			}
+
+			&:after {
+				content: close-quote;
+				display: inline;
+			}
+		}
+
+		table {
+			width: 100%;
+			font: var(--t-b-2);
+			border-collapse: collapse;
+			border-spacing: 0;
+
+			th,
+			td {
+				font-weight: 400;
+				text-align: left;
+				padding: 5px;
+				border: 1px solid var(--color-subtle);
+			}
+
+			th {
+				background-color: var(--color-subtle);
+			}
+
+			p {
+				font: inherit;
+			}
+		}
+	}
+}
+
+/* Font */
+
+@utility t-h-4 {
+	letter-spacing: -0.06rem;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+}
+
+@utility t-b-1 {
+	letter-spacing: -0.04rem;
+	font-size: 0.75rem;
+}
+
+/* Layouts */
+@utility pt-header-space-* {
+	padding-top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	padding-top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+}
+
+@utility mt-header-space-* {
+	margin-top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	margin-top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+}
+
+@utility top-header-space-* {
+	top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+}
+
+@utility p-fill {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+@utility p-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate3d(-50%, -50%, 0);
 }
