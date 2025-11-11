@@ -21,11 +21,9 @@
  * 15. Add the secret to Vercel: `npx vercel env add SANITY_REVALIDATE_SECRET`
  * 16. Redeploy with `npx vercel --prod` to apply the new environment variable
  */
-
+import { parseBody } from 'next-sanity/webhook';
 import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
-import { parseBody } from 'next-sanity/webhook';
-
 import { revalidateSecret } from '@/sanity/env';
 
 export async function POST(req) {

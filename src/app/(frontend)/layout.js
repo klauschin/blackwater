@@ -9,7 +9,6 @@ import { siteDataQuery } from '@/sanity/lib/queries';
 import '@/styles/globals.css';
 import ReactQueryProvider from '@/lib/providers/ReactQueryProvider';
 import StoreProvider from '@/lib/providers/StoreProvider';
-import StyledJsxRegistry from '@/lib/registry';
 import DraftModeToast from '@/components/DraftModeToast';
 import { Layout } from '@/components/layout';
 import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
@@ -131,19 +130,18 @@ export default async function RootLayout({ children }) {
 						<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 						<HeadTrackingCode siteData={data} />
 					</head>
-					<StyledJsxRegistry>
-						<body>
-							<Layout siteData={data}>{children}</Layout>
-							<SanityLive onError={handleError} />
-							<Toaster />
-							{isEnabled && (
-								<>
-									<DraftModeToast />
-									<VisualEditing />
-								</>
-							)}
-						</body>
-					</StyledJsxRegistry>
+
+					<body>
+						<Layout siteData={data}>{children}</Layout>
+						<SanityLive onError={handleError} />
+						<Toaster />
+						{isEnabled && (
+							<>
+								<DraftModeToast />
+								<VisualEditing />
+							</>
+						)}
+					</body>
 				</html>
 			</ReactQueryProvider>
 		</StoreProvider>
