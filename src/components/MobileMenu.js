@@ -41,7 +41,7 @@ export default function MobileMenu({ data }) {
 			<SheetTrigger className={buttonClasses} aria-label="Open Mobile Menu">
 				{buttonContent}
 			</SheetTrigger>
-			<SheetContent className="px-contain mobile:hidden pt-[calc(var(--h-announcement)+var(--h-header)+20px)] pb-5">
+			<SheetContent className="px-contain mobile:hidden pt-[calc(var(--h-announcement)+var(--height-header)+20px)] pb-5">
 				<SheetHeader>
 					<SheetTitle className="sr-only">Mobile menu</SheetTitle>
 					<SheetDescription className="sr-only">

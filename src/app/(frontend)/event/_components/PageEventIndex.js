@@ -1,6 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/components/ui/Table';
 
 export function PageEventIndex({ data }) {
 	const { title, eventList } = data || {};
@@ -9,56 +17,66 @@ export function PageEventIndex({ data }) {
 		<div className="px-contain mx-auto max-w-7xl">
 			<h1 className="sr-only">{title}</h1>
 			{hasArrayValue(eventList) && (
-				<ul>
-					{eventList.map((item) => {
-						const {
-							slug,
-							title,
-							_id,
-							status,
-							eventDate,
-							location,
-							locationLink,
-						} = item || {};
+				<Table className="border-t border-b border-white">
+					<TableHeader>
+						<TableRow className="uppercase">
+							<TableHead>codex</TableHead>
+							<TableHead>date</TableHead>
+							<TableHead>loaction</TableHead>
+							<TableHead className="text-right">status</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{eventList.map((item) => {
+							const {
+								slug,
+								title,
+								_id,
+								status,
+								eventDate,
+								location,
+								locationLink,
+							} = item || {};
 
-						return (
-							<li
-								className="flex items-center border-b border-white py-5"
-								key={_id}
-							>
-								<p className="t-h-4 flex-2">{title}</p>
-								<date className="t-h-4 min-w-28">{eventDate}</date>
-								{locationLink ? (
-									<Link className="t-h-4 min-w-72 flex-1" href={locationLink}>
-										{location}
-									</Link>
-								) : (
-									<p className="t-h-4 min-w-72 flex-1">{location}</p>
-								)}
+							return (
+								<TableRow key={_id}>
+									<TableCell className="t-h-4">{title}</TableCell>
+									<TableCell className="t-h-4 sm:min-w-28">
+										{eventDate}
+									</TableCell>
+									<TableCell className="t-h-4">
+										{locationLink ? (
+											<Link className="sm:min-w-72" href={locationLink}>
+												{location}
+											</Link>
+										) : (
+											<p className="t-h-4 sm:min-w-72">{location}</p>
+										)}
+									</TableCell>
 
-								{hasArrayValue(status) && (
-									<div className="flex">
-										{status.map((item) => {
-											const { _id, title, statusColor } = item || {};
-											console.log(item);
-											return (
-												<span
-													key={_id}
-													className="t-b-1 rounded-4xl p-2.5 text-white"
-													style={{
-														backgroundColor: buildRgbaCssString(statusColor),
-													}}
-												>
-													{title}
-												</span>
-											);
-										})}
-									</div>
-								)}
-							</li>
-						);
-					})}
-				</ul>
+									{hasArrayValue(status) && (
+										<TableCell className="flex justify-end gap-1">
+											{status.map((item) => {
+												const { _id, title, statusColor } = item || {};
+												return (
+													<span
+														key={_id}
+														className="t-b-1 rounded-4xl p-1.25 text-white"
+														style={{
+															backgroundColor: buildRgbaCssString(statusColor),
+														}}
+													>
+														{title}
+													</span>
+												);
+											})}
+										</TableCell>
+									)}
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
 			)}
 		</div>
 	);

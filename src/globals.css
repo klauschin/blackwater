@@ -108,15 +108,11 @@
 html {
 	@apply bg-black text-white;
 	scroll-behavior: smooth;
-	scroll-padding-top: calc(var(--h-announcement, 0px) + var(--h-header, 0px) + 20px);
+	scroll-padding-top: calc(var(--h-announcement, 0px) + var(--height-header, 0px) + 20px);
 }
 
 html::selection {
-	@apply text-cream bg-black [text-shadow:none];
-}
-
-html::-moz-selection {
-	@apply text-cream bg-black [text-shadow:none];
+	@apply text-black bg-cream [text-shadow:none];
 }
 
 body {
@@ -260,18 +256,18 @@ ul {
 
 /* Layouts */
 @utility pt-header-space-* {
-	padding-top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
-	padding-top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+	padding-top: calc(var(--height-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	padding-top: calc(var(--height-header) + var(--h-announcement) + --value([*]));
 }
 
 @utility mt-header-space-* {
-	margin-top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
-	margin-top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+	margin-top: calc(var(--height-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	margin-top: calc(var(--height-header) + var(--h-announcement) + --value([*]));
 }
 
 @utility top-header-space-* {
-	top: calc(var(--h-header) + var(--h-announcement) + --value(number) * var(--spacing));
-	top: calc(var(--h-header) + var(--h-announcement) + --value([*]));
+	top: calc(var(--height-header) + var(--h-announcement) + --value(number) * var(--spacing));
+	top: calc(var(--height-header) + var(--h-announcement) + --value([*]));
 }
 
 @utility p-fill {
