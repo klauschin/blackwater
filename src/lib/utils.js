@@ -684,6 +684,10 @@ export const resolveHref = ({ documentType, slug }) => {
 			return '/blog';
 		case 'pBlog':
 			return `/blog/${slug}`;
+		case 'pEventIndex':
+			return '/event';
+		case 'pEvent':
+			return `/event/${slug}`;
 		case 'externalUrl':
 			return slug;
 

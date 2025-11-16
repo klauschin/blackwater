@@ -6,17 +6,6 @@ import { useAppDispatch } from '@/store/hook';
 import { useForm } from 'react-hook-form';
 import { hasArrayValue, toCamelCase } from '@/lib/utils';
 import { formatObjectToHtml } from '@/lib/utils';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormFieldController,
-	FormLabel,
-	FormMessage,
-} from '@/components/Form';
-import Input from '@/components/Input';
-import Select from '@/components/Select';
-import Textarea from '@/components/Textarea';
 
 const VALIDATION_PATTERNS = {
 	email: {
@@ -56,45 +45,6 @@ const getFieldRules = ({ required, inputType, minLength }) => {
 	}
 
 	return rules;
-};
-
-const FormItem = ({ item, control }) => {
-	const { inputType, fieldLabel, placeholder, selectOptions, name, rules } =
-		item;
-
-	const renderFormComponent = (field) => {
-		switch (inputType) {
-			case 'textarea':
-				return <Textarea {...field} placeholder={placeholder} />;
-			case 'select':
-				return (
-					<Select
-						{...field}
-						options={selectOptions}
-						placeholder={placeholder}
-					/>
-				);
-			default:
-				return <Input {...field} type={inputType} placeholder={placeholder} />;
-		}
-	};
-
-	return (
-		<FormFieldController
-			control={control}
-			name={name}
-			rules={rules}
-			render={({ field }) => {
-				return (
-					<FormField>
-						<FormLabel>{fieldLabel}</FormLabel>
-						<FormControl>{renderFormComponent(field)}</FormControl>
-						<FormMessage />
-					</FormField>
-				);
-			}}
-		/>
-	);
 };
 
 export default function CustomForm({ data }) {
@@ -178,20 +128,7 @@ export default function CustomForm({ data }) {
 	return (
 		<div className="c-form">
 			{formTitle && <h4>{formTitle}</h4>}
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onHandleSubmit)}>
-					{formFieldsData.map((item) => (
-						<FormItem key={item._key} item={item} control={form.control} />
-					))}
-					<button
-						type="submit"
-						disabled={formState === FORM_STATES.SUBMITTING}
-						className="btn"
-					>
-						{formState === FORM_STATES.SUBMITTING ? 'Submitting...' : 'Submit'}
-					</button>
-				</form>
-			</Form>
+			<p>WIP</p>
 			{formState === FORM_STATES.SUCCESS && (
 				<p>{successMessage || 'Success. Your message has been sent.'}</p>
 			)}
