@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { format, formatDistance, subDays } from 'date-fns';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 import {
 	Table,
@@ -42,7 +43,7 @@ export function PageEventIndex({ data }) {
 								<TableRow key={_id}>
 									<TableCell className="t-h-4">{title}</TableCell>
 									<TableCell className="t-h-4 sm:min-w-28">
-										{eventDate}
+										{format(new Date(eventDate), 'MM/dd/yyyy')}
 									</TableCell>
 									<TableCell className="t-h-4">
 										{locationLink ? (
@@ -53,10 +54,9 @@ export function PageEventIndex({ data }) {
 											<p className="t-h-4 sm:min-w-72">{location}</p>
 										)}
 									</TableCell>
-
-									{hasArrayValue(status) && (
-										<TableCell className="flex justify-end gap-1">
-											{status.map((item) => {
+									<TableCell className="flex justify-end gap-1">
+										{hasArrayValue(status) ? (
+											status.map((item) => {
 												const { _id, title, statusColor } = item || {};
 												return (
 													<span
@@ -69,9 +69,15 @@ export function PageEventIndex({ data }) {
 														{title}
 													</span>
 												);
-											})}
-										</TableCell>
-									)}
+											})
+										) : (
+											<span className="t-b-1 rounded-4xl bg-white px-2 py-1.25 text-black">
+												{formatDistance(new Date(eventDate), new Date(), {
+													addSuffix: true,
+												})}
+											</span>
+										)}
+									</TableCell>
 								</TableRow>
 							);
 						})}
