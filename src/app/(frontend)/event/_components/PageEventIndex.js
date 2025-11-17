@@ -1,5 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
+<<<<<<< Updated upstream
+=======
+import { format, formatDistance } from 'date-fns';
+>>>>>>> Stashed changes
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 import {
 	Table,
@@ -14,16 +18,16 @@ export function PageEventIndex({ data }) {
 	const { title, eventList } = data || {};
 	// console.log(data);
 	return (
-		<div className="px-contain mx-auto max-w-7xl">
+		<div className="px-contain mx-auto flex min-h-[inherit] max-w-7xl flex-col justify-center">
 			<h1 className="sr-only">{title}</h1>
 			{hasArrayValue(eventList) && (
 				<Table className="border-t border-b border-white">
 					<TableHeader>
-						<TableRow className="uppercase">
-							<TableHead>codex</TableHead>
-							<TableHead>date</TableHead>
-							<TableHead>loaction</TableHead>
-							<TableHead className="text-right">status</TableHead>
+						<TableRow className="t-h-4 font-bold uppercase">
+							<TableHead className="font-bold">codex</TableHead>
+							<TableHead className="font-bold">date</TableHead>
+							<TableHead className="font-bold">loaction</TableHead>
+							<TableHead className="text-right font-bold">status</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -39,18 +43,25 @@ export function PageEventIndex({ data }) {
 							} = item || {};
 
 							return (
+<<<<<<< Updated upstream
 								<TableRow key={_id}>
 									<TableCell className="t-h-4">{title}</TableCell>
 									<TableCell className="t-h-4 sm:min-w-28">
 										{eventDate}
+=======
+								<TableRow key={_id} className="t-h-4">
+									<TableCell className="font-bold">{title}</TableCell>
+									<TableCell className="sm:min-w-28">
+										{format(new Date(eventDate), 'iii, MM.dd.yy')}
+>>>>>>> Stashed changes
 									</TableCell>
-									<TableCell className="t-h-4">
+									<TableCell>
 										{locationLink ? (
 											<Link className="sm:min-w-72" href={locationLink}>
 												{location}
 											</Link>
 										) : (
-											<p className="t-h-4 sm:min-w-72">{location}</p>
+											<p className="sm:min-w-72">{location}</p>
 										)}
 									</TableCell>
 
@@ -61,7 +72,7 @@ export function PageEventIndex({ data }) {
 												return (
 													<span
 														key={_id}
-														className="t-b-1 rounded-4xl p-1.25 text-white"
+														className="t-b-2 rounded-4xl p-1.25 text-white"
 														style={{
 															backgroundColor: buildRgbaCssString(statusColor),
 														}}
@@ -69,9 +80,21 @@ export function PageEventIndex({ data }) {
 														{title}
 													</span>
 												);
+<<<<<<< Updated upstream
 											})}
 										</TableCell>
 									)}
+=======
+											})
+										) : (
+											<span className="t-b-2 rounded-4xl bg-white px-2.5 py-1.5 text-black">
+												{formatDistance(new Date(eventDate), new Date(), {
+													addSuffix: true,
+												})}
+											</span>
+										)}
+									</TableCell>
+>>>>>>> Stashed changes
 								</TableRow>
 							);
 						})}

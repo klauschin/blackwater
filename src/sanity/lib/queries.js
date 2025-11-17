@@ -258,6 +258,7 @@ export const pEventIndexQuery = defineQuery(`
 			eventDate,
 			location,
 			locationLink,
+			lumaLink,
 			categories[]-> {
 				_id,
 				title,

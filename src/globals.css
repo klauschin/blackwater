@@ -23,7 +23,7 @@
 
 
 :root {
-	--font-main: var(--font-ABC-Display-Unlicensed-Variable), 'Arial', 'Helvetica Neue', 'sans-serif';
+	--font-main: var(--font-ABC-Display), 'Arial', 'Helvetica Neue', 'sans-serif';
 }
 
 @theme inline {
@@ -120,6 +120,10 @@ body {
 	font-family: var(--font-main);
 }
 
+main {
+	min-height: calc(100vh - var(--spacing-header));
+}
+
 p,
 ol,
 ul {
@@ -162,7 +166,7 @@ ul {
 		p,
 		ol,
 		ul {
-			font: var(--t-b-2);
+			font: var(--t-b-1);
 
 			a {
 				text-decoration: underline;
@@ -242,14 +246,18 @@ ul {
 }
 
 /* Font */
-
 @utility t-h-4 {
 	letter-spacing: -0.06rem;
-	font-size: 0.75rem;
+	font-size: 1rem;
 	text-transform: uppercase;
 }
 
 @utility t-b-1 {
+	letter-spacing: -0.04rem;
+	font-size: 1rem;
+}
+
+@utility t-b-2 {
 	letter-spacing: -0.04rem;
 	font-size: 0.75rem;
 }

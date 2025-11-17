@@ -30,6 +30,10 @@ export const pEvent = defineType({
 			type: 'url',
 		},
 		{
+			name: 'lumaLink',
+			type: 'url',
+		},
+		{
 			name: 'categories',
 			type: 'array',
 			of: [
