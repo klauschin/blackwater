@@ -5,13 +5,14 @@ import { usePathname } from 'next/navigation';
 import * as gtag from '@/lib/gtag';
 import AdaSkip from './AdaSkip';
 import Announcement from './Announcement';
+import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
 import ProgressLoader from './ProgressLoader';
 import { LazyMotion, domAnimation } from 'motion/react';
 
 export function Layout({ children, siteData }) {
-	const { announcement, header, footer } = siteData || {};
+	const { announcement, header, footer, sharing } = siteData || {};
 	const pathname = usePathname();
 
 	useEffect(() => {
@@ -42,7 +43,12 @@ export function Layout({ children, siteData }) {
 
 	const headerData = {
 		...header,
-		siteTitle: siteData?.title,
+		siteTitle: sharing?.title,
+	};
+
+	const footerData = {
+		...footer,
+		siteTitle: sharing?.title,
 	};
 
 	return (
@@ -52,7 +58,7 @@ export function Layout({ children, siteData }) {
 			<Announcement data={announcement} />
 			<Header data={headerData} />
 			<Main>{children}</Main>
-			{/* <Footer siteData={siteData} data={footer} /> */}
+			<Footer data={footerData} />
 		</LazyMotion>
 	);
 }

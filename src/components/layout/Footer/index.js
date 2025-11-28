@@ -3,7 +3,9 @@ import { pageTransitionFade } from '@/lib/animate';
 import Menu from '@/components/Menu';
 import { m } from 'motion/react';
 
-export default function Footer({ siteData, data }) {
+export default function Footer({ data }) {
+	console.log(data);
+	const { siteTitle } = data || {};
 	const footerRef = useRef();
 
 	useEffect(() => {
@@ -31,9 +33,9 @@ export default function Footer({ siteData, data }) {
 					)}
 				</div>
 
-				<div className="px-contain flex items-center justify-between border-t-1 py-2.5">
+				<div className="px-contain flex items-center justify-between py-2.5">
 					<div className="relative">
-						© {new Date().getFullYear()} {siteData.title}
+						© {new Date().getFullYear()} {siteTitle}
 					</div>
 
 					{data?.menuLegal?.items && (
