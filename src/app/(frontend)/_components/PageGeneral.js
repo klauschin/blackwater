@@ -6,14 +6,13 @@ export default function PageGeneral({ data }) {
 	const { title, layout, content, pageModules } = data || {};
 
 	return (
-		<>
+		<div class="min-h-main">
 			{layout === 'editor' && hasArrayValue(content) && (
-				<section className="p-general">
-					{title && <h1 className="p-general__header">{title}</h1>}
-					<div className="p-general__content wysiwyg-page">
+				<div className="flex justify-center items-center min-h-[inherit]">
+					<div className='wysiwyg-page max-w-[650px] text-center'>
 						<CustomPortableText blocks={content} />
 					</div>
-				</section>
+				</div>
 			)}
 			{layout === 'modules' &&
 				pageModules?.map((module, i) => (
@@ -24,6 +23,6 @@ export default function PageGeneral({ data }) {
 						hasFirstSection
 					/>
 				))}
-		</>
+		</div>
 	);
 }

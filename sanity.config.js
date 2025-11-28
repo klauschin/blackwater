@@ -52,12 +52,10 @@ const commonPlugins = [
 		pContact.name,
 		gAnnouncement.name,
 	]),
-];
-
-const devPlugins = [
-	...commonPlugins,
 	visionTool({ defaultApiVersion: apiVersion }),
 ];
+
+const devPlugins = [...commonPlugins];
 
 export default defineConfig({
 	basePath: '/sanity',
@@ -65,7 +63,7 @@ export default defineConfig({
 	icon: LogoSvg,
 	projectId,
 	dataset,
-	plugins: isDev ? devPlugins : commonPlugins,
+	plugins: commonPlugins,
 	schema: {
 		types: schemaTypes,
 	},

@@ -43,12 +43,12 @@ export function Layout({ children, siteData }) {
 
 	const headerData = {
 		...header,
-		siteTitle: sharing?.title,
+		siteTitle: sharing?.siteTitle,
 	};
 
 	const footerData = {
 		...footer,
-		siteTitle: sharing?.title,
+		siteTitle: sharing?.siteTitle,
 	};
 
 	return (

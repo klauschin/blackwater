@@ -4,7 +4,7 @@ import { format, formatDistance } from 'date-fns';
 import { hasArrayValue } from '@/lib/utils';
 import { LogoSvg } from '@/components/LogoSvg';
 import Menu from '@/components/Menu';
-import MobileMenu from '@/components/MobileMenu';
+
 
 export default function Header({ data }) {
 	const { siteTitle, menu } = data || {};
