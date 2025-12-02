@@ -8,6 +8,14 @@ import * as z from "zod"
 
 import { Button } from "@/components/ui/Button"
 import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card"
+import {
 	Field,
 	FieldDescription,
 	FieldError,
@@ -33,10 +41,8 @@ const formSchema = z.object({
 		.max(100, "Description must be at most 100 characters."),
 })
 
-export function PageContact({ data }) {
-	const { title, description } = data || {}
-
-	const form = useForm({
+export function BugReportForm() {
+	const form = useForm < z.infer < typeof formSchema >> ({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
@@ -62,29 +68,29 @@ export function PageContact({ data }) {
 	}
 
 	return (
-		<div className="w-full sm:max-w-md m-auto flex flex-col justify-center h-main">
-			<div>
-				{title &&
-					<h1>{title}</h1>}
-				{description && <p>
-					{description}
-				</p>}
-			</div>
-			<div>
-				<form id="p-contact" onSubmit={form.handleSubmit(onSubmit)}>
+		<Card className="w-full sm:max-w-md">
+			<CardHeader>
+				<CardTitle>Bug Report</CardTitle>
+				<CardDescription>
+					Help us improve by reporting bugs you encounter.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
 					<FieldGroup>
 						<Controller
 							name="title"
 							control={form.control}
 							render={({ field, fieldState }) => (
 								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel htmlFor="p-contact-first-name">
-										First Name
+									<FieldLabel htmlFor="form-rhf-demo-title">
+										Bug Title
 									</FieldLabel>
 									<Input
 										{...field}
-										id="p-contact-first-name"
+										id="form-rhf-demo-title"
 										aria-invalid={fieldState.invalid}
+										placeholder="Login button not working on mobile"
 										autoComplete="off"
 									/>
 									{fieldState.invalid && (
@@ -98,13 +104,13 @@ export function PageContact({ data }) {
 							control={form.control}
 							render={({ field, fieldState }) => (
 								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel htmlFor="p-contact-description">
+									<FieldLabel htmlFor="form-rhf-demo-description">
 										Description
 									</FieldLabel>
 									<InputGroup>
 										<InputGroupTextarea
 											{...field}
-											id="p-contact-description"
+											id="form-rhf-demo-description"
 											placeholder="I'm having an issue with the login button on mobile."
 											rows={6}
 											className="min-h-24 resize-none"
@@ -128,17 +134,17 @@ export function PageContact({ data }) {
 						/>
 					</FieldGroup>
 				</form>
-			</div>
-			<div>
+			</CardContent>
+			<CardFooter>
 				<Field orientation="horizontal">
 					<Button type="button" variant="outline" onClick={() => form.reset()}>
 						Reset
 					</Button>
-					<Button type="submit" form="p-contact">
+					<Button type="submit" form="form-rhf-demo">
 						Submit
 					</Button>
 				</Field>
-			</div>
-		</div>
+			</CardFooter>
+		</Card>
 	)
 }

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { pageContactQuery } from '@/sanity/lib/queries';
 import defineMetadata from '@/lib/defineMetadata';
-import PageContact from './_components/PageContact';
+import { PageContact } from './_components/PageContact';
 
 export async function generateMetadata() {
 	const data = await sanityFetch({

@@ -2,10 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { pageTransitionFade } from '@/lib/animate';
 import Menu from '@/components/Menu';
 import { m } from 'motion/react';
-import { cn } from '@/lib/utils';
+
 
 export default function Footer({ data }) {
-	console.log(data);
 	const { siteTitle } = data || {};
 	const footerRef = useRef();
 

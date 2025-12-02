@@ -13,27 +13,9 @@ export const pGeneral = defineType({
 		title(),
 		slug(),
 		{
-			name: 'layout',
-			type: 'string',
-			options: {
-				list: [
-					{ title: 'Editor', value: 'editor' },
-					{ title: 'Modules', value: 'modules' },
-				],
-				layout: 'radio',
-				direction: 'horizontal',
-			},
-		},
-		{
 			name: 'pageModules',
 			type: 'array',
-			of: [freeform(), marquee()],
-			hidden: ({ parent }) => parent?.layout !== 'modules',
-		},
-		{
-			name: 'content',
-			type: 'portableText',
-			hidden: ({ parent }) => parent?.layout !== 'editor',
+			of: [freeform()],
 		},
 		sharing(),
 	],
