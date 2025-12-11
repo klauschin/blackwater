@@ -1,10 +1,11 @@
+	import type { Metadata } from 'next'
 import Link from 'next/link';
 import { sanityFetch } from '@/sanity/lib/live';
 import { pageHomeQuery } from '@/sanity/lib/queries';
 import defineMetadata from '@/lib/defineMetadata';
 import PageHome from './_components/PageHome';
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
 	const { data } = await sanityFetch({
 		query: pageHomeQuery,
 		tags: ['pHome'],

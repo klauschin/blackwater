@@ -1,4 +1,4 @@
-import { VisualEditing } from 'next-sanity';
+import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
 import '@/globals.css';
@@ -25,7 +25,7 @@ const fontABCDisplayUnlicensedVariable = localFont({
 	variable: '--font-ABC-Display',
 });
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
 	const {
 		data: { sharing },
 	} = await sanityFetch({
@@ -137,7 +137,6 @@ export default async function RootLayout({ children }) {
 						{isEnabled && (
 							<>
 								<DraftModeToast />
-								<VisualEditing />
 							</>
 						)}
 					</body>

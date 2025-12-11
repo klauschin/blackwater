@@ -5,10 +5,10 @@
 	"printWidth": 80,
 	"trailingComma": "es5",
 	"useTabs": true,
-	"plugins": [
-		"@trivago/prettier-plugin-sort-imports",
-		"prettier-plugin-tailwindcss"
-	],
+	// "plugins": [
+	// 	"@trivago/prettier-plugin-sort-imports",
+	// 	"prettier-plugin-tailwindcss"
+	// ],
 	"importOrderSortSpecifiers": true,
 	"importOrder": [
 		"^react$",

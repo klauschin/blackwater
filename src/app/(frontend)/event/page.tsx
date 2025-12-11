@@ -1,10 +1,11 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { pEventIndexQuery } from '@/sanity/lib/queries';
 import defineMetadata from '@/lib/defineMetadata';
 import { PageEventIndex } from './_components/PageEventIndex';
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
 	const { data } = await sanityFetch({
 		query: pEventIndexQuery,
 		tags: ['pEventIndex'],
@@ -21,7 +22,7 @@ export default async function Page() {
 
 	if (!data) return notFound();
 
-	const { eventList } = data || {}
+	const { eventList } = data || {};
 	const groupedEvents = eventList.reduce((acc, event) => {
 		const date = new Date(event.eventDatetime);
 		const month = date.toLocaleString('en-US', { month: 'long' }).toLowerCase();
