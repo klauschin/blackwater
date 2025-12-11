@@ -10,10 +10,11 @@ export const pEvent = defineType({
 	icon: BookIcon,
 	fields: [
 		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
+		{ name: 'subtitle', type: 'string', },
 		slug(),
 		{
-			name: 'eventDate',
-			type: 'date',
+			name: 'eventDatetime',
+			type: 'datetime',
 			options: {
 				dateFormat: 'MM/DD/YY',
 				calendarTodayLabel: 'Today',
@@ -27,6 +28,10 @@ export const pEvent = defineType({
 		},
 		{
 			name: 'locationLink',
+			type: 'url',
+		},
+		{
+			name: 'lumaLink',
 			type: 'url',
 		},
 		{
@@ -60,18 +65,16 @@ export const pEvent = defineType({
 	preview: {
 		select: {
 			title: 'title',
-			slug: 'slug',
+			location: 'location',
+			eventDatetime: 'eventDatetime',
 			categories: 'categories.0.title',
 		},
-		prepare({ title = 'Untitled', slug = {}, categories }) {
-			const path = `/event/${slug?.current}`;
+		prepare({ title = 'Untitled', location, eventDatetime, categories }) {
 			const categoryTitle = categories ?? '';
-			const subtitle = `${slug?.current ? path : '(missing slug)'} - [${
-				categoryTitle ? categoryTitle : '(missing category)'
-			}]`;
+			const subtitle = `${location} - ${categoryTitle ? `[${categoryTitle}]` : ''}`
 
 			return {
-				title: title,
+				title: `${title} - ${new Date(eventDatetime).toLocaleDateString('en-US')}`,
 				subtitle: subtitle,
 				media: BookIcon,
 			};

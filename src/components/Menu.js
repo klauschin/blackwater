@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import { checkIfLinkIsActive } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 import Dropdown from '@/components/MenuDropdown';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 
 export default function Menu({ items, className, ulClassName }) {
 	const pathName = usePathname();
@@ -13,8 +13,8 @@ export default function Menu({ items, className, ulClassName }) {
 	}
 
 	return (
-		<div className={className || ''}>
-			<ul className={ulClassName || ''}>
+		<div className={cn(className)}>
+			<ul className={cn(ulClassName)}>
 				{items.map((item, index) => {
 					const { link, dropdownItems } = item || {};
 					const isDropdown = !!dropdownItems;
@@ -31,7 +31,7 @@ export default function Menu({ items, className, ulClassName }) {
 						return (
 							<li
 								key={`li-${index}`}
-								className={clsx({ 'is-active': isActive })}
+								className={cn({ 'is-active': isActive })}
 							>
 								<Dropdown title={item.title} items={item.dropdownItems} />
 							</li>
@@ -44,7 +44,7 @@ export default function Menu({ items, className, ulClassName }) {
 					});
 
 					return (
-						<li key={`li-${index}`} className={clsx({ 'is-active': isActive })}>
+						<li key={`li-${index}`} className={cn({ 'is-active': isActive })}>
 							<CustomLink link={link}>{item.title}</CustomLink>
 						</li>
 					);

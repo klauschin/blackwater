@@ -21,5 +21,19 @@ export default async function Page() {
 
 	if (!data) return notFound();
 
-	return <PageEventIndex data={data} />;
+	const { eventList } = data || {}
+	const groupedEvents = eventList.reduce((acc, event) => {
+		const date = new Date(event.eventDatetime);
+		const month = date.toLocaleString('en-US', { month: 'long' }).toLowerCase();
+		const key = `${month}`;
+
+		if (!acc[key]) {
+			acc[key] = [];
+		}
+		acc[key].push(event);
+
+		return acc;
+	}, {});
+
+	return <PageEventIndex data={{ groupedEvents, ...data }} />;
 }

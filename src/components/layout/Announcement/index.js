@@ -99,7 +99,7 @@ export default function Announcement({ data }) {
 	return (
 		<div
 			ref={announcementRef}
-			className="relative z-10 hidden bg-[var(--background)] text-center text-[var(--color)]"
+			className="relative z-10 hidden bg-(--background) text-center text-(--color)"
 			style={{
 				'--color': `${data?.textColor?.hex || '#FFFFFF'}`,
 				'--background': `${data?.backgroundColor?.hex || '#000000'}`,
@@ -114,7 +114,7 @@ export default function Announcement({ data }) {
 								<div
 									key={`item-${index}`}
 									className={cn(
-										'announcement-block t-l-3 pointer-events-none absolute top-0 left-0 block w-full py-2.5 opacity-0 delay-0 [transition:opacity_0.4s] [&_b]:text-[var(--emphasize)] [&_strong]:text-[var(--emphasize)]',
+										'announcement-block t-l-3 pointer-events-none absolute top-0 left-0 block w-full py-2.5 opacity-0 delay-0 [transition:opacity_0.4s] [&_b]:text-(--emphasize) [&_strong]:text-(--emphasize)',
 										{
 											'is-active pointer-events-auto relative opacity-100 delay-400':
 												activeBlock == index,
@@ -139,10 +139,9 @@ export default function Announcement({ data }) {
 									index + 1
 								)} message`}
 								className={cn(
-									'relative size-2.5 cursor-pointer rounded-full border transition-all duration-200 after:absolute after:h-4.5 after:w-4.5 after:[transform:translate3d(-50%,-50%,0)]',
+									'relative size-2.5 cursor-pointer rounded-full border transition-all duration-200 after:absolute after:h-4.5 after:w-4.5 after:transform-[translate3d(-50%,-50%,0)]',
 									{
-										'bg-[var(--emphasize)] text-[var(--emphasize)]':
-											activeBlock == index,
+										'bg-(--emphasize) text-(--emphasize)': activeBlock == index,
 									}
 								)}
 								onClick={() => updateActiveBlock(index)}

@@ -3,7 +3,9 @@ import { pageTransitionFade } from '@/lib/animate';
 import Menu from '@/components/Menu';
 import { m } from 'motion/react';
 
-export default function Footer({ siteData, data }) {
+
+export default function Footer({ data }) {
+	const { siteTitle } = data || {};
 	const footerRef = useRef();
 
 	useEffect(() => {
@@ -20,20 +22,20 @@ export default function Footer({ siteData, data }) {
 				initial="initial"
 				animate="animate"
 				variants={pageTransitionFade}
-				className="bg-black text-white"
+				className="bg-black text-white px-contain"
 			>
-				<div className="px-contain py-5">
-					{data?.menu?.items && (
-						<Menu
-							items={data.menu.items}
-							ulClassName="flex items-center justify-start t-b-2 gap-2.5 select-none"
-						/>
-					)}
-				</div>
 
-				<div className="px-contain flex items-center justify-between border-t-1 py-2.5">
-					<div className="relative">
-						© {new Date().getFullYear()} {siteData.title}
+				{data?.menu?.items && (
+					<Menu
+						items={data.menu.items}
+						className="my-5 md:hidden block"
+						ulClassName="flex items-center justify-between t-b-2 gap-2.5 select-none"
+					/>
+				)}
+
+				<div className="flex items-center justify-between py-2.5">
+					<div className="relative t-b-3 ml-auto">
+						© {new Date().getFullYear()} {siteTitle}
 					</div>
 
 					{data?.menuLegal?.items && (

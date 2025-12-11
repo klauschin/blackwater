@@ -249,11 +249,13 @@ export const pageContactQuery = defineQuery(`
 export const pEventIndexQuery = defineQuery(`
 	*[_type == "pEventIndex"][0]{
 		${baseFields},
-		"eventList": *[_type == "pEvent"] {
+		"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {
 			${baseFields},
-			eventDate,
+			subtitle,
+			eventDatetime,
 			location,
 			locationLink,
+			lumaLink,
 			categories[]-> {
 				_id,
 				title,
@@ -266,7 +268,7 @@ export const pEventIndexQuery = defineQuery(`
 				"slug": slug.current,
 				statusColor->{...color}
 			}
-		}
+		},
 	}
 `);
 

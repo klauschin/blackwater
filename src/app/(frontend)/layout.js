@@ -22,7 +22,7 @@ const fontABCDisplayUnlicensedVariable = localFont({
 			style: 'normal',
 		},
 	],
-	variable: '--font-ABC-Display-Unlicensed-Variable',
+	variable: '--font-ABC-Display',
 });
 
 export async function generateMetadata() {

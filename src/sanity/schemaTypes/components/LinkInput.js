@@ -11,6 +11,8 @@ import { set } from 'sanity';
 const pageDocumentOrder = [
 	'pHome',
 	'pGeneral',
+	'pEventIndex',
+	'pEvent',
 	'pBlogIndex',
 	'pBlog',
 	'pContact',

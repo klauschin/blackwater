@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
-import { Textarea } from '@/components/ui/Textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/Textarea';
 
 const colorOptions = [
 	{ value: 'blue', label: 'Blue', class: 'bg-blue-500' },
@@ -175,11 +175,10 @@ export default function EventModal({
 										/>
 										<Label
 											htmlFor={color.value}
-											className={`${color.class} h-8 w-8 cursor-pointer rounded-full transition-all hover:scale-110 ${
-												formData.color === color.value
-													? 'scale-110 ring-2 ring-gray-900 ring-offset-2'
-													: ''
-											}`}
+											className={`${color.class} h-8 w-8 cursor-pointer rounded-full transition-all hover:scale-110 ${formData.color === color.value
+												? 'scale-110 ring-2 ring-gray-900 ring-offset-2'
+												: ''
+												}`}
 										/>
 									</div>
 								))}

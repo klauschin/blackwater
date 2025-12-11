@@ -5,7 +5,7 @@ export default function PageHome({ data }) {
 	const { pageModules, landingTitle } = data || {};
 
 	return (
-		<div className="p-home h-hea flex h-[calc(100vh-var(--height-header))] flex-col justify-center gap-5">
+		<div className="p-home flex min-h-[inherit] flex-col justify-center gap-5">
 			<TextReveal
 				text={landingTitle}
 				maxWordsPerLine={6}
