@@ -11,18 +11,18 @@ export default function Header({ data }) {
 	const { items } = menu || {};
 
 	return (
-		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 items-center bg-black leading-none lg:grid-cols-3">
-			{hasArrayValue(items) && (
+		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 items-center bg-black leading-none">
+			{/* {hasArrayValue(items) && (
 				<Menu
 					items={items}
 					className="hidden select-none lg:block"
 					ulClassName="flex item-center gap-2.5 t-b-2 uppercase"
 				/>
-			)}
+			)} */}
 			<Link
 				href="/"
 				title={siteTitle}
-				className="mr-auto w-24 text-white lg:ml-auto"
+				className="mr-auto w-24 text-white"
 			>
 				<LogoSvg />
 			</Link>

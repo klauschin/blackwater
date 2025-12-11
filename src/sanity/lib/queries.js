@@ -224,6 +224,7 @@ export const pageGeneralQuery = defineQuery(`
 		content[]{
 			${portableTextContentFields}
 		},
+		_updatedAt
 	}
 `);
 export const pageGeneralSlugsQuery = defineQuery(`

@@ -1,3 +1,4 @@
+import sharing from '@/sanity/schemaTypes/objects/sharing';
 import slug from '@/sanity/schemaTypes/objects/slug';
 import { BookIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
@@ -13,6 +14,7 @@ export const pEventIndex = defineType({
 			initialValue: { _type: 'slug', current: 'event' },
 			readOnly: true,
 		}),
+		sharing(),
 	],
 	preview: {
 		select: {

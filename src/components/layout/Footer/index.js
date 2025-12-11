@@ -25,13 +25,13 @@ export default function Footer({ data }) {
 				className="bg-black text-white px-contain"
 			>
 
-				{data?.menu?.items && (
+				{/* {data?.menu?.items && (
 					<Menu
 						items={data.menu.items}
 						className="my-5 md:hidden block"
 						ulClassName="flex items-center justify-between t-b-2 gap-2.5 select-none"
 					/>
-				)}
+				)} */}
 
 				<div className="flex items-center justify-between py-2.5">
 					<div className="relative t-b-3 ml-auto">
