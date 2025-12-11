@@ -221,13 +221,9 @@ export const page404Query = defineQuery(`
 export const pageGeneralQuery = defineQuery(`
 	*[_type == "pGeneral" && slug.current == $slug][0]{
 		${baseFields},
-		layout,
 		content[]{
 			${portableTextContentFields}
 		},
-		pageModules[]{
-			${pageModuleFields}
-		}
 	}
 `);
 export const pageGeneralSlugsQuery = defineQuery(`
