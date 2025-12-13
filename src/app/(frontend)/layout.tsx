@@ -98,7 +98,11 @@ export async function generateMetadata(): Promise<Metadata> {
 	};
 }
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({
+	children,
+}: Readonly<{
+	children: React.ReactNode;
+}>) {
 	const { isEnabled } = await draftMode();
 	const { data } = await sanityFetch({
 		query: siteDataQuery,

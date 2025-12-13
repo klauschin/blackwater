@@ -8,10 +8,8 @@ export default function PageHome({ data }) {
 		<div className="p-home flex min-h-[inherit] flex-col justify-center gap-5">
 			<TextReveal
 				text={landingTitle}
-				maxWordsPerLine={6}
 				className="px-contain mx-auto max-w-[340px] text-center text-sm text-balance uppercase sm:max-w-6xl"
 				htmlTag="h1"
-				splitMethod="manual"
 			/>
 			{pageModules?.map((module, i) => (
 				<PageModules key={`page-module-${i}`} module={module} />

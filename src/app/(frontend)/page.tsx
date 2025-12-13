@@ -1,4 +1,4 @@
-	import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { sanityFetch } from '@/sanity/lib/live';
 import { pageHomeQuery } from '@/sanity/lib/queries';

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { pageGeneralQuery, pageGeneralSlugsQuery } from '@/sanity/lib/queries';
@@ -14,7 +15,14 @@ export async function generateStaticParams() {
 	return data;
 }
 
-export async function generateMetadata(props) {
+type MetadataProps = {
+	params: Promise<{ slug: string }>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata(
+	props: MetadataProps
+): Promise<Metadata> {
 	const params = await props.params;
 	const { data } = await sanityFetch({
 		query: pageGeneralQuery,
