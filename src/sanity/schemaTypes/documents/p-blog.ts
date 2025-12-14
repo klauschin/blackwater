@@ -10,7 +10,7 @@ export const pBlog = defineType({
 	type: 'document',
 	icon: BookIcon,
 	fields: [
-		title(),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug(),
 		{
 			name: 'author',

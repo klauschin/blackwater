@@ -1,4 +1,3 @@
-
 import sharing from '@/sanity/schemaTypes/objects/sharing';
 import slug from '@/sanity/schemaTypes/objects/slug';
 import title from '@/sanity/schemaTypes/objects/title';
@@ -9,7 +8,7 @@ export const pGeneral = defineType({
 	name: 'pGeneral',
 	type: 'document',
 	fields: [
-		title(),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug(),
 		{
 			name: 'content',

@@ -1,3 +1,4 @@
+import { type SchemaTypeDefinition } from 'sanity';
 // Documents
 import { pBlog } from './documents/p-blog';
 import { pBlogCategory } from './documents/p-blog-category';
@@ -31,7 +32,7 @@ import { settingsIntegration } from './singletons/settings-integrations';
 import { settingsMenu } from './singletons/settings-menu';
 import { settingsRedirect } from './singletons/settings-redirect';
 
-export const schemaTypes = [
+export const schemaTypes: SchemaTypeDefinition[] = [
 	settingsGeneral,
 	settingsBrandColors,
 	settingsMenu,

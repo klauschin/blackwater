@@ -85,7 +85,7 @@ export const getPortableTextPreview = (content) => {
 	return 'Empty';
 };
 
-export const getSwatch = (color) => {
+export const getSwatch = (color: string) => {
 	return (
 		<div
 			style={{

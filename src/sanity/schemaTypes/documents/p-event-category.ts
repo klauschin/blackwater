@@ -10,7 +10,7 @@ export const pEventCategory = defineType({
 	type: 'document',
 	icon: TagsIcon,
 	fields: [
-		title(),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug(),
 		{
 			title: 'Category Color',

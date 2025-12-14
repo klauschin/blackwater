@@ -10,7 +10,7 @@ export const pBlogIndex = defineType({
 	type: 'document',
 	icon: BookIcon,
 	fields: [
-		title(),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug({
 			initialValue: { _type: 'slug', current: 'blog' },
 			readOnly: true,
