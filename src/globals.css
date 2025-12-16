@@ -84,7 +84,6 @@
 @layer base {
 	:root {
 		--font-main: var(--font-ABC-Display), 'Arial', 'Helvetica Neue', 'sans-serif';
-
 		--t-h-1: 300 72px/1 var(--font-main);
 		--t-h-2: 300 56px/1 var(--font-main);
 		--t-h-3: 300 42px/1 var(--font-main);
@@ -141,6 +140,7 @@
 		@apply bg-black text-white antialiased;
 		scroll-behavior: smooth;
 		scroll-padding-top: calc(var(--height-announcement, 0px) + var(--height-header, 0px) + 20px);
+		font-family: var(--font-main);
 	}
 
 	main {
