@@ -1,7 +1,20 @@
 import { hasArrayValue } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 
-export default function BlogCard({ data }) {
+interface Category {
+  _id: string;
+  title: string;
+}
+
+interface BlogCardData {
+  title?: string;
+  excerpt?: string;
+  slug: string;
+  author?: { name: string };
+  categories?: Category[];
+}
+
+export default function BlogCard({ data }: { data: BlogCardData }) {
 	const { title, excerpt, slug, author, categories } = data || {};
 
 	return (

@@ -164,7 +164,7 @@ export function PageEventIndex({ data }) {
 															className="t-b-2 rounded-4xl p-1.25 text-white"
 															style={{
 																backgroundColor:
-																	buildRgbaCssString(statusColor),
+																	buildRgbaCssString(statusColor) || null,
 															}}
 														>
 															{title}
