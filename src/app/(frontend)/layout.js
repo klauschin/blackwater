@@ -14,10 +14,10 @@ import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
 import { handleError } from '../client-utils';
 import { Toaster } from 'sonner';
 
-const fontABCDisplayUnlicensedVariable = localFont({
+const fontABCDisplay = localFont({
 	src: [
 		{
-			path: '../../public/fonts/font-abc-display-unlicensed-regular.woff2',
+			path: '../fonts/font-abc-display-regular.woff2',
 			weight: '400',
 			style: 'normal',
 		},
@@ -118,7 +118,7 @@ export default async function RootLayout({ children }) {
 			<ReactQueryProvider>
 				<html
 					lang="en"
-					className={`${fontABCDisplayUnlicensedVariable.variable}`}
+					className={`${fontABCDisplay.variable}`}
 				>
 					<head>
 						<meta
