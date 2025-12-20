@@ -24,9 +24,10 @@
 import { parseBody } from 'next-sanity/webhook';
 import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { revalidateSecret } from '@/sanity/env';
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
 	try {
 		const { body, isValidSignature } = await parseBody(req, revalidateSecret);
 
@@ -39,9 +40,9 @@ export async function POST(req) {
 			return new Response('Bad Request', { status: 400 });
 		}
 
-		revalidateTag(body._type);
+		revalidateTag(body._type, 'max');
 		if (body.slug) {
-			revalidateTag(`${body._type}:${body.slug}`);
+			revalidateTag(`${body._type}:${body.slug}`, 'max');
 		}
 		return NextResponse.json({
 			status: 200,

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { VisualEditing } from 'next-sanity/visual-editing';
 import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
 import '@/globals.css';
@@ -103,7 +104,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const { isEnabled } = await draftMode();
+	const { isEnabled: isDraftModeEnabled } = await draftMode();
 	const { data } = await sanityFetch({
 		query: siteDataQuery,
 		tags: [
@@ -135,9 +136,10 @@ export default async function RootLayout({
 						<Layout siteData={data}>{children}</Layout>
 						<SanityLive onError={handleError} />
 						<Toaster />
-						{isEnabled && (
+						{isDraftModeEnabled && (
 							<>
 								<DraftModeToast />
+								<VisualEditing />
 							</>
 						)}
 					</body>
