@@ -8,10 +8,13 @@ import Announcement from './Announcement';
 import Footer from './Footer';
 import Header from './Header';
 import Main from './Main';
-import ProgressLoader from './ProgressLoader';
 import { LazyMotion, domAnimation } from 'motion/react';
 
-export function Layout({ children, siteData }) {
+type LayoutProps = {
+	children: React.ReactNode;
+	siteData: any;
+};
+export function Layout({ children, siteData }: LayoutProps) {
 	const { announcement, header, footer, sharing } = siteData || {};
 	const pathname = usePathname();
 
@@ -20,26 +23,6 @@ export function Layout({ children, siteData }) {
 			gtag.pageview(pathname, siteData?.integrations?.gaID);
 		}
 	}, [siteData, pathname]);
-
-	useEffect(() => {
-		const setViewportHeight = () => {
-			document.documentElement.style.setProperty(
-				'--s-vp-height-js',
-				`${window.innerHeight}px`
-			);
-		};
-
-		// Set once on load
-		setViewportHeight();
-
-		// Optional: Update on resize
-		window.addEventListener('resize', setViewportHeight);
-
-		// Cleanup on unmount
-		return () => {
-			window.removeEventListener('resize', setViewportHeight);
-		};
-	}, []);
 
 	const headerData = {
 		...header,
@@ -53,9 +36,7 @@ export function Layout({ children, siteData }) {
 
 	return (
 		<LazyMotion features={domAnimation}>
-			<ProgressLoader />
 			<AdaSkip />
-			<Announcement data={announcement} />
 			<Header data={headerData} />
 			<Main>{children}</Main>
 			<Footer data={footerData} />

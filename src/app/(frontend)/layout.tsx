@@ -8,11 +8,9 @@ import { sanityFetch } from '@/sanity/lib/live';
 import { SanityLive } from '@/sanity/lib/live';
 import { siteDataQuery } from '@/sanity/lib/queries';
 import ReactQueryProvider from '@/lib/providers/ReactQueryProvider';
-import StoreProvider from '@/lib/providers/StoreProvider';
 import DraftModeToast from '@/components/DraftModeToast';
 import { Layout } from '@/components/layout';
 import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
-import { handleError } from '../client-utils';
 import { Toaster } from 'sonner';
 
 const fontABCDisplay = localFont({
@@ -119,32 +117,30 @@ export default async function RootLayout({
 	});
 
 	return (
-		<StoreProvider>
-			<ReactQueryProvider>
-				<html lang="en" className={`${fontABCDisplay.variable}`}>
-					<head>
-						<meta
-							httpEquiv="Content-Type"
-							charSet="UTF-8"
-							content="text/html;charset=utf-8"
-						/>
-						<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-						<HeadTrackingCode siteData={data} />
-					</head>
+		<ReactQueryProvider>
+			<html lang="en" className={`${fontABCDisplay.variable}`}>
+				<head>
+					<meta
+						httpEquiv="Content-Type"
+						charSet="UTF-8"
+						content="text/html;charset=utf-8"
+					/>
+					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+					<HeadTrackingCode siteData={data} />
+				</head>
 
-					<body>
-						<Layout siteData={data}>{children}</Layout>
-						<SanityLive onError={handleError} />
-						<Toaster />
-						{isDraftModeEnabled && (
-							<>
-								<DraftModeToast />
-								<VisualEditing />
-							</>
-						)}
-					</body>
-				</html>
-			</ReactQueryProvider>
-		</StoreProvider>
+				<body>
+					<Layout siteData={data}>{children}</Layout>
+					<SanityLive />
+					<Toaster />
+					{isDraftModeEnabled && (
+						<>
+							<DraftModeToast />
+							<VisualEditing />
+						</>
+					)}
+				</body>
+			</html>
+		</ReactQueryProvider>
 	);
 }

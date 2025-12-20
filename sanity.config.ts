@@ -5,7 +5,6 @@ import { apiVersion, dataset, projectId } from '@/sanity/env';
 import * as presentationResolver from '@/sanity/lib/presentation-resolver';
 import { singletonPlugin } from '@/sanity/lib/utils';
 import { schemaTypes } from '@/sanity/schemaTypes';
-import { portableTable } from '@/sanity/schemaTypes/objects/portable-table';
 import { gAnnouncement } from '@/sanity/schemaTypes/singletons/g-announcement';
 import { gFooter } from '@/sanity/schemaTypes/singletons/g-footer';
 import { gHeader } from '@/sanity/schemaTypes/singletons/g-header';
@@ -31,7 +30,6 @@ const commonPlugins = [
 	}),
 	media(),
 	colorInput(),
-	portableTable(),
 	noteField(),
 	presentationTool({
 		resolve: presentationResolver,

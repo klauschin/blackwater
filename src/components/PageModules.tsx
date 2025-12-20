@@ -1,13 +1,15 @@
-import React from 'react';
 import dynamic from 'next/dynamic';
-import Img from '@/components/Image';
 
 const Marquee = dynamic(() => import('./Marquee'));
 const Freeform = dynamic(() => import('./Freeform'), {
 	loading: () => <p>Loading...</p>,
 });
 
-export default function PageModules({ module }) {
+type PageModulesProps = {
+	module: any;
+};
+
+export default function PageModules({ module }: PageModulesProps) {
 	const type = module._type;
 
 	switch (type) {

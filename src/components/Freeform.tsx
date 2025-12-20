@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
 import { buildRgbaCssString, cn, getSpacingClass } from '@/lib/utils';
 import CustomPortableText from '@/components/CustomPortableText';
 
-export default function Freeform({ data, className }) {
+type FreeformProps = {
+	data: any;
+	className?: string;
+};
+export default function Freeform({ data, className }: FreeformProps) {
 	const { content, sectionAppearance } = data;
 
 	const {

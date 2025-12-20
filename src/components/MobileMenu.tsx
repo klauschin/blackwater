@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { hasArrayValue } from '@/lib/utils';
 import Menu from '@/components/Menu';
@@ -12,16 +12,14 @@ import {
 	SheetTrigger,
 } from '@/components/ui/Sheet';
 
-export default function MobileMenu({ data }) {
+type MobileMenuProps = {
+	data: any;
+};
+export default function MobileMenu({ data }: MobileMenuProps) {
 	const pathname = usePathname();
 	const { menu } = data || {};
 	const { items } = menu || {};
 	const [open, setOpen] = useState(false);
-
-	// Automatically close the menu when the pathname changes
-	useEffect(() => {
-		setOpen(false);
-	}, [pathname]);
 
 	if (!hasArrayValue(items)) return null;
 

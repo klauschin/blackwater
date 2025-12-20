@@ -61,10 +61,6 @@ export default function CustomPortableText({ blocks, hasPTag = true }) {
 					/>
 				);
 			},
-			portableTable: (props) => {
-				const { value } = props;
-				return <PortableTable blocks={value} />;
-			},
 		},
 		marks: {
 			link: ({ value, children }) => {

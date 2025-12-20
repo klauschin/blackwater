@@ -33,7 +33,7 @@ export async function generateMetadata(
 	return defineMetadata({ data });
 }
 
-export default async function PageSlugRoute(props) {
+export default async function PageSlugRoute(props: MetadataProps) {
 	const params = await props.params;
 
 	const { data } = await sanityFetch({

@@ -61,6 +61,6 @@ export const portableText = defineType({
 		},
 		customImage({ hasLinkOptions: true }),
 		customIframe(),
-		{ title: 'Table', type: 'portableTable' },
+		{ title: 'Table' },
 	],
 });

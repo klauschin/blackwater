@@ -5,7 +5,12 @@ import { cn } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 import { Button } from '@/components/ui/Button';
 
-export default function MenuDropdown({ title, items }) {
+type MenuDropdownProps = {
+	items: any;
+	title?: string;
+};
+
+export default function MenuDropdown({ title, items }: MenuDropdownProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const pathName = usePathname();
 
