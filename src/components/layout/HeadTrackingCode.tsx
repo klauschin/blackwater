@@ -1,8 +1,19 @@
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { hasArrayValue } from '@/lib/utils';
 
-type HeadTrackingCodeProps = {};
-export default function HeadTrackingCode({ siteData = {} }) {
+type Integrations = {
+	gaIDs?: string[];
+	gtmIDs?: string[];
+};
+
+type SiteData = {
+	integrations?: Integrations;
+};
+
+type HeadTrackingCodeProps = {
+	siteData?: SiteData;
+};
+export default function HeadTrackingCode({ siteData }: HeadTrackingCodeProps) {
 	const { integrations } = siteData || {};
 	const { gaIDs, gtmIDs } = integrations || {};
 

@@ -1,31 +1,7 @@
-export const getTypeTitles = (types) => {
-	const typeNames = types.map((type) => {
-		switch (type) {
-			case 'freeform':
-				return 'Freeform';
-			case 'accordionList':
-				return 'Accordion List';
-			default:
-				return null;
-		}
-	});
+import type { PortableTextBlock } from '@portabletext/types';
+import type { ImgObject } from '@/components/Image';
 
-	return typeNames.join(' + ');
-};
-
-export const getTypeSubtitle = (block) => {
-	switch (block._type) {
-		case 'freeform':
-			return getPortableTextPreview(block?.content[0]);
-		case 'accordionList':
-			return `${block?.items.length} item(s)`;
-
-		default:
-			return null;
-	}
-};
-
-export const getPortableTextPreview = (content) => {
+export const getPortableTextPreview = (content: PortableTextBlock[]) => {
 	if (!content) {
 		return 'Empty';
 	}
@@ -35,7 +11,7 @@ export const getPortableTextPreview = (content) => {
 	);
 	let contentWithIframe = content.filter((el) => el._type == 'iframe');
 	let contentWithImageAlt = content.filter(
-		(el) => el._type == 'image' && el.alt
+		(el) => el._type == 'image' && (el as any).alt
 	);
 
 	let contentWithImage = content.filter((el) => el._type == 'image');
@@ -53,11 +29,13 @@ export const getPortableTextPreview = (content) => {
 	}
 
 	if (contentWithIframe && contentWithIframe[0]) {
-		const { embedSnippet } = contentWithIframe[0] || '';
+		const { embedSnippet } = (contentWithIframe[0] as any) || '';
 		const regex = /<iframe.*?src=['"](.*?)['"]/;
 
-		const getUrl = (embedSnippet) => {
-			const url = regex.exec(embedSnippet)[1];
+		const getUrl = (embedSnippet: any) => {
+			const match = regex.exec(embedSnippet);
+			if (!match) return '';
+			const url = match[1];
 			if (url.includes('youtube.com') || url.includes('youtu.be')) {
 				return 'youtube.com';
 			}
@@ -71,7 +49,7 @@ export const getPortableTextPreview = (content) => {
 	}
 
 	if (contentWithImageAlt && contentWithImageAlt[0]) {
-		return contentWithImageAlt[0].alt;
+		return (contentWithImageAlt[0] as any).alt;
 	}
 
 	// with image but no alt, show "image"
@@ -97,33 +75,7 @@ export const getSwatch = (color: string) => {
 	);
 };
 
-export const assemblePageUrl = ({ document, options }) => {
-	const { slug } = document;
-	const { previewURL } = options;
-	if (!previewURL) {
-		console.warn('Missing preview URL', { slug, previewURL });
-		return '';
-	}
-
-	return previewURL + (slug ? `/${slug.current}` : '');
-};
-
-export const decodeAssetUrl = (id) => {
-	const pattern = /^(?:image|file)-([a-f\d]+)-(?:(\d+x\d+)-)?(\w+)$/;
-	const [, assetId, dimensions, format] = pattern.exec(id);
-
-	const [width, height] = dimensions
-		? dimensions.split('x').map((v) => parseInt(v, 10))
-		: [];
-
-	return {
-		assetId,
-		dimensions: { width, height },
-		format,
-	};
-};
-
-export const singletonPlugin = (types) => {
+export const singletonPlugin = (types: string[]) => {
 	return {
 		name: 'singletonPlugin',
 		document: {

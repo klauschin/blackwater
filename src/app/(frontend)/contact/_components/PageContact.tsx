@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -33,7 +32,11 @@ const formSchema = z.object({
 		.max(100, 'Description must be at most 100 characters.'),
 });
 
-export function PageContact({ data }) {
+interface PageContactProps {
+	data?: { title?: string; description?: string };
+}
+
+export function PageContact({ data }: PageContactProps) {
 	const { title, description } = data || {};
 
 	const form = useForm({
@@ -44,7 +47,7 @@ export function PageContact({ data }) {
 		},
 	});
 
-	function onSubmit(data) {
+	function onSubmit(data: unknown) {
 		toast('You submitted the following values:', {
 			description: (
 				<pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">

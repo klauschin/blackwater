@@ -13,13 +13,11 @@ import sanitizeHtml from 'sanitize-html';
 import { twMerge } from 'tailwind-merge';
 import { IconType } from 'react-icons';
 
-// --- INTERFACES & TYPES ---
-
 // For the Sanity Image Builder functions
 interface BuildImageOptions {
 	width?: number;
 	height?: number;
-	format?: string; // e.g., 'jpg', 'webp'
+	format?: 'jpg' | 'pjpg' | 'png' | 'webp'; // Sanity ImageFormat type
 	quality?: number;
 }
 
@@ -42,15 +40,7 @@ interface SanityColor {
 
 // For resolveHref function
 interface LinkResolverArgs {
-	documentType:
-		| 'pHome'
-		| 'pGeneral'
-		| 'pBlogIndex'
-		| 'pBlog'
-		| 'pEventIndex'
-		| 'pEvent'
-		| 'externalUrl'
-		| string;
+	documentType: string | null;
 	slug?: string | null;
 }
 
@@ -503,9 +493,9 @@ export function sleeper<T>(ms: number): (x: T) => Promise<T> {
 export function buildImageSrc(
 	image: any, // Use a more specific Sanity Image type if available
 	{ width, height, format, quality = 80 }: BuildImageOptions = {}
-): string | false {
+): string {
 	if (!image || !imageBuilder) {
-		return false;
+		return '';
 	}
 
 	try {
@@ -528,10 +518,10 @@ export function buildImageSrc(
 		}
 
 		// Assumes the image builder returns an object with a .url() method
-		return imgSrc?.fit('max').auto('format').url() || false;
+		return imgSrc?.fit('max').auto('format').url() || '';
 	} catch (error) {
 		console.error('Error building image source:', error);
-		return false;
+		return '';
 	}
 }
 
@@ -699,6 +689,7 @@ type SpacingType =
  * @param hasBackground - True if the spacing should use padding (hasBackground) instead of margin.
  * @returns The Tailwind class string (e.g., 'pt-8', 'sm:pb-16') or null.
  */
+
 export function getSpacingClass(
 	spacingType: SpacingType,
 	value: SpacingValue | null | undefined,

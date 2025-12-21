@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { hasArrayValue } from '@/lib/utils';
-import Menu from '@/components/Menu';
+import Menu, { MenuItem } from '@/components/Menu';
 import {
 	Sheet,
 	SheetClose,
@@ -18,7 +18,7 @@ type MobileMenuProps = {
 export default function MobileMenu({ data }: MobileMenuProps) {
 	const pathname = usePathname();
 	const { menu } = data || {};
-	const { items } = menu || {};
+	const { items } = (menu || {}) as { items: MenuItem[] };
 	const [open, setOpen] = useState(false);
 
 	if (!hasArrayValue(items)) return null;

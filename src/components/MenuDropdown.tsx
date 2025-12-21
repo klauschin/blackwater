@@ -5,8 +5,13 @@ import { cn } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 import { Button } from '@/components/ui/Button';
 
+interface MenuItem {
+	link: { href: string };
+	title: string;
+}
+
 type MenuDropdownProps = {
-	items: any;
+	items: MenuItem[];
 	title?: string;
 };
 
@@ -26,7 +31,7 @@ export default function MenuDropdown({ title, items }: MenuDropdownProps) {
 				</Button>
 				<div className="dropdown-content">
 					<ul className="dropdown-nav">
-						{items.map((item, index) => {
+						{items.map((item: MenuItem, index) => {
 							const { link, title } = item || {};
 							const isActive = checkIfLinkIsActive({
 								pathName: pathName,
@@ -36,11 +41,9 @@ export default function MenuDropdown({ title, items }: MenuDropdownProps) {
 							return (
 								<li
 									key={`li-${index}`}
-									className={clsx({ 'is-active': isActive })}
+									className={cn({ 'is-active': isActive })}
 								>
-									<CustomLink tabIndex={!isOpen ? -1 : null} link={link}>
-										{title}
-									</CustomLink>
+									<CustomLink link={link}>{title}</CustomLink>
 								</li>
 							);
 						})}

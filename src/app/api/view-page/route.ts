@@ -11,10 +11,13 @@ export async function GET(request: NextRequest) {
 	const documentType = searchParams.get('documentType');
 	const homePageID = await client.fetch(queries.homeID);
 
-	if (docId.includes(homePageID)) {
+	if (docId && docId.includes(homePageID)) {
 		redirect('/');
 	}
 
-	const url = resolveHref({ documentType, slug });
-	redirect(url);
+	const url = resolveHref({
+		documentType: documentType,
+		slug,
+	});
+	redirect(url || '/');
 }

@@ -33,7 +33,7 @@ export const locations = {
 		message: 'This document is used to render the front page',
 		tone: 'positive',
 		locations: [
-			{ title: 'Home', href: resolveHref({ documentType: 'pHome' }) },
+			{ title: 'Home', href: resolveHref({ documentType: 'pHome' }) || '' },
 		],
 	}),
 	settingsGeneral: defineLocations({
@@ -49,10 +49,11 @@ export const locations = {
 			locations: [
 				{
 					title: doc?.name || 'Untitled',
-					href: resolveHref({
-						documentType: 'pGeneral',
-						slug: doc?.slug,
-					}),
+					href:
+						resolveHref({
+							documentType: 'pGeneral',
+							slug: doc?.slug,
+						}) || '',
 				},
 			],
 		}),
@@ -63,7 +64,7 @@ export const locations = {
 			locations: [
 				{
 					title: doc?.title || 'Untitled',
-					href: resolveHref({ documentType: 'pBlog', slug: doc?.slug }),
+					href: resolveHref({ documentType: 'pBlog', slug: doc?.slug }) || '',
 				},
 			],
 		}),

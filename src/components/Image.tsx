@@ -5,41 +5,81 @@ import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
 import { buildImageSrc } from '@/lib/utils';
 import clsx from 'clsx';
+// import { SanityImage, type ImageProps } from 'next-sanity/image';
+import { type ImageProps } from 'next-sanity/image';
+export type ImgObject = {
+	src: {
+		_key?: string | null;
+		_type?: 'image' | (string & {});
+		asset: {
+			_type: 'reference';
+			_ref: string;
+		};
+		crop: {
+			top: number;
+			bottom: number;
+			left: number;
+			right: number;
+		} | null;
+		hotspot: {
+			x: number;
+			y: number;
+			height: number;
+			width: number;
+		} | null;
+		alt?: string | undefined;
+	};
+	width?: number;
+	height?: number;
+	aspectRatio?: number;
+	customRatio?: number;
+	alt?: string;
+};
 
-function getImageId(image) {
+function getImageId(image: any) {
 	if (!image) return null;
 	if (typeof image === 'string') return image;
 	if (image?.asset) return image.asset._ref || image.asset._id;
 	return image._ref || image._id || null;
 }
 
-function getImageDimensions(id) {
+function getImageDimensions(id: string) {
 	if (!id) return null;
 	const dimensions = id.split('-')[2];
 	const [width, height] = dimensions.split('x').map((num) => parseInt(num, 10));
 	return { width, height, aspectRatio: width / height };
 }
 
+type ImgProps = Omit<ImageProps, 'src' | 'alt'> & {
+	image: ImgObject;
+	responsiveImage?: ImgObject;
+	alt?: string;
+	className?: string;
+	breakpoint?: number;
+	quality?: number;
+	format?: 'jpg' | 'pjpg' | 'png' | 'webp';
+};
+
 function Img({
 	image,
 	alt,
 	className,
-	responsiveImage = false,
+	responsiveImage,
 	breakpoint = 640,
 	quality = 80,
 	format = 'webp',
-}) {
+}: ImgProps) {
 	const { ref, inView } = useInView({ triggerOnce: true });
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [error, setError] = useState(false);
-	const pictureRef = useRef();
+	const pictureRef = useRef<HTMLPictureElement | null>(null);
 	const [renderedWidth, setRenderedWidth] = useState(0);
 
 	const imageId = getImageId(image);
 	const dimensions = getImageDimensions(imageId);
 	const aspectRatio = image?.customRatio || dimensions?.aspectRatio || 1;
 	const placeholderSrc = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${aspectRatio * 100} 100'%3E%3C/svg%3E`;
-	const imageWidth = dimensions?.width;
+	const imageWidth = dimensions?.width || 0;
 	const imageHeight = Math.round(imageWidth / aspectRatio);
 	const imageOptions = {
 		width: imageWidth,
@@ -110,7 +150,7 @@ function Img({
 				height={imageHeight}
 				sizes={`${renderedWidth}px`}
 				quality={quality}
-				alt={alt || image.alt || 'image'}
+				alt={alt || image?.alt || 'image'}
 				src={src}
 				onError={handleImageError}
 				onLoad={() => renderedWidth > 0 && setIsLoaded(true)}

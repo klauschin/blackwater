@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -24,8 +24,18 @@ interface EventItem {
 	locationLink?: string;
 }
 
-export function PageEventIndex({ data }) {
-	const { title, subtitle, groupedEvents } = data || {};
+interface PageEventIndexProps {
+	data: {
+		title: string;
+		subtitle?: string;
+		groupedEvents: {
+			[key: string]: EventItem[];
+		};
+	};
+}
+
+export function PageEventIndex({ data }: PageEventIndexProps) {
+	const { title, groupedEvents } = data || {};
 	const currentDate = new Date();
 	const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
 	const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
@@ -47,13 +57,17 @@ export function PageEventIndex({ data }) {
 				};
 			})
 			.filter(Boolean)
-			.sort((a, b) => a.date.getTime() - b.date.getTime());
+			.sort((a, b) => a!.date.getTime() - b!.date.getTime());
 	}, [groupedEvents]);
 
 	const currentMonthIndex = useMemo(() => {
-		const index = availableMonths.findIndex(
-			(m) => m.month === currentMonth && m.year === currentYear
-		);
+		const index = availableMonths.findIndex((itemMonth) => {
+			if (!itemMonth) {
+				return;
+			}
+
+			itemMonth.month === currentMonth && itemMonth.year === currentYear;
+		});
 		// If current month not found, default to first available month
 		return index >= 0 ? index : 0;
 	}, [availableMonths, currentMonth, currentYear]);
@@ -65,6 +79,7 @@ export function PageEventIndex({ data }) {
 	const goToPreviousMonth = () => {
 		if (currentMonthIndex > 0) {
 			const prevMonth = availableMonths[currentMonthIndex - 1];
+			if (!prevMonth) return;
 			setCurrentMonth(prevMonth.month);
 			setCurrentYear(prevMonth.year);
 		}
@@ -73,6 +88,7 @@ export function PageEventIndex({ data }) {
 	const goToNextMonth = () => {
 		if (currentMonthIndex < availableMonths.length - 1) {
 			const nextMonth = availableMonths[currentMonthIndex + 1];
+			if (!nextMonth) return;
 			setCurrentMonth(nextMonth.month);
 			setCurrentYear(nextMonth.year);
 		}
@@ -164,7 +180,7 @@ export function PageEventIndex({ data }) {
 															className="t-b-2 rounded-4xl p-1.25 text-white"
 															style={{
 																backgroundColor:
-																	buildRgbaCssString(statusColor) || null,
+																	buildRgbaCssString(statusColor) || undefined,
 															}}
 														>
 															{title}

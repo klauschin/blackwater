@@ -5,11 +5,21 @@ import CustomLink from '@/components/CustomLink';
 import Dropdown from '@/components/MenuDropdown';
 import { cn } from '@/lib/utils';
 
+export interface MenuItem {
+	link: LinkProps;
+	title: string;
+	dropdownItems?: MenuItem[];
+}
+
 type MenuProps = {
 	className?: string;
 	ulClassName?: string;
-	items: any;
+	items: MenuItem[];
 };
+interface LinkProps {
+	href: string;
+}
+
 export default function Menu({ items, className, ulClassName }: MenuProps) {
 	const pathName = usePathname();
 
@@ -20,7 +30,7 @@ export default function Menu({ items, className, ulClassName }: MenuProps) {
 	return (
 		<div className={cn(className)}>
 			<ul className={cn(ulClassName)}>
-				{items.map((item, index) => {
+				{items.map((item: MenuItem, index) => {
 					const { link, dropdownItems } = item || {};
 					const isDropdown = !!dropdownItems;
 
@@ -35,7 +45,7 @@ export default function Menu({ items, className, ulClassName }: MenuProps) {
 
 						return (
 							<li key={`li-${index}`} className={cn({ 'is-active': isActive })}>
-								<Dropdown title={item.title} items={item.dropdownItems} />
+								<Dropdown title={item.title} items={item.dropdownItems || []} />
 							</li>
 						);
 					}

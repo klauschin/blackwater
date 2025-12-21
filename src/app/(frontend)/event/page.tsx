@@ -23,18 +23,26 @@ export default async function Page() {
 	if (!data) return notFound();
 
 	const { eventList } = data || {};
-	const groupedEvents = eventList.reduce((acc, event) => {
-		const date = new Date(event.eventDatetime);
-		const month = date.toLocaleString('en-US', { month: 'long' }).toLowerCase();
-		const key = `${month}`;
+	const groupedEvents = eventList.reduce(
+		(
+			acc: Record<string, (typeof eventList)[number][]>,
+			event: (typeof eventList)[number]
+		) => {
+			const date = new Date(event.eventDatetime);
+			const month = date
+				.toLocaleString('en-US', { month: 'long' })
+				.toLowerCase();
+			const key = `${month}`;
 
-		if (!acc[key]) {
-			acc[key] = [];
-		}
-		acc[key].push(event);
+			if (!acc[key]) {
+				acc[key] = [];
+			}
+			acc[key].push(event);
 
-		return acc;
-	}, {});
+			return acc;
+		},
+		{}
+	);
 
 	return <PageEventIndex data={{ groupedEvents, ...data }} />;
 }

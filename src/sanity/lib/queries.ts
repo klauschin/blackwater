@@ -113,28 +113,6 @@ const pageModuleFields = defineQuery(`
 	_type == 'freeform' => {
 		${freeformFields}
 	},
-	_type == 'marquee' => {
-		_type,
-		_key,
-		items[]{
-			_type == 'simple' => {
-				_type,
-				text
-			},
-			_type == 'image' => {
-				_type,
-				"image": {
-					${imageMetaFields}
-				}
-			}
-		}[0...20], // Limit items for performance
-		speed,
-		reverse,
-		pausable,
-		showGradient,
-		"gradientColor": gradientColor->color.hex,
-		isMerged
-	}
 `);
 
 const customFormFields = defineQuery(`
@@ -274,7 +252,7 @@ export const pEventIndexQuery = defineQuery(`
 `);
 
 // Blog queries with pagination
-export const getBlogPostData = (type) => {
+export const getBlogPostData = (type?: 'card' | undefined): string => {
 	const basePostFields = defineQuery(`
 		${baseFields},
 		author->{name},

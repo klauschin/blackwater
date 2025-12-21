@@ -39,7 +39,7 @@ export default function PageEmailSignature() {
 	);
 	const [iconColor, setIconColor] = useState('black');
 
-	const SITE_URL = process.env.SITE_URL.replace(/\/$/, '');
+	const SITE_URL = process.env.SITE_URL;
 
 	const onHandleCopy = () => {
 		setButtonText(COPY_TEXT_CLICKED);
@@ -49,27 +49,29 @@ export default function PageEmailSignature() {
 
 		const range = document.createRange();
 
-		range.setStart(clipboardRef.current, 0);
-		range.setEndAfter(clipboardRef.current);
-		window.getSelection()?.removeAllRanges();
-		window.getSelection()?.addRange(range);
-		document.execCommand('copy');
-		window.getSelection()?.removeAllRanges();
+		if (clipboardRef.current) {
+			range.setStart(clipboardRef.current, 0);
+			range.setEndAfter(clipboardRef.current);
+			window.getSelection()?.removeAllRanges();
+			window.getSelection()?.addRange(range);
+			document.execCommand('copy');
+			window.getSelection()?.removeAllRanges();
+		}
 	};
 
-	const onHandleInputName = (e) => {
+	const onHandleInputName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setName(e.target.value);
 	};
 
-	const onHandleInputPosition = (e) => {
+	const onHandleInputPosition = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPosition(e.target.value);
 	};
 
-	const onHandleInputSubtext = (e) => {
+	const onHandleInputSubtext = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setSubtext(e.target.value);
 	};
 
-	const onHandleInputColor = (e) => {
+	const onHandleInputColor = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setIconColor(e.target.value);
 	};
 
@@ -179,13 +181,7 @@ export default function PageEmailSignature() {
 									<strong style={{ fontWeight: '700' }}>{name}</strong>
 									{position ? ` ${position} ` : ' '}
 								</p>
-								{subtext && (
-									<p
-										dangerouslySetInnerHTML={{
-											__html: formatNewLineToBr(subtext),
-										}}
-									/>
-								)}
+								{subtext && <p>{formatNewLineToBr(subtext)}</p>}
 								<a
 									href={`${SITE_URL}/?ref=email-sig`}
 									target="_blank"

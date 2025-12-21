@@ -1,4 +1,4 @@
-import { PortableText } from '@portabletext/react';
+import { PortableText, PortableTextReactComponents } from '@portabletext/react';
 import type {
 	PortableTextBlock,
 	PortableTextSpan,
@@ -7,14 +7,16 @@ import type {
 import { cn } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 import Img from '@/components/Image';
-import PortableTable from './PortableTable';
 
-export default function CustomPortableText({ blocks, hasPTag = true }) {
+export default function CustomPortableText({
+	blocks,
+}: {
+	blocks: PortableTextBlock[];
+}) {
 	if (!blocks) return null;
 
-	const portableTextComponents = {
+	const portableTextComponents: Partial<PortableTextReactComponents> = {
 		block: {
-			...(!hasPTag && { normal: ({ children }) => <>{children}</> }),
 			h1: ({ children }) => <h1>{children}</h1>,
 			h2: ({ children }) => <h2>{children}</h2>,
 			h3: ({ children }) => <h3>{children}</h3>,

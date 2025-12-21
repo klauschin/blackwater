@@ -3,7 +3,15 @@
 import CustomLink from '@/components/CustomLink';
 import CustomPortableText from '@/components/CustomPortableText';
 
-export default function Page404({ data }) {
+import { PortableTextBlock } from '@portabletext/types';
+
+interface Page404Data {
+  heading?: string;
+  paragraph?: PortableTextBlock[];
+  callToAction?: { link: { href: string }; label: string };
+}
+
+export default function Page404({ data }: { data?: Page404Data }) {
 	const { heading, paragraph, callToAction } = data || {};
 
 	return (

@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	const shareVideoUrl = sharing?.shareVideo || null;
 
 	return {
-		metadataBase: new URL(process.env.SITE_URL),
+		metadataBase: new URL(process.env.SITE_URL || 'https://blackwaterrc.com'),
 		title: {
 			template: `%s | ${siteTitle}`,
 			default: siteTitle,
@@ -62,13 +62,15 @@ export async function generateMetadata(): Promise<Metadata> {
 		applicationName: siteTitle,
 		openGraph: {
 			title: siteTitle,
-			images: [
-				{
-					url: shareGraphicUrl,
-					width: 1200,
-					height: 630,
-				},
-			],
+			images: shareGraphicUrl
+				? [
+						{
+							url: shareGraphicUrl,
+							width: 1200,
+							height: 630,
+						},
+					]
+				: [],
 			videos: [
 				{
 					url: shareVideoUrl,

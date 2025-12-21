@@ -6,12 +6,12 @@ import defineMetadata from '@/lib/defineMetadata';
 import { PageContact } from './_components/PageContact';
 
 export async function generateMetadata(): Promise<Metadata> {
-	const data = await sanityFetch({
+	const { data } = await sanityFetch({
 		query: pageContactQuery,
 		tags: ['pContact'],
 		stega: false,
 	});
-	return defineMetadata({ data });
+	return defineMetadata(data);
 }
 
 export default async function Page() {

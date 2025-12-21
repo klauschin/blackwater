@@ -19,6 +19,7 @@ import { portableTextSimple } from './objects/portable-text-simple';
 import { sectionAppearance } from './objects/section-appearance';
 import { socialLink } from './objects/social-link';
 import { gAnnouncement } from './singletons/g-announcement';
+import { freeform } from './objects/freeform';
 import { gAuthor } from './singletons/g-author';
 import { gFooter } from './singletons/g-footer';
 import { gHeader } from './singletons/g-header';

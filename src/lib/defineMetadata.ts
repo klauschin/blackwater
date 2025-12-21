@@ -27,7 +27,7 @@ export default function defineMetadata({ data }: Props): Metadata {
 
 	const disableIndex = sharing?.disableIndex;
 	const pageRoute = resolveHref({
-		documentType: _type,
+		documentType: _type ?? null,
 		slug: slug,
 	});
 
@@ -37,20 +37,22 @@ export default function defineMetadata({ data }: Props): Metadata {
 		openGraph: {
 			title: metaTitle,
 			description: metaDesc,
-			images: [
-				{
-					url: shareGraphicUrl,
-					width: 1200,
-					height: 630,
-				},
-			],
+			images: shareGraphicUrl
+				? [
+						{
+							url: shareGraphicUrl,
+							width: 1200,
+							height: 630,
+						},
+					]
+				: [],
 		},
 		twitter: {
 			card: 'summary_large_image',
 			title: metaTitle,
 			description: metaDesc,
 			creator: siteTitle,
-			images: [shareGraphicUrl],
+			images: shareGraphicUrl ? [shareGraphicUrl] : [],
 		},
 		alternates: {
 			...(pageRoute && {

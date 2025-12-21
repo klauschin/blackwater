@@ -3,9 +3,16 @@ import { pageTransitionFade } from '@/lib/animate';
 import Menu from '@/components/Menu';
 import { m } from 'motion/react';
 
-export default function Footer({ data }) {
+interface FooterData {
+	siteTitle?: string;
+	menuLegal?: {
+		items: any[];
+	};
+}
+
+export default function Footer({ data }: { data: FooterData }) {
 	const { siteTitle } = data || {};
-	const footerRef = useRef(null);
+	const footerRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
 		document.documentElement.style.setProperty(

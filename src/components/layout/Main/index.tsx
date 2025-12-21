@@ -2,7 +2,7 @@ import { usePathname } from 'next/navigation';
 import { pageTransitionFade } from '@/lib/animate';
 import { motion } from 'motion/react';
 
-export default function Main({ children }) {
+export default function Main({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	return (
 		<motion.main

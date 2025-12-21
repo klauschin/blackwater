@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 
-const Marquee = dynamic(() => import('./Marquee'));
 const Freeform = dynamic(() => import('./Freeform'), {
 	loading: () => <p>Loading...</p>,
 });
@@ -15,8 +14,6 @@ export default function PageModules({ module }: PageModulesProps) {
 	switch (type) {
 		case 'freeform':
 			return <Freeform data={module} />;
-		case 'marquee':
-			return <Marquee data={module} />;
 
 		default:
 			return null;

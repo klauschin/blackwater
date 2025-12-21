@@ -5,7 +5,16 @@ import { hasArrayValue } from '@/lib/utils';
 import { LogoSvg } from '@/components/LogoSvg';
 import Menu from '@/components/Menu';
 
-export default function Header({ data }) {
+interface HeaderProps {
+  data?: {
+    siteTitle?: string;
+    menu?: {
+      items?: any[];
+    };
+  };
+}
+
+export default function Header({ data }: HeaderProps) {
 	const { siteTitle, menu } = data || {};
 	const { items } = menu || {};
 

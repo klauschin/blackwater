@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { buildRgbaCssString, cn } from '@/lib/utils';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { motion, useInView } from 'motion/react';
@@ -33,8 +39,8 @@ export function TextReveal({
 	);
 
 	const [lines, setLines] = useState([text]);
-	const containerRef = useRef(null);
-	const measureRef = useRef(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const measureRef = useRef<HTMLSpanElement>(null);
 	const isInView = useInView(containerRef, {
 		once: true,
 		margin: '0px 0px -10% 0px', // Trigger slightly before fully in view
@@ -45,59 +51,64 @@ export function TextReveal({
 		return cssString || undefined;
 	}, [textColor]);
 
-	const splitTextIntoLines = (text, maxWidth) => {
-		if (!measureRef.current || maxWidth <= 0) return [text];
+	const splitTextIntoLines = useCallback(
+		(text: string, maxWidth: number): string[] => {
+			if (!measureRef.current || maxWidth <= 0) return [text];
 
-		const words = text.split(' ');
-		const lines = [];
-		let currentLine = '';
+			const words = text.split(' ');
+			const lines: string[] = [];
+			let currentLine = '';
 
-		for (const word of words) {
-			const testLine = currentLine ? `${currentLine} ${word}` : word;
+			for (const word of words) {
+				const testLine = currentLine ? `${currentLine} ${word}` : word;
 
-			// Measure the width of the test line
-			measureRef.current.textContent = testLine;
-			const lineWidth = measureRef.current.getBoundingClientRect().width;
+				// Measure the width of the test line
+				measureRef.current.textContent = testLine;
+				const lineWidth = measureRef.current.getBoundingClientRect().width;
 
-			if (lineWidth <= maxWidth) {
-				currentLine = testLine;
-			} else {
-				// If current line is not empty, push it and start new line
-				if (currentLine) {
-					lines.push(currentLine);
-					currentLine = word;
+				if (lineWidth <= maxWidth) {
+					currentLine = testLine;
 				} else {
-					// Single word is too long, just add it anyway
-					lines.push(word);
+					// If current line is not empty, push it and start new line
+					if (currentLine) {
+						lines.push(currentLine);
+						currentLine = word;
+					} else {
+						// Single word is too long, just add it anyway
+						lines.push(word);
+					}
 				}
 			}
-		}
 
-		// Add the last line if it exists
-		if (currentLine) {
-			lines.push(currentLine);
-		}
+			// Add the last line if it exists
+			if (currentLine) {
+				lines.push(currentLine);
+			}
 
-		return lines.length > 0 ? lines : [text];
-	};
+			return lines.length > 0 ? lines : [text];
+		},
+		[]
+	);
+
+	const updateLines = useCallback(() => {
+		if (!containerRef.current || !measureRef.current) return;
+
+		const containerWidth = containerRef.current.getBoundingClientRect().width;
+		const availableWidth = containerWidth - 30;
+		const newLines = splitTextIntoLines(text, availableWidth);
+		setLines(newLines);
+	}, [text, splitTextIntoLines]);
 
 	useEffect(() => {
-		const updateLines = () => {
-			if (!containerRef.current || !measureRef.current) return;
-
-			const containerWidth = containerRef.current.getBoundingClientRect().width;
-			const availableWidth = containerWidth - 30;
-			const newLines = splitTextIntoLines(text, availableWidth);
-			setLines(newLines);
-		};
-
 		// Initial calculation with a small delay to ensure DOM is ready
 		const timeoutId = setTimeout(updateLines, 0);
 
 		// Update on resize
+		let resizeTimeoutId: ReturnType<typeof setTimeout>;
 		const resizeObserver = new ResizeObserver(() => {
-			// Use requestAnimationFrame to debounce resize events
-			requestAnimationFrame(updateLines);
+			// Debounce resize events to improve performance
+			clearTimeout(resizeTimeoutId);
+			resizeTimeoutId = setTimeout(updateLines, 100);
 		});
 
 		if (containerRef.current) {
@@ -106,9 +117,10 @@ export function TextReveal({
 
 		return () => {
 			clearTimeout(timeoutId);
+			clearTimeout(resizeTimeoutId);
 			resizeObserver.disconnect();
 		};
-	}, [text]);
+	}, [updateLines]);
 
 	return (
 		<div
