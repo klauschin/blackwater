@@ -1,15 +1,6 @@
 import { resolveHref } from '@/lib/utils';
 import { defineField, defineType } from 'sanity';
 
-const slugValidator = (rule) =>
-	rule.required().custom((value) => {
-		if (!value || !value.current) return "Can't be blank";
-		if (!value.current.startsWith('/')) {
-			return 'The path must start with a /';
-		}
-		return true;
-	});
-
 export const settingsRedirect = defineType({
 	name: 'settingsRedirect',
 	title: 'Redirects',
@@ -20,7 +11,7 @@ export const settingsRedirect = defineType({
 			title: 'Source',
 			name: 'url',
 			type: 'slug',
-			validation: (rule) => slugValidator(rule),
+			validation: (Rule) => [Rule.required()],
 			description: (
 				<>
 					Enter path (e.g. /blog/lorem-ipsum). Source path supports{' '}

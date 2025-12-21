@@ -3,7 +3,6 @@
 import { defaultDocumentNode } from '@/sanity/defaultDocumentNode';
 import { apiVersion, dataset, projectId } from '@/sanity/env';
 import * as presentationResolver from '@/sanity/lib/presentation-resolver';
-import { singletonPlugin } from '@/sanity/lib/utils';
 import { schemaTypes } from '@/sanity/schemaTypes';
 import { gAnnouncement } from '@/sanity/schemaTypes/singletons/g-announcement';
 import { gFooter } from '@/sanity/schemaTypes/singletons/g-footer';
@@ -40,17 +39,17 @@ const commonPlugins = [
 			},
 		},
 	}),
-	singletonPlugin([
-		gFooter.name,
-		gHeader.name,
-		pHome.name,
-		settingsIntegration.name,
-		settingsGeneral.name,
-		p404.name,
-		pContact.name,
-		gAnnouncement.name,
-	]),
 	visionTool({ defaultApiVersion: apiVersion }),
+];
+const singletonDocuments = [
+	gFooter.name,
+	gHeader.name,
+	pHome.name,
+	settingsIntegration.name,
+	settingsGeneral.name,
+	p404.name,
+	pContact.name,
+	gAnnouncement.name,
 ];
 
 export default defineConfig({
@@ -77,5 +76,26 @@ export default defineConfig({
 		}
 
 		return prev.filter((tool) => tool.name !== 'vision');
+	},
+	document: {
+		// Hide 'Singletons (such as Home)' from new document options
+		newDocumentOptions: (prev, { creationContext }) => {
+			if (creationContext.type === 'global') {
+				return prev.filter(
+					(templateItem) =>
+						!singletonDocuments.includes(templateItem.templateId as any)
+				);
+			}
+
+			return prev;
+		},
+		// Removes the "duplicate" action on the Singletons (such as Home)
+		actions: (prev, { schemaType }) => {
+			if (singletonDocuments.includes(schemaType as any)) {
+				return prev.filter(({ action }) => action !== 'duplicate');
+			}
+
+			return prev;
+		},
 	},
 });

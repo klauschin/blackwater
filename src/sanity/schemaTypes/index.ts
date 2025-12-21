@@ -56,6 +56,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	pEventStatus,
 	pContact,
 
+	freeform,
 	formFields,
 	link,
 	linkInput,

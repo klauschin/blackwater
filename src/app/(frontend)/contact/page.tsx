@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 		tags: ['pContact'],
 		stega: false,
 	});
-	return defineMetadata(data);
+	return defineMetadata({ data });
 }
 
 export default async function Page() {
@@ -20,7 +20,7 @@ export default async function Page() {
 		tags: ['pContact'],
 	});
 
-	if (!data) return notFound();
+	if (!data || data.sharing.disableIndex) return notFound();
 
 	return <PageContact data={data} />;
 }

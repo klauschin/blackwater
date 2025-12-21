@@ -1,6 +1,5 @@
 import sharing from '@/sanity/schemaTypes/objects/sharing';
 import slug from '@/sanity/schemaTypes/objects/slug';
-import title from '@/sanity/schemaTypes/objects/title';
 import { defineType } from 'sanity';
 
 export const pHome = defineType({
@@ -8,7 +7,7 @@ export const pHome = defineType({
 	name: 'pHome',
 	type: 'document',
 	fields: [
-		title({ initialValue: 'Homepage' }),
+		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug({ initialValue: { _type: 'slug', current: '/' }, readOnly: true }),
 		{
 			title: 'Landing Title',

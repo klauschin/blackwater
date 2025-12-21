@@ -1,5 +1,6 @@
 import { getPortableTextPreview } from '@/sanity/lib/utils';
 import { EditIcon } from '@sanity/icons';
+import { defineType } from 'sanity';
 
 export const freeform = defineType({
 	name: 'freeform',

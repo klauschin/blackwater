@@ -54,19 +54,8 @@ export const gAnnouncement = defineType({
 			name: 'autoplayInterval',
 			description: 'Interval in seconds',
 			type: 'number',
+			initialValue: 10,
 			hidden: ({ parent }) => !parent.autoplay,
-			validation: (Rule) =>
-				Rule.custom((autoplayInterval, context) => {
-					if (context.parent.autoplay == true) {
-						if (autoplayInterval < 2) {
-							return 'Interval must be 2 seconds or more';
-						} else if (autoplayInterval > 20) {
-							return 'Interval must be 20 seconds or less';
-						}
-					}
-
-					return true;
-				}),
 		},
 		{
 			name: 'backgroundColor',
