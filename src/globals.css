@@ -78,6 +78,16 @@
 	--z-index-dialog: calc(var(--z-index-overlay) + 1);
 }
 
+@theme {
+	--animate-blinker: blinker 1s linear infinite;
+
+	@keyframes blinker {
+		50% {
+			opacity: 0;
+		}
+	}
+}
+
 /* Specificity: @layer base < components < utilities */
 
 /* BASE: contains reset rules and default styles */

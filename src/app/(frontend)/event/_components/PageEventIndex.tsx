@@ -14,22 +14,12 @@ import {
 	TableRow,
 } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
-interface EventItem {
-	title: string;
-	subtitle?: string;
-	_id: string;
-	status: Array<{ _id: string; title: string; statusColor: any }>;
-	eventDatetime: string;
-	location: string;
-	locationLink?: string;
-}
+import type { PEvent, PEventStatus } from 'sanity.types';
 
 interface PageEventIndexProps {
-	data: {
-		title: string;
-		subtitle?: string;
+	data: PEvent & {
 		groupedEvents: {
-			[key: string]: EventItem[];
+			[key: string]: PEvent[];
 		};
 	};
 }
@@ -39,13 +29,14 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 	const currentDate = new Date();
 	const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
 	const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+
 	const availableMonths = useMemo(() => {
 		if (!groupedEvents) return [];
 
 		return Object.keys(groupedEvents)
 			.map((key) => {
 				const firstEvent = groupedEvents[key][0];
-				if (!firstEvent) return null;
+				if (!firstEvent || !firstEvent.eventDatetime) return null;
 
 				const date = new Date(firstEvent.eventDatetime);
 				return {
@@ -53,7 +44,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 					month: date.getMonth(),
 					year: date.getFullYear(),
 					date: date,
-					events: groupedEvents[key] as EventItem[],
+					events: groupedEvents[key] as PEvent[],
 				};
 			})
 			.filter(Boolean)
@@ -154,11 +145,13 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 								return (
 									<TableRow key={_id} className="t-b-1">
 										<TableCell>
-											<div className="font-bold uppercase">{title}</div>
-											{subtitle && <div className="t-b-2 mt-1">{subtitle}</div>}
+											<span className="font-bold uppercase">{title}</span>
+											{subtitle && <span className="ml-2.5">{subtitle}</span>}
 										</TableCell>
 										<TableCell className="sm:min-w-28 uppercase">
-											{format(new Date(eventDatetime), 'iii, MM.dd.yy')}
+											{eventDatetime
+												? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+												: 'TBD'}
 										</TableCell>
 										<TableCell className="uppercase">
 											{locationLink ? (
@@ -172,7 +165,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 
 										{hasArrayValue(status) && (
 											<TableCell className="flex justify-end gap-1 uppercase">
-												{status.map((item) => {
+												{status.map((item: any) => {
 													const { _id, title, statusColor } = item || {};
 													return (
 														<span
