@@ -120,7 +120,7 @@ export default async function RootLayout({
 
 	return (
 		<ReactQueryProvider>
-			<html lang="en" className={`${fontABCDisplay.variable}`}>
+			<html lang="en" className={`${fontABCDisplay.variable} dark`}>
 				<head>
 					<meta
 						httpEquiv="Content-Type"
@@ -131,9 +131,9 @@ export default async function RootLayout({
 					<HeadTrackingCode siteData={data} />
 				</head>
 
-				<body>
+				<body className="bg-background">
 					<Layout siteData={data}>{children}</Layout>
-					<SanityLive />
+					<SanityLive refreshOnFocus={isDraftModeEnabled} />
 					<Toaster />
 					{isDraftModeEnabled && (
 						<>

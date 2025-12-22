@@ -1,9 +1,9 @@
 'use client';
-
+import { cn } from '@/lib/utils';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 import {
 	Table,
@@ -35,36 +35,43 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 
 		return Object.keys(groupedEvents)
 			.map((key) => {
-				const firstEvent = groupedEvents[key][0];
+				const events = groupedEvents[key];
+				const firstEvent = events[0];
 				if (!firstEvent || !firstEvent.eventDatetime) return null;
 
 				const date = new Date(firstEvent.eventDatetime);
+
 				return {
 					key,
 					month: date.getMonth(),
 					year: date.getFullYear(),
 					date: date,
-					events: groupedEvents[key] as PEvent[],
+					events: events as PEvent[],
 				};
 			})
-			.filter(Boolean)
-			.sort((a, b) => a!.date.getTime() - b!.date.getTime());
+			.filter((item): item is NonNullable<typeof item> => item !== null)
+			.sort((a, b) => a.date.getTime() - b.date.getTime());
 	}, [groupedEvents]);
 
 	const currentMonthIndex = useMemo(() => {
 		const index = availableMonths.findIndex((itemMonth) => {
-			if (!itemMonth) {
-				return;
-			}
-
-			itemMonth.month === currentMonth && itemMonth.year === currentYear;
+			return itemMonth.month === currentMonth && itemMonth.year === currentYear;
 		});
-		// If current month not found, default to first available month
+
 		return index >= 0 ? index : 0;
 	}, [availableMonths, currentMonth, currentYear]);
 
 	const currentMonthData = availableMonths[currentMonthIndex];
-	const displayEvents = currentMonthData?.events || [];
+	const displayEvents = useMemo(() => {
+		return currentMonthData?.events || [];
+	}, [currentMonthData]);
+
+	const isHideStatusColumn = useMemo(() => {
+		const isAllStatusEmpty = displayEvents.every((event) => {
+			return event.status === null || event.status === undefined;
+		});
+		return isAllStatusEmpty;
+	}, [displayEvents]);
 
 	// Navigation handlers
 	const goToPreviousMonth = () => {
@@ -93,45 +100,48 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 		: '';
 
 	return (
-		<div className="px-contain mx-auto flex min-h-[inherit] max-w-7xl flex-col justify-center">
+		<div className="px-contain mx-auto flex min-h-[inherit] max-w-7xl flex-col justify-between">
 			<h1 className="sr-only">{title}</h1>
-			{availableMonths.length > 0 && (
-				<div className="my-10 flex items-center justify-between">
-					<Button
-						onClick={goToPreviousMonth}
-						disabled={!hasPrevious}
-						aria-label="Previous month"
-					>
-						<ChevronLeft className="h-5 w-5" />
-						Previous
-					</Button>
-
-					<h2 className="text-2xl font-bold uppercase">{monthYearDisplay}</h2>
-
-					<Button
-						onClick={goToNextMonth}
-						disabled={!hasNext}
-						aria-label="Next month"
-					>
-						Next
-						<ChevronRight className="h-5 w-5" />
-					</Button>
-				</div>
-			)}
-
+			<div className="flex items-center justify-between flex-1">
+				<h5 className="t-h-5 uppercase">{monthYearDisplay}</h5>
+				{availableMonths.length > 0 && (
+					<div className="flex items-center justify-between">
+						<Button
+							onClick={goToPreviousMonth}
+							disabled={!hasPrevious}
+							aria-label="Previous month"
+							variant="ghost"
+						>
+							Previous
+						</Button>
+						/
+						<Button
+							onClick={goToNextMonth}
+							disabled={!hasNext}
+							aria-label="Next month"
+							variant="ghost"
+						>
+							Next
+							<ArrowRight className="h-5 w-5" />
+						</Button>
+					</div>
+				)}
+			</div>
 			{hasArrayValue(displayEvents) ? (
 				<div className="flex-1">
-					<Table className="border-t border-b border-white">
+					<Table className="border-t border-b">
 						<TableHeader>
-							<TableRow className="t-b-1 font-bold uppercase">
-								<TableHead className="font-bold">codex</TableHead>
-								<TableHead className="font-bold">date</TableHead>
+							<TableRow className="t-h-6 uppercase">
+								<TableHead className="font-bold px-0">codex</TableHead>
+								<TableHead className="font-bold">time</TableHead>
 								<TableHead className="font-bold">loaction</TableHead>
-								<TableHead className="text-right font-bold">status</TableHead>
+								{!isHideStatusColumn && (
+									<TableHead className="text-right font-bold">status</TableHead>
+								)}
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{displayEvents.map((item) => {
+							{displayEvents.map((item, index) => {
 								const {
 									title,
 									subtitle,
@@ -144,16 +154,20 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 
 								return (
 									<TableRow key={_id} className="t-b-1">
-										<TableCell>
-											<span className="font-bold uppercase">{title}</span>
-											{subtitle && <span className="ml-2.5">{subtitle}</span>}
+										<TableCell
+											className={cn(
+												'font-bold uppercase px-0 flex gap-2 t-h-6'
+											)}
+										>
+											<span className="min-w-20">{title}</span>
+											<span className="text-muted">{subtitle}</span>
 										</TableCell>
-										<TableCell className="sm:min-w-28 uppercase">
+										<TableCell className="sm:min-w-28 t-b-1 uppercase">
 											{eventDatetime
 												? format(new Date(eventDatetime), 'iii, MM.dd.yy')
 												: 'TBD'}
 										</TableCell>
-										<TableCell className="uppercase">
+										<TableCell className="t-b-1 uppercase">
 											{locationLink ? (
 												<Link className="sm:min-w-72" href={locationLink}>
 													{location}
@@ -162,10 +176,9 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 												<p className="sm:min-w-72">{location}</p>
 											)}
 										</TableCell>
-
-										{hasArrayValue(status) && (
-											<TableCell className="flex justify-end gap-1 uppercase">
-												{status.map((item: any) => {
+										<TableCell className="flex justify-end gap-1 uppercase">
+											{hasArrayValue(status) &&
+												status.map((item: any) => {
 													const { _id, title, statusColor } = item || {};
 													return (
 														<span
@@ -180,8 +193,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 														</span>
 													);
 												})}
-											</TableCell>
-										)}
+										</TableCell>
 									</TableRow>
 								);
 							})}

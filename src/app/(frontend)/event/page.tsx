@@ -29,10 +29,12 @@ export default async function Page() {
 			event: (typeof eventList)[number]
 		) => {
 			const date = new Date(event.eventDatetime);
+			const year = date.getFullYear();
 			const month = date
 				.toLocaleString('en-US', { month: 'long' })
 				.toLowerCase();
-			const key = `${month}`;
+
+			const key = `${year}_${month}`;
 
 			if (!acc[key]) {
 				acc[key] = [];
@@ -43,6 +45,7 @@ export default async function Page() {
 		},
 		{}
 	);
+	console.log('🚀 ~ :46 ~ Page ~ groupedEvents:', groupedEvents);
 
 	return <PageEventIndex data={{ groupedEvents, ...data }} />;
 }
