@@ -11,7 +11,7 @@ export const pEventIndex = defineType({
 	fields: [
 		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug({
-			initialValue: { _type: 'slug', current: 'event' },
+			initialValue: { _type: 'slug', current: 'events' },
 			readOnly: true,
 		}),
 		sharing(),

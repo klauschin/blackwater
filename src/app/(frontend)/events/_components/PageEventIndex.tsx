@@ -100,109 +100,152 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 		: '';
 
 	return (
-		<div className="px-contain mx-auto flex min-h-[inherit] max-w-7xl flex-col justify-between">
+		<div className="px-contain mx-auto min-h-[inherit] max-w-7xl">
 			<h1 className="sr-only">{title}</h1>
-			<div className="flex items-center justify-between flex-1">
+			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10">
 				<h5 className="t-h-5 uppercase">{monthYearDisplay}</h5>
 				{availableMonths.length > 0 && (
-					<div className="flex items-center justify-between">
-						<Button
+					<div className="flex items-center justify-between gap-2">
+						<button
 							onClick={goToPreviousMonth}
 							disabled={!hasPrevious}
 							aria-label="Previous month"
-							variant="ghost"
+							type="button"
+							className="uppercase t-l-1"
 						>
 							Previous
-						</Button>
+						</button>
 						/
-						<Button
+						<button
 							onClick={goToNextMonth}
 							disabled={!hasNext}
 							aria-label="Next month"
-							variant="ghost"
+							type="button"
+							className="flex items-center uppercase gap-1 t-l-1"
 						>
 							Next
-							<ArrowRight className="h-5 w-5" />
-						</Button>
+							<ArrowRight className="size-3.5" />
+						</button>
 					</div>
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<div className="flex-1">
-					<Table className="border-t border-b">
-						<TableHeader>
-							<TableRow className="t-h-6 uppercase">
-								<TableHead className="font-bold px-0">codex</TableHead>
-								<TableHead className="font-bold">time</TableHead>
-								<TableHead className="font-bold">loaction</TableHead>
-								{!isHideStatusColumn && (
-									<TableHead className="text-right font-bold">status</TableHead>
-								)}
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{displayEvents.map((item, index) => {
-								const {
-									title,
-									subtitle,
-									_id,
-									status,
-									eventDatetime,
-									location,
-									locationLink,
-								} = item || {};
+				<Table className="border-t border-b my-12 lg:mb-28">
+					<TableHeader>
+						<TableRow className="t-h-6 uppercase">
+							<TableHead className="font-bold px-0">codex</TableHead>
+							<TableHead className="font-bold text-right lg:text-left">
+								time
+							</TableHead>
+							<TableHead className="font-bold hidden lg:table-cell">
+								loaction
+							</TableHead>
+							{!isHideStatusColumn && (
+								<TableHead className="text-right font-bold hidden lg:table-cell">
+									status
+								</TableHead>
+							)}
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{displayEvents.map((item, index) => {
+							const {
+								title,
+								subtitle,
+								_id,
+								status,
+								eventDatetime,
+								location,
+								locationLink,
+							} = item || {};
 
-								return (
-									<TableRow key={_id} className="t-b-1">
-										<TableCell
-											className={cn(
-												'font-bold uppercase px-0 flex gap-2 t-h-6'
-											)}
-										>
-											<span className="min-w-20">{title}</span>
-											<span className="text-muted">{subtitle}</span>
-										</TableCell>
-										<TableCell className="sm:min-w-28 t-b-1 uppercase">
-											{eventDatetime
-												? format(new Date(eventDatetime), 'iii, MM.dd.yy')
-												: 'TBD'}
-										</TableCell>
-										<TableCell className="t-b-1 uppercase">
-											{locationLink ? (
-												<Link className="sm:min-w-72" href={locationLink}>
-													{location}
-												</Link>
-											) : (
-												<p className="sm:min-w-72">{location}</p>
-											)}
-										</TableCell>
-										<TableCell className="flex justify-end gap-1 uppercase">
-											{hasArrayValue(status) &&
-												status.map((item: any) => {
-													const { _id, title, statusColor } = item || {};
-													return (
-														<span
-															key={_id}
-															className="t-b-2 rounded-4xl p-1.25 text-white"
-															style={{
-																backgroundColor:
-																	buildRgbaCssString(statusColor) || undefined,
-															}}
-														>
-															{title}
-														</span>
-													);
-												})}
-										</TableCell>
-									</TableRow>
-								);
-							})}
-						</TableBody>
-					</Table>
-				</div>
+							return (
+								<TableRow key={_id} className="t-b-1">
+									<TableCell className={cn('font-bold uppercase px-0 t-h-6')}>
+										<p className="md:max-w-xs whitespace-pre-wrap text-pretty">
+											{title}
+										</p>
+										{subtitle && (
+											<p className="mt-4 md:mt-1 text-muted">{subtitle}</p>
+										)}
+										<LocationItem
+											location={location}
+											locationLink={locationLink}
+											className="lg:hidden mt-2"
+										/>
+										<div className="flex flex-wrap gap-2 lg:hidden mt-6 empty:hidden">
+											<StatusItems status={status} />
+										</div>
+									</TableCell>
+									<TableCell className="t-b-1 uppercase lg:align-middle align-top text-right lg:text-left">
+										{eventDatetime
+											? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+											: 'TBD'}
+									</TableCell>
+									<TableCell className="t-b-1 uppercase hidden lg:table-cell">
+										<LocationItem
+											location={location}
+											locationLink={locationLink}
+										/>
+									</TableCell>
+									<TableCell className="justify-end gap-1 hidden lg:flex">
+										<StatusItems status={status} />
+									</TableCell>
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
 			) : (
 				<p className="py-8 text-center">No events for this month</p>
 			)}
 		</div>
 	);
+}
+
+function LocationItem({
+	locationLink,
+	location,
+	className,
+}: {
+	location: string | undefined;
+	locationLink?: string | undefined;
+	className?: string;
+}) {
+	if (!location) return null;
+	return (
+		<p className={cn('sm:min-w-72 relative', className)}>
+			{location}
+			{locationLink && (
+				<Link className="p-fill" href={locationLink} aria-label={location} />
+			)}
+		</p>
+	);
+}
+
+function StatusItems({
+	className,
+	status,
+}: {
+	status: any;
+	className?: string;
+}) {
+	if (!hasArrayValue(status)) return null;
+	return status.map((item: any) => {
+		const { _id, title, statusColor } = item || {};
+		return (
+			<span
+				key={_id}
+				className={cn(
+					't-b-2 rounded-4xl py-2 px-2.5 text-white uppercase',
+					className
+				)}
+				style={{
+					backgroundColor: buildRgbaCssString(statusColor) || undefined,
+				}}
+			>
+				{title}
+			</span>
+		);
+	});
 }
