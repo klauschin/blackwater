@@ -370,9 +370,9 @@ export type PEventStatus = {
 	statusColor?: SettingsBrandColorsReference;
 };
 
-export type PEventIndex = {
+export type pEvents = {
 	_id: string;
-	_type: 'pEventIndex';
+	_type: 'pEvents';
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
@@ -724,9 +724,9 @@ export type SettingsRedirect = {
 export type SettingsMenu = {
 	_id: string;
 	_type: 'settingsMenu';
-	_createdAt: string;
-	_updatedAt: string;
-	_rev: string;
+	_createdAt?: string;
+	_updatedAt?: string;
+	_rev?: string;
 	title?: string;
 	items?: Array<
 		| ({
@@ -941,7 +941,7 @@ export type AllSanitySchemaTypes =
 	| SanityImageHotspot
 	| Slug
 	| PEventStatus
-	| PEventIndex
+	| pEvents
 	| PEventCategory
 	| PEventCategoryReference
 	| PEventStatusReference

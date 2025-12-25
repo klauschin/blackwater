@@ -16,7 +16,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import type { PEvent, PEventStatus } from 'sanity.types';
 
-interface PageEventIndexProps {
+interface PageEventsProps {
 	data: PEvent & {
 		groupedEvents: {
 			[key: string]: PEvent[];
@@ -24,7 +24,7 @@ interface PageEventIndexProps {
 	};
 }
 
-export function PageEventIndex({ data }: PageEventIndexProps) {
+export function PageEvents({ data }: PageEventsProps) {
 	const { title, groupedEvents } = data || {};
 	const currentDate = new Date();
 	const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
@@ -100,32 +100,34 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 		: '';
 
 	return (
-		<div className="px-contain mx-auto min-h-[inherit] max-w-7xl">
+		<div className="px-contain mx-auto min-h-[inherit]">
 			<h1 className="sr-only">{title}</h1>
 			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10">
 				<h5 className="t-h-5 uppercase">{monthYearDisplay}</h5>
 				{availableMonths.length > 0 && (
-					<div className="flex items-center justify-between gap-2">
-						<button
+					<div className="flex items-center justify-between">
+						<Button
 							onClick={goToPreviousMonth}
 							disabled={!hasPrevious}
 							aria-label="Previous month"
-							type="button"
-							className="uppercase t-l-1"
+							variant="ghost"
+							size="sm"
+							className="uppercase t-b-2 cursor-pointer"
 						>
 							Previous
-						</button>
+						</Button>
 						/
-						<button
+						<Button
 							onClick={goToNextMonth}
 							disabled={!hasNext}
 							aria-label="Next month"
-							type="button"
-							className="flex items-center uppercase gap-1 t-l-1"
+							variant="ghost"
+							size="sm"
+							className="uppercase t-b-2 cursor-pointer"
 						>
 							Next
 							<ArrowRight className="size-3.5" />
-						</button>
+						</Button>
 					</div>
 				)}
 			</div>
@@ -133,7 +135,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 				<Table className="border-t border-b my-12 lg:mb-28">
 					<TableHeader>
 						<TableRow className="t-h-6 uppercase">
-							<TableHead className="font-bold px-0">codex</TableHead>
+							<TableHead className="font-bold px-0 lg:w-full">codex</TableHead>
 							<TableHead className="font-bold text-right lg:text-left">
 								time
 							</TableHead>
@@ -157,16 +159,19 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 								eventDatetime,
 								location,
 								locationLink,
+								lumaLink,
 							} = item || {};
 
 							return (
 								<TableRow key={_id} className="t-b-1">
-									<TableCell className={cn('font-bold uppercase px-0 t-h-6')}>
-										<p className="md:max-w-xs whitespace-pre-wrap text-pretty">
-											{title}
-										</p>
+									<TableCell
+										className={cn(
+											'font-bold uppercase px-0 t-h-6 lg:flex flex-wrap items-center gap-2.5'
+										)}
+									>
+										<p className="text-pretty">{title}</p>
 										{subtitle && (
-											<p className="mt-4 md:mt-1 text-muted">{subtitle}</p>
+											<p className="mt-4 lg:mt-0 text-muted">{subtitle}</p>
 										)}
 										<LocationItem
 											location={location}
@@ -174,7 +179,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 											className="lg:hidden mt-2"
 										/>
 										<div className="flex flex-wrap gap-2 lg:hidden mt-6 empty:hidden">
-											<StatusItems status={status} />
+											<StatusItems status={status} lumaLink={lumaLink} />
 										</div>
 									</TableCell>
 									<TableCell className="t-b-1 uppercase lg:align-middle align-top text-right lg:text-left">
@@ -189,7 +194,7 @@ export function PageEventIndex({ data }: PageEventIndexProps) {
 										/>
 									</TableCell>
 									<TableCell className="justify-end gap-1 hidden lg:flex">
-										<StatusItems status={status} />
+										<StatusItems status={status} lumaLink={lumaLink} />
 									</TableCell>
 								</TableRow>
 							);
@@ -214,10 +219,15 @@ function LocationItem({
 }) {
 	if (!location) return null;
 	return (
-		<p className={cn('sm:min-w-72 relative', className)}>
+		<p className={cn('relative', className)}>
 			{location}
 			{locationLink && (
-				<Link className="p-fill" href={locationLink} aria-label={location} />
+				<Link
+					className="p-fill"
+					href={locationLink}
+					aria-label={location}
+					target="_blank"
+				/>
 			)}
 		</p>
 	);
@@ -226,9 +236,11 @@ function LocationItem({
 function StatusItems({
 	className,
 	status,
+	lumaLink,
 }: {
 	status: any;
 	className?: string;
+	lumaLink?: string;
 }) {
 	if (!hasArrayValue(status)) return null;
 	return status.map((item: any) => {
@@ -237,7 +249,7 @@ function StatusItems({
 			<span
 				key={_id}
 				className={cn(
-					't-b-2 rounded-4xl py-2 px-2.5 text-white uppercase',
+					't-b-2 rounded-4xl py-2 px-2.5 text-foreground uppercase relative flex items-center gap-0.5 t-b-2',
 					className
 				)}
 				style={{
@@ -245,6 +257,12 @@ function StatusItems({
 				}}
 			>
 				{title}
+				{lumaLink && (
+					<>
+						<ArrowRight className="size-3" />
+						<Link className="p-fill" href={lumaLink} aria-hidden={true} />
+					</>
+				)}
 			</span>
 		);
 	});

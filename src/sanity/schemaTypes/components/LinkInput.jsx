@@ -9,9 +9,8 @@ import { isValidUrl } from '@/lib/utils';
 import { set } from 'sanity';
 
 const pageDocumentOrder = [
-	'pHome',
 	'pGeneral',
-	'pEventIndex',
+	'pEvents',
 	'pEvent',
 	'pBlogIndex',
 	'pBlog',
@@ -19,15 +18,13 @@ const pageDocumentOrder = [
 ];
 
 const fetchOptions = async () => {
-	const groqQuery = `* [_type in ${JSON.stringify(pageDocumentOrder)}] {
+	const groqQuery = `*[_type in ${JSON.stringify(pageDocumentOrder)}] {
 		title,
 		_type,
 		_id,
 		"slug": slug.current,
 	}`;
-
 	const data = await client.fetch(groqQuery);
-
 	return data
 		.map(({ _type, slug, _id, title }) => ({
 			value: _id,
@@ -135,8 +132,8 @@ export const LinkInput = (props) => {
 				const queryLower = query?.toLowerCase();
 
 				return (
-					payload.route.toLowerCase().includes(queryLower) ||
-					payload.pageTitle.toLowerCase().includes(queryLower) ||
+					payload.route?.toLowerCase().includes(queryLower) ||
+					payload.pageTitle?.toLowerCase().includes(queryLower) ||
 					payload._id.toLowerCase().includes(queryLower)
 				);
 			});

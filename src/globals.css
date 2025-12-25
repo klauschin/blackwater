@@ -266,12 +266,10 @@
 	}
 
 	html::selection {
-		@apply bg-white text-black [text-shadow:none];
+		@apply bg-accent text-foreground [text-shadow:none];
 	}
 
-	html::-moz-selection {
-		@apply bg-white text-black [text-shadow:none];
-	}
+
 
 	/* Global disabled state */
 	[disabled],

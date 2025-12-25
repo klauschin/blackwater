@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
-import { pEventIndexQuery } from '@/sanity/lib/queries';
+import { pEventsQuery } from '@/sanity/lib/queries';
 import defineMetadata from '@/lib/defineMetadata';
-import { PageEventIndex } from './_components/PageEventIndex';
+import { PageEvents } from './_components/PageEvents';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const { data } = await sanityFetch({
-		query: pEventIndexQuery,
-		tags: ['pEventIndex'],
+		query: pEventsQuery,
+		tags: ['pEvents'],
 		stega: false,
 	});
 	return defineMetadata({ data });
@@ -16,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
 	const { data } = await sanityFetch({
-		query: pEventIndexQuery,
-		tags: ['pEventIndex'],
+		query: pEventsQuery,
+		tags: ['pEvents'],
 	});
 
 	if (!data) return notFound();
@@ -45,7 +45,6 @@ export default async function Page() {
 		},
 		{}
 	);
-	console.log('🚀 ~ :46 ~ Page ~ groupedEvents:', groupedEvents);
 
-	return <PageEventIndex data={{ groupedEvents, ...data }} />;
+	return <PageEvents data={{ groupedEvents, ...data }} />;
 }

@@ -3,9 +3,9 @@ import slug from '@/sanity/schemaTypes/objects/slug';
 import { BookIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 
-export const pEventIndex = defineType({
+export const pEvents = defineType({
 	title: 'Events',
-	name: 'pEventIndex',
+	name: 'pEvents',
 	type: 'document',
 	icon: BookIcon,
 	fields: [

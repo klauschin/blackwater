@@ -26,10 +26,10 @@ export const pageEvent = (S, context) => {
 						.title('Event Index Page')
 						.child(
 							S.editor()
-								.id('pEventIndex')
+								.id('pEvents')
 								.title('Event Index Page')
-								.schemaType('pEventIndex')
-								.documentId('pEventIndex')
+								.schemaType('pEvents')
+								.documentId('pEvents')
 						)
 						.icon(BookIcon),
 					S.listItem()

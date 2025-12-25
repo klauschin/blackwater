@@ -35,7 +35,7 @@ const linkFields = defineQuery(`
 `);
 
 const menuFields = defineQuery(`
-	_key,
+	_id,
 	_type,
 	title,
 	items[]{
@@ -144,12 +144,12 @@ export const siteDataQuery = defineQuery(`{
 			"link": ${linkFields}
 		},
 		"header": *[_type == "gHeader"][0]{
-			"menu": menu->{
+			menu->{
 				${menuFields}
 			}
 		},
 		"footer": *[_type == "gFooter"][0]{
-			"menu": menu->{
+			menu->{
 				${menuFields}
 			},
 			"menuLegal": menuLegal->{
@@ -225,8 +225,8 @@ export const pageContactQuery = defineQuery(`
 	}
 `);
 
-export const pEventIndexQuery = defineQuery(`
-	*[_type == "pEventIndex"][0]{
+export const pEventsQuery = defineQuery(`
+	*[_type == "pEvents"][0]{
 		${baseFields},
 		"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {
 			${baseFields},
