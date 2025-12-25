@@ -26,7 +26,8 @@ export default function Menu({ data, className }: MenuProps) {
 
 				if (isDropdown) {
 					const isActive =
-						dropdownItems.filter((item) => {
+						dropdownItems.filter((item: any) => {
+							const { link } = item || {};
 							return checkIfLinkIsActive({
 								pathName: pathName,
 								url: link.href,
@@ -48,7 +49,9 @@ export default function Menu({ data, className }: MenuProps) {
 				return (
 					<li
 						key={`li-${index}`}
-						className={cn('t-b-2', { 'is-active': isActive })}
+						className={cn('t-b-2 text-secondary', {
+							'text-foreground': isActive,
+						})}
 					>
 						<CustomLink link={link}>{item.title}</CustomLink>
 					</li>

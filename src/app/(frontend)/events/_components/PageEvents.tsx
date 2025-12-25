@@ -15,7 +15,8 @@ import {
 } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
 import type { PEvent, PEventStatus } from 'sanity.types';
-
+import { motion } from 'motion/react';
+import { Typewriter } from '@/components/Typewriter';
 interface PageEventsProps {
 	data: PEvent & {
 		groupedEvents: {
@@ -24,6 +25,8 @@ interface PageEventsProps {
 	};
 }
 
+const MotionTableRow = motion(TableRow);
+const MotionTableBody = motion(TableBody);
 export function PageEvents({ data }: PageEventsProps) {
 	const { title, groupedEvents } = data || {};
 	const currentDate = new Date();
@@ -103,7 +106,13 @@ export function PageEvents({ data }: PageEventsProps) {
 		<div className="px-contain mx-auto min-h-[inherit]">
 			<h1 className="sr-only">{title}</h1>
 			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10">
-				<h5 className="t-h-5 uppercase">{monthYearDisplay}</h5>
+				<Typewriter
+					speed={1}
+					isShowBlinkingCursor={false}
+					className="t-h-5 uppercase"
+				>
+					{monthYearDisplay}
+				</Typewriter>
 				{availableMonths.length > 0 && (
 					<div className="flex items-center justify-between">
 						<Button
@@ -149,7 +158,18 @@ export function PageEvents({ data }: PageEventsProps) {
 							)}
 						</TableRow>
 					</TableHeader>
-					<TableBody>
+					<MotionTableBody
+						key={displayEvents[0]._id}
+						variants={{
+							hidden: { opacity: 0 },
+							show: {
+								opacity: 1,
+								transition: { staggerChildren: 0.1 },
+							},
+						}}
+						initial="hidden"
+						animate="show"
+					>
 						{displayEvents.map((item, index) => {
 							const {
 								title,
@@ -163,7 +183,14 @@ export function PageEvents({ data }: PageEventsProps) {
 							} = item || {};
 
 							return (
-								<TableRow key={_id} className="t-b-1">
+								<MotionTableRow
+									key={_id}
+									className="t-b-1"
+									variants={{
+										hidden: { opacity: 0 },
+										show: { opacity: 1 },
+									}}
+								>
 									<TableCell
 										className={cn(
 											'font-bold uppercase px-0 t-h-6 lg:flex flex-wrap items-center gap-2.5'
@@ -196,10 +223,10 @@ export function PageEvents({ data }: PageEventsProps) {
 									<TableCell className="justify-end gap-1 hidden lg:flex">
 										<StatusItems status={status} lumaLink={lumaLink} />
 									</TableCell>
-								</TableRow>
+								</MotionTableRow>
 							);
 						})}
-					</TableBody>
+					</MotionTableBody>
 				</Table>
 			) : (
 				<p className="py-8 text-center">No events for this month</p>

@@ -42,13 +42,6 @@ export default function Footer({ data }: { data: FooterData }) {
 					<div className="relative t-b-3 ml-auto">
 						© {new Date().getFullYear()} {siteTitle}
 					</div>
-
-					{data?.menuLegal?.items && (
-						<Menu
-							items={data.menuLegal.items}
-							ulClassName="flex items-center gap-2.5 t-b-2 select-none"
-						/>
-					)}
 				</div>
 			</m.footer>
 		</>
