@@ -154,7 +154,11 @@ export const siteDataQuery = defineQuery(`{
 			},
 			"menuLegal": menuLegal->{
 				${menuFields}
-			}
+			},
+			"toolbarMenu": toolbarMenu->{
+				${menuFields}
+			},
+			note
 		},
 		"sharing": *[_type == "settingsGeneral"][0]{
 			siteTitle,

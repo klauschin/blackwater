@@ -4,9 +4,10 @@ import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import * as gtag from '@/lib/gtag';
 import AdaSkip from './AdaSkip';
-import Footer from './Footer';
+import { Footer } from './Footer';
 import { Header } from './Header';
-import Main from './Main';
+import { ToolBar } from './ToolBar';
+import { Main } from './Main';
 import { LazyMotion, domAnimation } from 'motion/react';
 
 type LayoutProps = {
@@ -14,7 +15,7 @@ type LayoutProps = {
 	siteData: any;
 };
 export function Layout({ children, siteData }: LayoutProps) {
-	const { announcement, header, footer, sharing } = siteData || {};
+	const { header, footer, sharing } = siteData || {};
 	const pathname = usePathname();
 
 	useEffect(() => {
@@ -39,6 +40,7 @@ export function Layout({ children, siteData }: LayoutProps) {
 			<Header data={headerData} />
 			<Main>{children}</Main>
 			<Footer data={footerData} />
+			<ToolBar menu={footerData.toolbarMenu} />
 		</LazyMotion>
 	);
 }

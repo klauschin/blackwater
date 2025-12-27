@@ -135,9 +135,7 @@
 
 		--t-b-1: 400 14px/1 var(--font-main);
 		--t-b-2: 400 12px/1 var(--font-main);
-
 		--t-l-1: 500 12px/1 var(--font-main);
-
 
 		--background: oklch(1 0 0);
 		--foreground: oklch(0.145 0 0);

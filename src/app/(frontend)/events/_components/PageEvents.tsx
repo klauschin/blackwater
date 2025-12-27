@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 import {
 	Table,
@@ -14,9 +14,9 @@ import {
 	TableRow,
 } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
-import type { PEvent, PEventStatus } from 'sanity.types';
+import type { PEvent } from 'sanity.types';
 import { motion } from 'motion/react';
-import { Typewriter } from '@/components/Typewriter';
+
 interface PageEventsProps {
 	data: PEvent & {
 		groupedEvents: {
@@ -105,14 +105,27 @@ export function PageEvents({ data }: PageEventsProps) {
 	return (
 		<div className="px-contain mx-auto min-h-[inherit]">
 			<h1 className="sr-only">{title}</h1>
-			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10">
-				<Typewriter
-					speed={1}
-					isShowBlinkingCursor={false}
+			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/90 z-10 backdrop-blur-2xl">
+				<motion.h5
+					key={monthYearDisplay}
+					variants={{
+						hidden: { opacity: 0, y: 30 },
+						show: {
+							opacity: 1,
+							y: 0,
+						},
+					}}
+					transition={{
+						duration: 0.6,
+						delay: 0.3,
+						ease: [0, 0.71, 0.2, 1.01],
+					}}
+					initial="hidden"
+					animate="show"
 					className="t-h-5 uppercase"
 				>
 					{monthYearDisplay}
-				</Typewriter>
+				</motion.h5>
 				{availableMonths.length > 0 && (
 					<div className="flex items-center justify-between">
 						<Button
@@ -123,6 +136,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							size="sm"
 							className="uppercase t-b-2 cursor-pointer"
 						>
+							<ArrowLeft className="size-3.5" />
 							Previous
 						</Button>
 						/
@@ -149,7 +163,7 @@ export function PageEvents({ data }: PageEventsProps) {
 								time
 							</TableHead>
 							<TableHead className="font-bold hidden lg:table-cell">
-								loaction
+								location
 							</TableHead>
 							{!isHideStatusColumn && (
 								<TableHead className="text-right font-bold hidden lg:table-cell">
@@ -185,7 +199,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							return (
 								<MotionTableRow
 									key={_id}
-									className="t-b-1"
+									className="t-b-1 transition-colors hover:bg-foreground "
 									variants={{
 										hidden: { opacity: 0 },
 										show: { opacity: 1 },

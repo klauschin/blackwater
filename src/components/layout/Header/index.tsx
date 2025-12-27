@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { LogoSvg } from '@/components/LogoSvg';
 import Menu from '@/components/Menu';
 import { LocationCurrentTime } from '@/components/LocationCurrentTime';
-
 type HeaderProps = GHeader & {
 	siteTitle?: string;
 	menu?: SettingsMenu;
@@ -13,7 +12,7 @@ export function Header({ data }: { data: HeaderProps }) {
 	const { siteTitle, menu } = data || {};
 
 	return (
-		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 lg:grid-cols-3 items-center bg-black leading-none">
+		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 lg:grid-cols-3 items-center bg-background leading-none">
 			{menu && (
 				<Menu
 					data={menu}

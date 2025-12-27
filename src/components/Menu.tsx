@@ -49,7 +49,7 @@ export default function Menu({ data, className }: MenuProps) {
 				return (
 					<li
 						key={`li-${index}`}
-						className={cn('t-b-2 text-secondary', {
+						className={cn('t-b-2 text-muted', {
 							'text-foreground': isActive,
 						})}
 					>
