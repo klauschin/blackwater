@@ -34,7 +34,7 @@ export function Footer({ data }: { data: FooterProps }) {
 					className="mb-10 md:hidden flex items-center t-b-2 gap-2.5 select-none uppercase justify-between"
 				/>
 			)}
-			{note && <p className="t-l-1 uppercase text-right">{note}</p>}
+			{note && <p className="t-l-2 uppercase text-right">{note}</p>}
 		</m.footer>
 	);
 }

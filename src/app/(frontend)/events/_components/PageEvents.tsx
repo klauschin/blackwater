@@ -105,7 +105,7 @@ export function PageEvents({ data }: PageEventsProps) {
 	return (
 		<div className="px-contain mx-auto min-h-[inherit]">
 			<h1 className="sr-only">{title}</h1>
-			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/90 z-10 backdrop-blur-2xl">
+			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10 ">
 				<motion.h5
 					key={monthYearDisplay}
 					variants={{
