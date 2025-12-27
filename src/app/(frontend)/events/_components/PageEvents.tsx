@@ -155,93 +155,97 @@ export function PageEvents({ data }: PageEventsProps) {
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<Table className="border-t border-b my-12 lg:mb-28">
-					<TableHeader>
-						<TableRow className="t-h-6 uppercase">
-							<TableHead className="font-bold px-0 lg:w-full">codex</TableHead>
-							<TableHead className="font-bold text-right lg:text-left">
-								time
-							</TableHead>
-							<TableHead className="font-bold hidden lg:table-cell">
-								location
-							</TableHead>
-							{!isHideStatusColumn && (
-								<TableHead className="text-right font-bold hidden lg:table-cell">
-									status
+				<div className="border-t border-b my-12 lg:mb-28 ">
+					<Table>
+						<TableHeader>
+							<TableRow className="t-h-6 uppercase">
+								<TableHead className="font-bold px-0">codex</TableHead>
+								<TableHead className="font-bold text-right lg:text-left">
+									time
 								</TableHead>
-							)}
-						</TableRow>
-					</TableHeader>
-					<MotionTableBody
-						key={displayEvents[0]._id}
-						variants={{
-							hidden: { opacity: 0 },
-							show: {
-								opacity: 1,
-								transition: { staggerChildren: 0.1 },
-							},
-						}}
-						initial="hidden"
-						animate="show"
-					>
-						{displayEvents.map((item, index) => {
-							const {
-								title,
-								subtitle,
-								_id,
-								status,
-								eventDatetime,
-								location,
-								locationLink,
-								lumaLink,
-							} = item || {};
+								<TableHead className="font-bold hidden lg:table-cell">
+									location
+								</TableHead>
+								{!isHideStatusColumn && (
+									<TableHead className="text-right font-bold hidden lg:table-cell">
+										status
+									</TableHead>
+								)}
+							</TableRow>
+						</TableHeader>
+						<MotionTableBody
+							key={displayEvents[0]._id}
+							variants={{
+								hidden: { opacity: 0 },
+								show: {
+									opacity: 1,
+									transition: { staggerChildren: 0.1 },
+								},
+							}}
+							initial="hidden"
+							animate="show"
+						>
+							{displayEvents.map((item, index) => {
+								const {
+									title,
+									subtitle,
+									_id,
+									status,
+									eventDatetime,
+									location,
+									locationLink,
+									lumaLink,
+								} = item || {};
 
-							return (
-								<MotionTableRow
-									key={_id}
-									className="t-b-1 transition-colors hover:bg-foreground "
-									variants={{
-										hidden: { opacity: 0 },
-										show: { opacity: 1 },
-									}}
-								>
-									<TableCell
-										className={cn(
-											'font-bold uppercase px-0 t-h-6 lg:flex flex-wrap items-center gap-2.5'
-										)}
+								return (
+									<MotionTableRow
+										key={_id}
+										className="t-b-1 transition-colors hover:bg-foreground "
+										variants={{
+											hidden: { opacity: 0 },
+											show: { opacity: 1 },
+										}}
 									>
-										<p className="text-pretty">{title}</p>
-										{subtitle && (
-											<p className="mt-4 lg:mt-0 text-muted">{subtitle}</p>
-										)}
-										<LocationItem
-											location={location}
-											locationLink={locationLink}
-											className="lg:hidden mt-2"
-										/>
-										<div className="flex flex-wrap gap-2 lg:hidden mt-6 empty:hidden">
+										<TableCell
+											className={cn(
+												'font-bold uppercase px-0 t-h-6 lg:flex flex-wrap items-center gap-2.5 whitespace-pre-wrap text-balance'
+											)}
+										>
+											<p className="text-balance">{title}</p>
+											{subtitle && (
+												<p className="mt-4 lg:mt-0 text-muted text-balance">
+													{subtitle}
+												</p>
+											)}
+											<LocationItem
+												location={location}
+												locationLink={locationLink}
+												className="lg:hidden mt-2"
+											/>
+											<div className="flex flex-wrap gap-2 lg:hidden mt-6 empty:hidden">
+												<StatusItems status={status} lumaLink={lumaLink} />
+											</div>
+										</TableCell>
+										<TableCell className="t-b-1 uppercase lg:align-middle align-top text-right lg:text-left w-1/8">
+											{eventDatetime
+												? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+												: 'TBD'}
+										</TableCell>
+										<TableCell className="t-b-1 uppercase hidden lg:table-cell whitespace-pre-wrap text-balance">
+											<LocationItem
+												location={location}
+												locationLink={locationLink}
+											/>
+										</TableCell>
+										<TableCell className="justify-end gap-1 hidden lg:flex">
 											<StatusItems status={status} lumaLink={lumaLink} />
-										</div>
-									</TableCell>
-									<TableCell className="t-b-1 uppercase lg:align-middle align-top text-right lg:text-left">
-										{eventDatetime
-											? format(new Date(eventDatetime), 'iii, MM.dd.yy')
-											: 'TBD'}
-									</TableCell>
-									<TableCell className="t-b-1 uppercase hidden lg:table-cell">
-										<LocationItem
-											location={location}
-											locationLink={locationLink}
-										/>
-									</TableCell>
-									<TableCell className="justify-end gap-1 hidden lg:flex">
-										<StatusItems status={status} lumaLink={lumaLink} />
-									</TableCell>
-								</MotionTableRow>
-							);
-						})}
-					</MotionTableBody>
-				</Table>
+										</TableCell>
+									</MotionTableRow>
+								);
+							})}
+						</MotionTableBody>
+					</Table>
+				</div>
 			) : (
 				<p className="py-8 text-center">No events for this month</p>
 			)}
