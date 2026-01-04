@@ -25,8 +25,10 @@ const INSTRUCTIONS_LIST = [
 ];
 
 const ICON_COLOR = ['black', 'white'];
-
-export default function PageEmailSignature() {
+type PageEmailSignature = {
+	siteUrl: string;
+};
+export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 	const COPY_TEXT_INITIAL = 'Click to copy';
 	const COPY_TEXT_CLICKED = 'Copied!';
 	const clipboardRef = useRef(null);
@@ -38,8 +40,6 @@ export default function PageEmailSignature() {
 		'A running community exploring movement & meaning.'
 	);
 	const [iconColor, setIconColor] = useState('black');
-
-	const SITE_URL = process.env.SITE_URL;
 
 	const onHandleCopy = () => {
 		setButtonText(COPY_TEXT_CLICKED);
@@ -154,7 +154,7 @@ export default function PageEmailSignature() {
 						<tr>
 							<td style={{ paddingRight: '15px' }}>
 								<a
-									href={`${SITE_URL}/?ref=email-sig`}
+									href={`${siteUrl}/?ref=email-sig`}
 									target="_blank"
 									rel="noreferrer"
 								>
@@ -162,7 +162,7 @@ export default function PageEmailSignature() {
 										width="50"
 										height="50"
 										alt="Blackwater RC Logo"
-										src={`${SITE_URL}/blackwater_wordmark_white.jpg`}
+										src={`${siteUrl}/blackwater_wordmark_white.jpg`}
 									/>
 								</a>
 							</td>
@@ -183,7 +183,7 @@ export default function PageEmailSignature() {
 								</p>
 								{subtext && <p>{formatNewLineToBr(subtext)}</p>}
 								<a
-									href={`${SITE_URL}/?ref=email-sig`}
+									href={`${siteUrl}/?ref=email-sig`}
 									target="_blank"
 									rel="noreferrer"
 									style={{ color: 'black' }}

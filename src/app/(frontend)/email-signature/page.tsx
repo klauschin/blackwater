@@ -1,5 +1,6 @@
-import PageEmailSignature from './_components/PageEmailSignature';
+import { PageEmailSignature } from './_components/PageEmailSignature';
 
 export default async function Page() {
-	return <PageEmailSignature />;
+	const SITE_URL = process.env.SITE_URL;
+	return <PageEmailSignature siteUrl={SITE_URL} />;
 }
