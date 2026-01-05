@@ -5,14 +5,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/Table';
+
 import { Button } from '@/components/ui/Button';
 import type { PEvent } from 'sanity.types';
 import { motion } from 'motion/react';
@@ -25,8 +18,6 @@ interface PageEventsProps {
 	};
 }
 
-const MotionTableRow = motion(TableRow);
-const MotionTableBody = motion(TableBody);
 export function PageEvents({ data }: PageEventsProps) {
 	const { title, groupedEvents } = data || {};
 	const currentDate = new Date();
@@ -75,8 +66,10 @@ export function PageEvents({ data }: PageEventsProps) {
 		});
 		return isAllStatusEmpty;
 	}, [displayEvents]);
+	const colStyle = isHideStatusColumn
+		? 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_10%_1fr]'
+		: 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_10%_1fr_230px]';
 
-	// Navigation handlers
 	const goToPreviousMonth = () => {
 		if (currentMonthIndex > 0) {
 			const prevMonth = availableMonths[currentMonthIndex - 1];
@@ -155,96 +148,88 @@ export function PageEvents({ data }: PageEventsProps) {
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<div className="border-t border-b my-12 lg:mb-28 ">
-					<Table>
-						<TableHeader>
-							<TableRow className="t-h-6 uppercase">
-								<TableHead className="font-bold px-0">codex</TableHead>
-								<TableHead className="font-bold text-right lg:text-left">
-									time
-								</TableHead>
-								<TableHead className="font-bold hidden lg:table-cell">
-									location
-								</TableHead>
-								{!isHideStatusColumn && (
-									<TableHead className="text-right font-bold hidden lg:table-cell">
-										status
-									</TableHead>
-								)}
-							</TableRow>
-						</TableHeader>
-						<MotionTableBody
-							key={displayEvents[0]._id}
-							variants={{
-								hidden: { opacity: 0 },
-								show: {
-									opacity: 1,
-									transition: { staggerChildren: 0.1 },
-								},
-							}}
-							initial="hidden"
-							animate="show"
-						>
-							{displayEvents.map((item, index) => {
-								const {
-									title,
-									subtitle,
-									_id,
-									status,
-									eventDatetime,
-									location,
-									locationLink,
-									lumaLink,
-								} = item || {};
+				<div className="border-t my-12 lg:mb-28 ">
+					<div
+						className={cn(
+							't-h-6 uppercase grid border-b py-2 lg:py-6',
+							colStyle
+						)}
+					>
+						<Th className="px-0">codex</Th>
+						<Th className="text-right lg:text-left">time</Th>
+						<Th className="hidden lg:block">location</Th>
+						{!isHideStatusColumn && (
+							<Th className="hidden lg:block text-right">status</Th>
+						)}
+					</div>
+					<motion.div
+						key={displayEvents[0]._id}
+						variants={{
+							hidden: { opacity: 0 },
+							show: {
+								opacity: 1,
+							},
+						}}
+						initial="hidden"
+						animate="show"
+					>
+						{displayEvents.map((item, index) => {
+							const {
+								title,
+								subtitle,
+								_id,
+								status,
+								eventDatetime,
+								location,
+								locationLink,
+								lumaLink,
+							} = item || {};
 
-								return (
-									<MotionTableRow
-										key={_id}
-										className="t-b-1 transition-colors hover:bg-foreground "
-										variants={{
-											hidden: { opacity: 0 },
-											show: { opacity: 1 },
-										}}
+							return (
+								<motion.div
+									key={_id}
+									className={cn(
+										't-b-1 transition-colors hover:bg-foreground grid items-center border-b group py-4',
+										colStyle
+									)}
+									variants={{
+										hidden: { opacity: 0 },
+										show: { opacity: 1 },
+									}}
+									transition={{
+										duration: 2,
+										delay: (index + 1) * 0.12,
+										ease: [0, 0.5, 0.5, 1],
+									}}
+								>
+									<Td
+										className={cn(
+											'font-bold uppercase lg:pl-0 t-h-6 lg:flex flex-wrap items-center gap-2.5 text-balance'
+										)}
 									>
-										<TableCell
-											className={cn(
-												'font-bold uppercase px-0 t-h-6 lg:flex flex-wrap items-center gap-2.5 whitespace-pre-wrap text-balance'
-											)}
-										>
-											<p className="text-balance">{title}</p>
-											{subtitle && (
-												<p className="mt-4 lg:mt-0 text-muted text-balance">
-													{subtitle}
-												</p>
-											)}
-											<LocationItem
-												location={location}
-												locationLink={locationLink}
-												className="lg:hidden mt-2"
-											/>
-											<div className="flex flex-wrap gap-2 lg:hidden mt-6 empty:hidden">
-												<StatusItems status={status} lumaLink={lumaLink} />
-											</div>
-										</TableCell>
-										<TableCell className="t-b-1 uppercase lg:align-middle align-top text-right lg:text-left w-1/8">
-											{eventDatetime
-												? format(new Date(eventDatetime), 'iii, MM.dd.yy')
-												: 'TBD'}
-										</TableCell>
-										<TableCell className="t-b-1 uppercase hidden lg:table-cell whitespace-pre-wrap text-balance">
-											<LocationItem
-												location={location}
-												locationLink={locationLink}
-											/>
-										</TableCell>
-										<TableCell className="justify-end gap-1 hidden lg:flex">
-											<StatusItems status={status} lumaLink={lumaLink} />
-										</TableCell>
-									</MotionTableRow>
-								);
-							})}
-						</MotionTableBody>
-					</Table>
+										<p className="text-balance mb-4 lg:mb-0">{title}</p>
+										{subtitle && (
+											<p className="text-muted text-balance">{subtitle}</p>
+										)}
+									</Td>
+									<Td className="t-b-1 uppercase mb-auto text-right lg:text-left lg:mb-0">
+										{eventDatetime
+											? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+											: 'TBD'}
+									</Td>
+									<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0">
+										<LocationItem
+											location={location}
+											locationLink={locationLink}
+										/>
+									</Td>
+									<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
+										<StatusItems status={status} lumaLink={lumaLink} />
+									</Td>
+								</motion.div>
+							);
+						})}
+					</motion.div>
 				</div>
 			) : (
 				<p className="py-8 text-center">No events for this month</p>
@@ -264,11 +249,11 @@ function LocationItem({
 }) {
 	if (!location) return null;
 	return (
-		<p className={cn('relative', className)}>
+		<p className={cn('relative', className, { underline: locationLink })}>
 			{location}
 			{locationLink && (
 				<Link
-					className="p-fill"
+					className="p-fill increase-target-size"
 					href={locationLink}
 					aria-label={location}
 					target="_blank"
@@ -311,4 +296,19 @@ function StatusItems({
 			</span>
 		);
 	});
+}
+
+function Th({ className, ...props }: React.ComponentProps<'div'>) {
+	return <div className={cn('font-bold px-2', className)} {...props} />;
+}
+function Td({ className, ...props }: React.ComponentProps<'div'>) {
+	return (
+		<div
+			className={cn(
+				'lg:px-2 whitespace-nowrap group-hover:text-background transition-colors empty:hidden',
+				className
+			)}
+			{...props}
+		/>
+	);
 }
