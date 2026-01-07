@@ -98,8 +98,8 @@ export function PageEvents({ data }: PageEventsProps) {
 	return (
 		<div className="px-contain mx-auto min-h-[inherit]">
 			<h1 className="sr-only">{title}</h1>
-			<div className="flex items-center justify-between my-10 lg:my-14 sticky top-header bg-background/95 z-10 ">
-				<motion.h5
+			<div className="flex items-center justify-between py-10 lg:py-14 sticky top-header bg-background/95 z-10 ">
+				<motion.p
 					key={monthYearDisplay}
 					variants={{
 						hidden: { opacity: 0, y: 30 },
@@ -118,7 +118,7 @@ export function PageEvents({ data }: PageEventsProps) {
 					className="t-h-5 uppercase"
 				>
 					{monthYearDisplay}
-				</motion.h5>
+				</motion.p>
 				{availableMonths.length > 0 && (
 					<div className="flex items-center justify-between">
 						<Button
@@ -127,7 +127,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							aria-label="Previous month"
 							variant="ghost"
 							size="sm"
-							className="uppercase t-b-2 cursor-pointer"
+							className="uppercase t-b-2 cursor-pointer hover:opacity-60"
 						>
 							<ArrowLeft className="size-3.5" />
 							Previous
@@ -139,7 +139,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							aria-label="Next month"
 							variant="ghost"
 							size="sm"
-							className="uppercase t-b-2 cursor-pointer"
+							className="uppercase t-b-2 cursor-pointer hover:opacity-60"
 						>
 							Next
 							<ArrowRight className="size-3.5" />
@@ -148,18 +148,33 @@ export function PageEvents({ data }: PageEventsProps) {
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<div className="border-t my-12 lg:mb-28 ">
+				<div className="my-12 lg:mb-28">
 					<div
 						className={cn(
-							't-h-6 uppercase grid border-b py-2 lg:py-6',
+							't-h-6 uppercase grid border-y border-b border-white/80 py-2 lg:py-6',
 							colStyle
 						)}
 					>
 						<Th className="px-0">codex</Th>
-						<Th className="text-right lg:text-left">time</Th>
-						<Th className="hidden lg:block">location</Th>
+						<Th
+							isHideStatusColumn={isHideStatusColumn}
+							className="text-right lg:text-left"
+						>
+							time
+						</Th>
+						<Th
+							isHideStatusColumn={isHideStatusColumn}
+							className="hidden lg:block"
+						>
+							location
+						</Th>
 						{!isHideStatusColumn && (
-							<Th className="hidden lg:block text-right">status</Th>
+							<Th
+								isHideStatusColumn={isHideStatusColumn}
+								className="hidden lg:block text-right"
+							>
+								status
+							</Th>
 						)}
 					</div>
 					<motion.div
@@ -189,7 +204,7 @@ export function PageEvents({ data }: PageEventsProps) {
 								<motion.div
 									key={_id}
 									className={cn(
-										't-b-1 transition-colors hover:bg-foreground grid items-center border-b group py-4',
+										't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80',
 										colStyle
 									)}
 									variants={{
@@ -249,7 +264,11 @@ function LocationItem({
 }) {
 	if (!location) return null;
 	return (
-		<p className={cn('relative', className, { underline: locationLink })}>
+		<p
+			className={cn('relative', className, {
+				'underline hover:opacity-60 transition-opacity': locationLink,
+			})}
+		>
 			{location}
 			{locationLink && (
 				<Link
@@ -298,8 +317,31 @@ function StatusItems({
 	});
 }
 
-function Th({ className, ...props }: React.ComponentProps<'div'>) {
-	return <div className={cn('font-bold px-2', className)} {...props} />;
+function Th({
+	isHideStatusColumn,
+	className,
+	...props
+}: React.ComponentProps<typeof motion.div> & {
+	isHideStatusColumn?: boolean;
+}) {
+	return (
+		<motion.div
+			key={String(isHideStatusColumn)}
+			variants={{
+				hidden: { opacity: 0, y: 10 },
+				show: { opacity: 1, y: 0 },
+			}}
+			initial="hidden"
+			animate="show"
+			transition={{
+				duration: 0.6,
+				delay: 0.3,
+				ease: [0, 0.5, 0.5, 1],
+			}}
+			className={cn('font-bold px-2', className)}
+			{...props}
+		/>
+	);
 }
 function Td({ className, ...props }: React.ComponentProps<'div'>) {
 	return (

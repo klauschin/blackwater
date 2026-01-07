@@ -22,10 +22,11 @@ export function Header({ data }: { data: HeaderProps }) {
 
 			<Link
 				href="/"
-				title={siteTitle}
+				aria-label={siteTitle}
 				className="w-24 text-foreground mr-auto lg:mx-auto"
 			>
 				<LogoSvg />
+				<span className="sr-only">{siteTitle}</span>
 			</Link>
 			<div className="t-b-2 ml-auto flex items-center gap-0.5 uppercase">
 				<LocationCurrentTime />

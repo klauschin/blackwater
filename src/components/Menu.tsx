@@ -49,9 +49,12 @@ export default function Menu({ data, className }: MenuProps) {
 				return (
 					<li
 						key={`li-${index}`}
-						className={cn('t-b-2 text-muted', {
-							'text-foreground': isActive,
-						})}
+						className={cn(
+							't-b-2 text-muted hover:text-foreground transition-colors',
+							{
+								'text-foreground hover:text-foreground/60': isActive,
+							}
+						)}
 					>
 						<CustomLink link={link}>{item.title}</CustomLink>
 					</li>
