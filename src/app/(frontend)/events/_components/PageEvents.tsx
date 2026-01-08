@@ -96,9 +96,9 @@ export function PageEvents({ data }: PageEventsProps) {
 		: '';
 
 	return (
-		<div className="px-contain mx-auto min-h-[inherit]">
+		<div className="px-contain mx-auto min-h-[inherit] py-10 lg:py-17.5">
 			<h1 className="sr-only">{title}</h1>
-			<div className="flex items-center justify-between py-10 lg:py-14 sticky top-header bg-background/95 z-10 ">
+			<div className="flex items-center justify-between sticky top-header bg-background/95 z-10 ">
 				<motion.p
 					key={monthYearDisplay}
 					variants={{
@@ -148,7 +148,7 @@ export function PageEvents({ data }: PageEventsProps) {
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<div className="mb-12 lg:mb-28 lg:mt-7.5">
+				<div className="mt-10 lg:mt-17.5">
 					<div
 						className={cn(
 							't-h-6 uppercase grid border-y border-b border-white/80 py-2 lg:py-6',
