@@ -148,7 +148,7 @@ export function PageEvents({ data }: PageEventsProps) {
 				)}
 			</div>
 			{hasArrayValue(displayEvents) ? (
-				<div className="my-12 lg:mb-28">
+				<div className="mb-12 lg:mb-28 lg:mt-7.5">
 					<div
 						className={cn(
 							't-h-6 uppercase grid border-y border-b border-white/80 py-2 lg:py-6',
@@ -177,74 +177,65 @@ export function PageEvents({ data }: PageEventsProps) {
 							</Th>
 						)}
 					</div>
-					<motion.div
-						key={displayEvents[0]._id}
-						variants={{
-							hidden: { opacity: 0 },
-							show: {
-								opacity: 1,
-							},
-						}}
-						initial="hidden"
-						animate="show"
-					>
-						{displayEvents.map((item, index) => {
-							const {
-								title,
-								subtitle,
-								_id,
-								status,
-								eventDatetime,
-								location,
-								locationLink,
-								lumaLink,
-							} = item || {};
+					{displayEvents.map((item, index) => {
+						const {
+							title,
+							subtitle,
+							_id,
+							status,
+							eventDatetime,
+							location,
+							locationLink,
+							lumaLink,
+						} = item || {};
 
-							return (
-								<motion.div
-									key={_id}
+						return (
+							<motion.div
+								key={_id}
+								data-key={_id}
+								className={cn(
+									't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80',
+									colStyle
+								)}
+								variants={{
+									hidden: { opacity: 0 },
+									show: { opacity: 1 },
+								}}
+								transition={{
+									duration: 2,
+									delay: (index + 1) * 0.12,
+									ease: [0, 0.5, 0.5, 1],
+								}}
+								initial="hidden"
+								animate="show"
+							>
+								<Td
 									className={cn(
-										't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80',
-										colStyle
+										'font-bold uppercase lg:pl-0 t-h-6 lg:flex flex-wrap items-center gap-2.5 text-balance'
 									)}
-									variants={{
-										hidden: { opacity: 0 },
-										show: { opacity: 1 },
-									}}
-									transition={{
-										duration: 2,
-										delay: (index + 1) * 0.12,
-										ease: [0, 0.5, 0.5, 1],
-									}}
 								>
-									<Td
-										className={cn(
-											'font-bold uppercase lg:pl-0 t-h-6 lg:flex flex-wrap items-center gap-2.5 text-balance'
-										)}
-									>
-										<p className="text-balance mb-4 lg:mb-0">{title}</p>
-										{subtitle && (
-											<p className="text-muted text-balance">{subtitle}</p>
-										)}
-									</Td>
-									<Td className="t-b-1 uppercase mb-auto text-right lg:text-left lg:mb-0">
-										{eventDatetime
-											? format(new Date(eventDatetime), 'iii, MM.dd.yy')
-											: 'TBD'}
-									</Td>
-									<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0">
-										<LocationItem
-											location={location}
-											locationLink={locationLink}
-										/>
-									</Td>
-									<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
-										<StatusItems status={status} lumaLink={lumaLink} />
-									</Td>
-								</motion.div>
-							);
-						})}
-					</motion.div>
+									<p className="text-balance mb-4 lg:mb-0">{title}</p>
+									{subtitle && (
+										<p className="text-muted text-balance">{subtitle}</p>
+									)}
+								</Td>
+								<Td className="t-b-1 uppercase mb-auto text-right lg:text-left lg:mb-0">
+									{eventDatetime
+										? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+										: 'TBD'}
+								</Td>
+								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0">
+									<LocationItem
+										location={location}
+										locationLink={locationLink}
+									/>
+								</Td>
+								<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
+									<StatusItems status={status} lumaLink={lumaLink} />
+								</Td>
+							</motion.div>
+						);
+					})}
 				</div>
 			) : (
 				<p className="py-8 text-center">No events for this month</p>
