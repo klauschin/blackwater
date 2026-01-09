@@ -6,11 +6,11 @@ export function Main({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	return (
 		<motion.main
-			id="main"
 			key={pathname}
 			initial="initial"
 			animate="animate"
 			variants={pageTransitionFade}
+			className="min-h-main"
 		>
 			{children}
 		</motion.main>

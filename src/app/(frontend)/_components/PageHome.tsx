@@ -2,10 +2,10 @@ import PageModules from '@/components/PageModules';
 import { TextReveal } from '@/components/TextReveal';
 
 interface PageHomeProps {
-  data: {
-    pageModules?: Array<any>;
-    landingTitle?: string;
-  };
+	data: {
+		pageModules?: Array<any>;
+		landingTitle?: string;
+	};
 }
 
 export default function PageHome({ data }: PageHomeProps) {
