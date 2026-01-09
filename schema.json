@@ -1862,7 +1862,7 @@
     }
   },
   {
-    "name": "pEventIndex",
+    "name": "pEvents",
     "type": "document",
     "attributes": {
       "_id": {
@@ -1875,7 +1875,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "pEventIndex"
+          "value": "pEvents"
         }
       },
       "_createdAt": {
@@ -3498,6 +3498,21 @@
         "value": {
           "type": "inline",
           "name": "settingsMenu.reference"
+        },
+        "optional": true
+      },
+      "toolbarMenu": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "settingsMenu.reference"
+        },
+        "optional": true
+      },
+      "note": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       }

@@ -16,6 +16,17 @@ export const gFooter = defineType({
 			type: 'reference',
 			to: [{ type: 'settingsMenu' }],
 		},
+		{
+			title: 'Toolbar Menu (Mobile)',
+			name: 'toolbarMenu',
+			type: 'reference',
+			to: [{ type: 'settingsMenu' }],
+		},
+		{
+			title: 'Note',
+			name: 'note',
+			type: 'string',
+		},
 	],
 	preview: {
 		prepare() {

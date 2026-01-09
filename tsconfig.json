@@ -20,7 +20,8 @@
 		],
 		"paths": {
 			"@/*": ["./src/*"],
-			"sanity.config": ["./sanity.config.ts"]
+			"sanity.config": ["./sanity.config.ts"],
+			"sanity.types": ["./sanity.types.ts"]
 		}
 	},
 	"include": [
@@ -28,7 +29,8 @@
 		"/next-env.d.ts",
 		".next/dev/types/**/*.ts",
 		"**/*.mts",
-		"src/app/sitemap.js"
+		"src/app/sitemap.js",
+		"sanity.types.ts"
 	],
 	"exclude": ["node_modules"]
 }

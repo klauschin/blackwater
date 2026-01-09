@@ -16,12 +16,23 @@ import { Toaster } from 'sonner';
 const fontABCDisplay = localFont({
 	src: [
 		{
-			path: '../fonts/font-abc-display-regular.woff2',
+			path: '../fonts/abc-display-regular.woff2',
 			weight: '400',
 			style: 'normal',
 		},
 	],
 	variable: '--font-ABC-Display',
+});
+
+const baselTypewriter = localFont({
+	src: [
+		{
+			path: '../fonts/basel-typewriter.woff2',
+			weight: '400',
+			style: 'normal',
+		},
+	],
+	variable: '--font-basel-typewriter',
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -120,7 +131,10 @@ export default async function RootLayout({
 
 	return (
 		<ReactQueryProvider>
-			<html lang="en" className={`${fontABCDisplay.variable}`}>
+			<html
+				lang="en"
+				className={`${fontABCDisplay.variable} ${baselTypewriter.variable} dark`}
+			>
 				<head>
 					<meta
 						httpEquiv="Content-Type"
@@ -131,9 +145,9 @@ export default async function RootLayout({
 					<HeadTrackingCode siteData={data} />
 				</head>
 
-				<body>
+				<body className="bg-background">
 					<Layout siteData={data}>{children}</Layout>
-					<SanityLive />
+					<SanityLive refreshOnFocus={isDraftModeEnabled} />
 					<Toaster />
 					{isDraftModeEnabled && (
 						<>

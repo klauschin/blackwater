@@ -125,7 +125,7 @@ export function TextReveal({
 	return (
 		<div
 			className={cn('relative overflow-hidden', className, {
-				'text-cream': !textColor,
+				'text-foreground': !textColor,
 			})}
 			ref={containerRef}
 			style={{
@@ -152,7 +152,7 @@ export function TextReveal({
 							key={index}
 							className="absolute inset-0 z-20"
 							style={{
-								backgroundColor: textColorStyle || 'var(--color-cream)',
+								backgroundColor: textColorStyle || 'var(--foreground)',
 							}}
 							initial={{ x: '-101%' }}
 							animate={{ x: isInView ? '101%' : '-101%' }}

@@ -759,7 +759,7 @@ export const resolveHref = ({
 			return '/blog';
 		case 'pBlog':
 			return `/blog/${slug}`;
-		case 'pEventIndex':
+		case 'pEvents':
 			return '/event';
 		case 'pEvent':
 			return `/event/${slug}`;

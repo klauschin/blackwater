@@ -1,45 +1,37 @@
+import { GHeader, SettingsMenu } from 'sanity.types';
 import Link from 'next/link';
-import { TZDate } from '@date-fns/tz';
-import { format, formatDistance } from 'date-fns';
-import { hasArrayValue } from '@/lib/utils';
 import { LogoSvg } from '@/components/LogoSvg';
 import Menu from '@/components/Menu';
+import { LocationCurrentTime } from '@/components/LocationCurrentTime';
+type HeaderProps = GHeader & {
+	siteTitle?: string;
+	menu?: SettingsMenu;
+};
 
-interface HeaderProps {
-  data?: {
-    siteTitle?: string;
-    menu?: {
-      items?: any[];
-    };
-  };
-}
-
-export default function Header({ data }: HeaderProps) {
+export function Header({ data }: { data: HeaderProps }) {
 	const { siteTitle, menu } = data || {};
-	const { items } = menu || {};
 
 	return (
-		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 items-center bg-black leading-none">
-			{/* {hasArrayValue(items) && (
+		<header className="px-contain h-header sticky top-0 z-10 grid w-full grid-cols-2 lg:grid-cols-3 items-center bg-background leading-none">
+			{menu && (
 				<Menu
-					items={items}
-					className="hidden select-none lg:block"
-					ulClassName="flex item-center gap-2.5 t-b-2 uppercase"
+					data={menu}
+					className="lg:flex item-center gap-2.5 t-b-2 uppercase hidden select-none"
 				/>
-			)} */}
-			<Link href="/" title={siteTitle} className="mr-auto w-24 text-white">
+			)}
+
+			<Link
+				href="/"
+				aria-label={siteTitle}
+				className="w-24 text-foreground mr-auto lg:mx-auto"
+			>
 				<LogoSvg />
+				<span className="sr-only">{siteTitle}</span>
 			</Link>
-			<div className="t-b-1 ml-auto flex items-center gap-0.5">
+			<div className="t-b-2 ml-auto flex items-center gap-0.5 uppercase">
 				<LocationCurrentTime />
 				(TPE)
 			</div>
 		</header>
 	);
-}
-
-function LocationCurrentTime() {
-	const now = new Date();
-	const tzDate = new TZDate(now, 'Asia/Singapore');
-	return <time>{format(tzDate, 'iiii, p')}</time>;
 }

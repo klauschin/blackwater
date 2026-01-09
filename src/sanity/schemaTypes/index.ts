@@ -5,7 +5,7 @@ import { pBlogCategory } from './documents/p-blog-category';
 import { pBlogIndex } from './documents/p-blog-index';
 import { pEvent } from './documents/p-event';
 import { pEventCategory } from './documents/p-event-category';
-import { pEventIndex } from './documents/p-event-index';
+import { pEvents } from './documents/p-events';
 import { pEventStatus } from './documents/p-event-status';
 import { pGeneral } from './documents/p-general';
 // Objects
@@ -52,7 +52,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	pEvent,
 	gAuthor,
 	pEventCategory,
-	pEventIndex,
+	pEvents,
 	pEventStatus,
 	pContact,
 

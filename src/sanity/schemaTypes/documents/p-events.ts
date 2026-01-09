@@ -3,15 +3,15 @@ import slug from '@/sanity/schemaTypes/objects/slug';
 import { BookIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 
-export const pEventIndex = defineType({
+export const pEvents = defineType({
 	title: 'Events',
-	name: 'pEventIndex',
+	name: 'pEvents',
 	type: 'document',
 	icon: BookIcon,
 	fields: [
 		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug({
-			initialValue: { _type: 'slug', current: 'event' },
+			initialValue: { _type: 'slug', current: 'events' },
 			readOnly: true,
 		}),
 		sharing(),
