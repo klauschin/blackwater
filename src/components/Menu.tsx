@@ -56,7 +56,9 @@ export default function Menu({ data, className }: MenuProps) {
 							}
 						)}
 					>
-						<CustomLink link={link}>{item.title}</CustomLink>
+						<CustomLink link={link} className="inline-block">
+							{item.title}
+						</CustomLink>
 					</li>
 				);
 			})}
