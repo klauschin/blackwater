@@ -1,5 +1,6 @@
 import { apiVersion } from '@/sanity/env';
-import { BookIcon, TagsIcon, UserIcon } from '@sanity/icons';
+import { BookIcon, CalendarIcon, TagsIcon, UserIcon } from '@sanity/icons';
+import { client } from '@/sanity/lib/client';
 
 export const pageEventCategory = (S) => {
 	return S.listItem()
@@ -13,6 +14,77 @@ export const pageEventStatus = (S) => {
 		.title('Status')
 		.child(S.documentTypeList('pEventStatus').title('Status'))
 		.icon(UserIcon);
+};
+
+export const pageEventGroupByDate = (S) => {
+	return S.listItem()
+		.title('By Month/Year')
+		.child(async () => {
+			const events = await client.fetch(`
+				*[_type == "pEvent" && defined(eventDatetime)] {
+					eventDatetime
+				} | order(eventDatetime desc)
+			`);
+
+			// Create unique month/year combinations
+			const monthYearMap = new Map();
+
+			events.forEach((event) => {
+				const date = new Date(event.eventDatetime);
+				const year = date.getFullYear();
+				const month = date.getMonth();
+				const key = `${year}-${String(month + 1).padStart(2, '0')}`;
+				const monthName = date.toLocaleString('en-US', {
+					month: 'long',
+					year: 'numeric',
+				});
+
+				if (!monthYearMap.has(key)) {
+					monthYearMap.set(key, {
+						key,
+						label: monthName,
+						year,
+						month: month + 1,
+					});
+				}
+			});
+
+			const monthYearItems = Array.from(monthYearMap.values()).sort((a, b) =>
+				b.key.localeCompare(a.key)
+			); // Sort by year/month descending
+
+			return S.list()
+				.title('Events by Month/Year')
+				.items(
+					monthYearItems.map(({ label, year, month }) => {
+						// Calculate start and end dates for the month
+						const startDate = new Date(year, month - 1, 1); // month is 1-based, Date constructor is 0-based
+						const endDate = new Date(year, month, 1); // First day of next month
+
+						return S.listItem()
+							.title(label)
+							.child(
+								S.documentList()
+									.title(`${label} Events`)
+									.apiVersion(apiVersion)
+									.filter(
+										'_type == "pEvent" && eventDatetime >= $startDate && eventDatetime < $endDate'
+									)
+									.params({
+										startDate: startDate.toISOString(),
+										endDate: endDate.toISOString(),
+									})
+									.defaultOrdering([
+										{
+											field: 'eventDatetime',
+											direction: 'asc',
+										},
+									])
+							);
+					})
+				);
+		})
+		.icon(CalendarIcon);
 };
 
 export const pageEvent = (S, context) => {
@@ -72,11 +144,12 @@ export const pageEvent = (S, context) => {
 														.params({ statusId })
 												)
 										),
+									pageEventGroupByDate(S),
 								])
 						),
 					S.divider(),
 					pageEventStatus(S),
-					pageEventCategory(S, context),
+					pageEventCategory(S),
 				])
 		)
 		.icon(BookIcon);
