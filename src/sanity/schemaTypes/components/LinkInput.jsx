@@ -9,6 +9,7 @@ import { isValidUrl } from '@/lib/utils';
 import { set } from 'sanity';
 
 const pageDocumentOrder = [
+	'pHome',
 	'pGeneral',
 	'pEvents',
 	'pEvent',
