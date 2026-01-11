@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import CustomLink from '@/components/CustomLink';
 import { Button } from '@/components/ui/Button';
 import CustomPortableText from '@/components/CustomPortableText';
@@ -21,7 +21,7 @@ export function PageNotFound({ data }: { data?: Page404Data }) {
 
 			{paragraph && <CustomPortableText blocks={paragraph} />}
 
-			{callToAction && (
+			{callToAction && callToAction?.link && callToAction?.label && (
 				<Button asChild>
 					<CustomLink link={callToAction.link}>{callToAction.label}</CustomLink>
 				</Button>
