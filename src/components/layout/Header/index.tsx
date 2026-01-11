@@ -16,14 +16,14 @@ export function Header({ data }: { data: HeaderProps }) {
 			{menu && (
 				<Menu
 					data={menu}
-					className="lg:flex item-center gap-2.5 t-b-2 uppercase hidden select-none"
+					className="lg:flex item-center gap-2.5 t-b-2 uppercase hidden select-none [&_a]:leading-header [&_a]:h-header"
 				/>
 			)}
 
 			<Link
 				href="/"
 				aria-label={siteTitle}
-				className="w-24 text-foreground mr-auto lg:mx-auto"
+				className="w-24 text-foreground mr-auto lg:mx-auto h-full flex items-center hover:opacity-90 transition-opacity"
 			>
 				<LogoSvg />
 				<span className="sr-only">{siteTitle}</span>
