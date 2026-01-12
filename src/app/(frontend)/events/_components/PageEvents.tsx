@@ -33,6 +33,26 @@ export function PageEvents({ data }: PageEventsProps) {
 		return eventDateEndOfDay < currentDate;
 	};
 
+	// Helper function to get days until event (returns null if event has passed or is more than 3 days away)
+	const getDaysUntilEvent = (eventDatetime: string | null | undefined) => {
+		if (!eventDatetime) return null;
+		const eventDate = new Date(eventDatetime);
+		const eventDateStartOfDay = new Date(eventDate);
+		eventDateStartOfDay.setHours(0, 0, 0, 0);
+
+		const today = new Date(currentDate);
+		today.setHours(0, 0, 0, 0);
+
+		const diffTime = eventDateStartOfDay.getTime() - today.getTime();
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+		// Only return days if event is in the future and within 3 days
+		if (diffDays >= 0 && diffDays <= 3) {
+			return diffDays;
+		}
+		return null;
+	};
+
 	const availableMonths = useMemo(() => {
 		if (!groupedEvents) return [];
 
@@ -198,7 +218,7 @@ export function PageEvents({ data }: PageEventsProps) {
 						} = item || {};
 
 						const eventHasEnded = isEventEnded(eventDatetime);
-
+						const daysUntil = getDaysUntilEvent(eventDatetime);
 						return (
 							<motion.div
 								key={_id}
@@ -255,6 +275,14 @@ export function PageEvents({ data }: PageEventsProps) {
 								<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
 									{eventHasEnded && (
 										<StatusItem key="ended" data={{ title: 'ended' }} />
+									)}
+									{daysUntil && (
+										<StatusItem
+											key={`in-${daysUntil}-day`}
+											data={{
+												title: `in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`,
+											}}
+										/>
 									)}
 									{hasArrayValue(status) &&
 										status.map((item: any) => (
