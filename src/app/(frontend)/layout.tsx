@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { VisualEditing } from 'next-sanity/visual-editing';
 import localFont from 'next/font/local';
@@ -155,6 +156,7 @@ export default async function RootLayout({
 							<VisualEditing />
 						</>
 					)}
+					<Analytics />
 				</body>
 			</html>
 		</ReactQueryProvider>
