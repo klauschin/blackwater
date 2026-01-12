@@ -10,7 +10,7 @@ export const pEvent = defineType({
 	icon: BookIcon,
 	fields: [
 		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
-		{ name: 'subtitle', type: 'string', },
+		{ name: 'subtitle', type: 'string' },
 		slug(),
 		{
 			name: 'eventDatetime',
@@ -28,10 +28,6 @@ export const pEvent = defineType({
 		},
 		{
 			name: 'locationLink',
-			type: 'url',
-		},
-		{
-			name: 'lumaLink',
 			type: 'url',
 		},
 		{
@@ -71,7 +67,7 @@ export const pEvent = defineType({
 		},
 		prepare({ title = 'Untitled', location, eventDatetime, categories }) {
 			const categoryTitle = categories ?? '';
-			const subtitle = `${location} - ${categoryTitle ? `[${categoryTitle}]` : ''}`
+			const subtitle = `${location} - ${categoryTitle ? `[${categoryTitle}]` : ''}`;
 
 			return {
 				title: `${title} - ${new Date(eventDatetime).toLocaleDateString('en-US')}`,

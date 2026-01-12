@@ -11,10 +11,21 @@ export const pEventStatus = defineType({
 		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
 		slug(),
 		{
-			title: 'Status Color',
-			name: 'statusColor',
+			title: 'Status text color',
+			name: 'statusTextColor',
 			type: 'reference',
 			to: [{ type: 'settingsBrandColors' }],
+		},
+		{
+			title: 'Status background color',
+			name: 'statusBgColor',
+			type: 'reference',
+			to: [{ type: 'settingsBrandColors' }],
+		},
+		{
+			name: 'link',
+			type: 'url',
+			description: 'Luma link or other services link',
 		},
 	],
 	preview: {

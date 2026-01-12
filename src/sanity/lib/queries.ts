@@ -238,7 +238,6 @@ export const pEventsQuery = defineQuery(`
 			eventDatetime,
 			location,
 			locationLink,
-			lumaLink,
 			categories[]-> {
 				_id,
 				title,
@@ -249,7 +248,9 @@ export const pEventsQuery = defineQuery(`
 				_id,
 				title,
 				"slug": slug.current,
-				statusColor->{...color}
+				link,
+				statusTextColor->{...color},
+				statusBgColor->{...color}
 			}
 		},
 	}

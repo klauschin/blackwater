@@ -441,7 +441,6 @@ export type PEvent = {
 	eventDatetime?: string;
 	location?: string;
 	locationLink?: string;
-	lumaLink?: string;
 	categories?: Array<
 		{
 			_key: string;

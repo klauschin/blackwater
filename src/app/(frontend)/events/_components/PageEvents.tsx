@@ -186,7 +186,6 @@ export function PageEvents({ data }: PageEventsProps) {
 							eventDatetime,
 							location,
 							locationLink,
-							lumaLink,
 						} = item || {};
 
 						return (
@@ -231,7 +230,7 @@ export function PageEvents({ data }: PageEventsProps) {
 									/>
 								</Td>
 								<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
-									<StatusItems status={status} lumaLink={lumaLink} />
+									<StatusItems status={status} />
 								</Td>
 							</motion.div>
 						);
@@ -276,31 +275,30 @@ function LocationItem({
 function StatusItems({
 	className,
 	status,
-	lumaLink,
 }: {
 	status: any;
 	className?: string;
-	lumaLink?: string;
 }) {
 	if (!hasArrayValue(status)) return null;
 	return status.map((item: any) => {
-		const { _id, title, statusColor } = item || {};
+		const { _id, title, statusTextColor, statusBgColor, link } = item || {};
 		return (
 			<span
 				key={_id}
 				className={cn(
-					't-b-2 rounded-4xl py-2 px-2.5 text-foreground uppercase relative flex items-center gap-0.5 t-b-2',
+					'rounded-4xl py-2 px-2.5 uppercase relative flex items-center gap-0.5 t-b-2 text-',
 					className
 				)}
 				style={{
-					backgroundColor: buildRgbaCssString(statusColor) || undefined,
+					color: buildRgbaCssString(statusTextColor) || 'var(--foreground)',
+					backgroundColor: buildRgbaCssString(statusBgColor) || 'var(--muted)',
 				}}
 			>
 				{title}
-				{lumaLink && (
+				{link && (
 					<>
 						<ArrowRight className="size-3" />
-						<Link className="p-fill" href={lumaLink} aria-hidden={true} />
+						<Link className="p-fill" href={link} aria-hidden={true} />
 					</>
 				)}
 			</span>
