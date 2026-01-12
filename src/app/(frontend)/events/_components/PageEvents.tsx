@@ -24,6 +24,15 @@ export function PageEvents({ data }: PageEventsProps) {
 	const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
 	const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
+	const isEventEnded = (eventDatetime: string | null | undefined) => {
+		if (!eventDatetime) return false;
+		const eventDate = new Date(eventDatetime);
+		// Compare dates by setting time to end of day for the event date
+		const eventDateEndOfDay = new Date(eventDate);
+		eventDateEndOfDay.setHours(23, 59, 59, 999);
+		return eventDateEndOfDay < currentDate;
+	};
+
 	const availableMonths = useMemo(() => {
 		if (!groupedEvents) return [];
 
@@ -188,12 +197,14 @@ export function PageEvents({ data }: PageEventsProps) {
 							locationLink,
 						} = item || {};
 
+						const eventHasEnded = isEventEnded(eventDatetime);
+
 						return (
 							<motion.div
 								key={_id}
 								data-key={_id}
 								className={cn(
-									't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80',
+									't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80 lg:py-2 lg:min-h-15',
 									colStyle
 								)}
 								variants={{
@@ -223,14 +234,32 @@ export function PageEvents({ data }: PageEventsProps) {
 										? format(new Date(eventDatetime), 'iii, MM.dd.yy')
 										: 'TBD'}
 								</Td>
-								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0">
-									<LocationItem
-										location={location}
-										locationLink={locationLink}
-									/>
+								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0 h-full flex items-center">
+									<p
+										className={cn('relative', {
+											'underline hover:opacity-60 transition-opacity':
+												locationLink,
+										})}
+									>
+										{location}
+									</p>
+									{locationLink && (
+										<Link
+											className="p-fill increase-target-size"
+											href={locationLink}
+											aria-label={location}
+											target="_blank"
+										/>
+									)}
 								</Td>
 								<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
-									<StatusItems status={status} />
+									{eventHasEnded && (
+										<StatusItem key="ended" data={{ title: 'ended' }} />
+									)}
+									{hasArrayValue(status) &&
+										status.map((item: any) => (
+											<StatusItem key={item._id} data={item} />
+										))}
 								</Td>
 							</motion.div>
 						);
@@ -243,67 +272,25 @@ export function PageEvents({ data }: PageEventsProps) {
 	);
 }
 
-function LocationItem({
-	locationLink,
-	location,
-	className,
-}: {
-	location: string | undefined;
-	locationLink?: string | undefined;
-	className?: string;
-}) {
-	if (!location) return null;
+function StatusItem({ data }: { data: any }) {
+	const { title, statusTextColor, statusBgColor, link } = data || {};
 	return (
-		<p
-			className={cn('relative', className, {
-				'underline hover:opacity-60 transition-opacity': locationLink,
-			})}
+		<span
+			className="rounded-4xl py-2 px-2.5 uppercase relative flex items-center gap-0.5 t-b-2"
+			style={{
+				color: buildRgbaCssString(statusTextColor) || 'var(--foreground)',
+				backgroundColor: buildRgbaCssString(statusBgColor) || 'var(--muted)',
+			}}
 		>
-			{location}
-			{locationLink && (
-				<Link
-					className="p-fill increase-target-size"
-					href={locationLink}
-					aria-label={location}
-					target="_blank"
-				/>
+			{title}
+			{link && (
+				<>
+					<ArrowRight className="size-3" />
+					<Link className="p-fill" href={link} aria-hidden={true} />
+				</>
 			)}
-		</p>
+		</span>
 	);
-}
-
-function StatusItems({
-	className,
-	status,
-}: {
-	status: any;
-	className?: string;
-}) {
-	if (!hasArrayValue(status)) return null;
-	return status.map((item: any) => {
-		const { _id, title, statusTextColor, statusBgColor, link } = item || {};
-		return (
-			<span
-				key={_id}
-				className={cn(
-					'rounded-4xl py-2 px-2.5 uppercase relative flex items-center gap-0.5 t-b-2 text-',
-					className
-				)}
-				style={{
-					color: buildRgbaCssString(statusTextColor) || 'var(--foreground)',
-					backgroundColor: buildRgbaCssString(statusBgColor) || 'var(--muted)',
-				}}
-			>
-				{title}
-				{link && (
-					<>
-						<ArrowRight className="size-3" />
-						<Link className="p-fill" href={link} aria-hidden={true} />
-					</>
-				)}
-			</span>
-		);
-	});
 }
 
 function Th({
@@ -336,7 +323,7 @@ function Td({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
 		<div
 			className={cn(
-				'lg:px-2 whitespace-nowrap group-hover:text-background transition-colors empty:hidden',
+				'lg:px-2 whitespace-nowrap group-hover:text-background transition-colors empty:hidden relative',
 				className
 			)}
 			{...props}
