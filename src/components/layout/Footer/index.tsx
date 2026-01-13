@@ -26,7 +26,7 @@ export function Footer({ data }: { data: FooterProps }) {
 			initial="initial"
 			animate="animate"
 			variants={pageTransitionFade}
-			className="bg-background text-foreground px-contain py-6 lg:py-10 mb-15 lg:mb-0"
+			className="bg-background text-foreground px-contain py-6 lg:py-10 lg:mb-0 empty:hidden"
 		>
 			{menu && (
 				<Menu
