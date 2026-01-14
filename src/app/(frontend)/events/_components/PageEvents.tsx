@@ -219,6 +219,7 @@ export function PageEvents({ data }: PageEventsProps) {
 
 						const eventHasEnded = isEventEnded(eventDatetime);
 						const daysUntil = getDaysUntilEvent(eventDatetime);
+
 						return (
 							<motion.div
 								key={_id}
@@ -276,11 +277,14 @@ export function PageEvents({ data }: PageEventsProps) {
 									{eventHasEnded && (
 										<StatusItem key="ended" data={{ title: 'ended' }} />
 									)}
-									{daysUntil && (
+									{daysUntil !== null && daysUntil !== undefined && (
 										<StatusItem
 											key={`in-${daysUntil}-day`}
 											data={{
-												title: `in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`,
+												title:
+													daysUntil === 0
+														? 'today'
+														: `in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`,
 											}}
 										/>
 									)}
