@@ -17,18 +17,17 @@ import clsx from 'clsx';
  * @param {React.ReactNode} props.children - Link content
  * @param {string} props.className - CSS classes
  */
-
-type CustomLinkProps = {
+interface CustomLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 	link?: {
 		href?: string;
 		isNewTab?: boolean;
 		linkType?: 'internal' | 'external';
 	};
-	children: React.ReactNode;
+	children?: React.ReactNode;
 	className?: string;
 	isNewTab?: boolean;
 	onLinkClickAction?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
-};
+}
 
 export default function CustomLink({
 	link,

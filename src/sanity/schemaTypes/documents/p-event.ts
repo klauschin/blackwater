@@ -42,12 +42,34 @@ export const pEvent = defineType({
 			validation: (Rule) => Rule.unique(),
 		},
 		{
-			name: 'status',
+			name: 'statusList',
 			type: 'array',
 			of: [
 				{
-					type: 'reference',
-					to: { type: 'pEventStatus' },
+					name: 'statusItem',
+					type: 'object',
+					fields: [
+						{
+							title: 'Status',
+							name: 'eventStatus',
+							type: 'reference',
+							to: { type: 'pEventStatus' },
+						},
+						{
+							name: 'link',
+							type: 'link',
+						},
+					],
+					preview: {
+						select: {
+							title: 'eventStatus.title',
+						},
+						prepare({ title = 'Untitled' }) {
+							return {
+								title: title,
+							};
+						},
+					},
 				},
 			],
 			validation: (Rule) => Rule.unique(),

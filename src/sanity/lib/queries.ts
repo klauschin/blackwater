@@ -244,13 +244,18 @@ export const pEventsQuery = defineQuery(`
 				"slug": slug.current,
 				categoryColor->{...color}
 			},
-			status[]-> {
-				_id,
-				title,
-				"slug": slug.current,
-				link,
-				statusTextColor->{...color},
-				statusBgColor->{...color}
+			statusList[]{
+				_key,
+				link {
+					${linkFields}
+				},
+				eventStatus-> {
+					_id,
+					title,
+					"slug": slug.current,
+					statusTextColor->{...color},
+					statusBgColor->{...color}
+				}
 			}
 		},
 	}

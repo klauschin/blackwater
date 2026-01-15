@@ -1,7 +1,7 @@
 'use client';
 import PageModules from '@/components/PageModules';
 import { motion } from 'motion/react';
-
+import { fadeAnim } from '@/lib/animate';
 interface PageHomeProps {
 	data: {
 		pageModules?: Array<any>;
@@ -17,19 +17,14 @@ export default function PageHome({ data }: PageHomeProps) {
 			<div className="px-contain mx-auto max-w-sm text-center text-sm text-balance uppercase sm:max-w-6xl">
 				<motion.h1
 					key="landing-title"
-					variants={{
-						hidden: { opacity: 0 },
-						show: {
-							opacity: 1,
-						},
-					}}
+					initial="hide"
+					animate="show"
+					variants={fadeAnim}
 					transition={{
 						duration: 0.6,
 						delay: 0.3,
 						ease: [0, 0.71, 0.2, 1.01],
 					}}
-					initial="hidden"
-					animate="show"
 				>
 					{landingTitle}
 				</motion.h1>

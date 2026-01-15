@@ -2,10 +2,11 @@
 import { cn } from '@/lib/utils';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import CustomLink from '@/components/CustomLink';
 import { format } from 'date-fns';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
-
+import { fadeAnim } from '@/lib/animate';
 import { Button } from '@/components/ui/Button';
 import type { PEvent } from 'sanity.types';
 import { motion } from 'motion/react';
@@ -91,7 +92,7 @@ export function PageEvents({ data }: PageEventsProps) {
 
 	const isHideStatusColumn = useMemo(() => {
 		const isAllStatusEmpty = displayEvents.every((event) => {
-			return event.status === null || event.status === undefined;
+			return event.statusList === null || event.statusList === undefined;
 		});
 		return isAllStatusEmpty;
 	}, [displayEvents]);
@@ -130,20 +131,14 @@ export function PageEvents({ data }: PageEventsProps) {
 			<div className="flex items-center justify-between sticky top-header bg-background/95 z-10 ">
 				<motion.p
 					key={monthYearDisplay}
-					variants={{
-						hidden: { opacity: 0, y: 30 },
-						show: {
-							opacity: 1,
-							y: 0,
-						},
-					}}
+					initial="hide"
+					animate="show"
+					variants={fadeAnim}
 					transition={{
 						duration: 0.6,
 						delay: 0.3,
 						ease: [0, 0.71, 0.2, 1.01],
 					}}
-					initial="hidden"
-					animate="show"
 					className="t-h-5 uppercase"
 				>
 					{monthYearDisplay}
@@ -211,7 +206,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							title,
 							subtitle,
 							_id,
-							status,
+							statusList,
 							eventDatetime,
 							location,
 							locationLink,
@@ -228,17 +223,14 @@ export function PageEvents({ data }: PageEventsProps) {
 									't-b-1 transition-colors hover:bg-foreground/90 grid items-center border-b group py-4 border-white/80 lg:py-2 lg:min-h-15',
 									colStyle
 								)}
-								variants={{
-									hidden: { opacity: 0 },
-									show: { opacity: 1 },
-								}}
+								initial="hide"
+								animate="show"
+								variants={fadeAnim}
 								transition={{
 									duration: 2,
 									delay: (index + 1) * 0.12,
 									ease: [0, 0.5, 0.5, 1],
 								}}
-								initial="hidden"
-								animate="show"
 							>
 								<Td
 									className={cn(
@@ -275,22 +267,27 @@ export function PageEvents({ data }: PageEventsProps) {
 								</Td>
 								<Td className="lg:justify-end gap-1 flex col-start-1 lg:col-start-[unset] mt-6 lg:mt-0">
 									{eventHasEnded && (
-										<StatusItem key="ended" data={{ title: 'ended' }} />
+										<StatusItem
+											key="ended"
+											data={{ eventStatus: { title: 'ended' } }}
+										/>
 									)}
 									{daysUntil !== null && daysUntil !== undefined && (
 										<StatusItem
 											key={`in-${daysUntil}-day`}
 											data={{
-												title:
-													daysUntil === 0
-														? 'today'
-														: `in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`,
+												eventStatus: {
+													title:
+														daysUntil === 0
+															? 'today'
+															: `in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`,
+												},
 											}}
 										/>
 									)}
-									{hasArrayValue(status) &&
-										status.map((item: any) => (
-											<StatusItem key={item._id} data={item} />
+									{hasArrayValue(statusList) &&
+										statusList.map((item: any) => (
+											<StatusItem key={item._key} data={item} />
 										))}
 								</Td>
 							</motion.div>
@@ -305,7 +302,8 @@ export function PageEvents({ data }: PageEventsProps) {
 }
 
 function StatusItem({ data }: { data: any }) {
-	const { title, statusTextColor, statusBgColor, link } = data || {};
+	const { link, eventStatus } = data;
+	const { title, statusTextColor, statusBgColor } = eventStatus || {};
 	return (
 		<span
 			className="rounded-4xl py-2 px-2.5 uppercase relative flex items-center gap-0.5 t-b-2"
@@ -315,10 +313,14 @@ function StatusItem({ data }: { data: any }) {
 			}}
 		>
 			{title}
-			{link && (
+			{link?.href && (
 				<>
 					<ArrowRight className="size-3" />
-					<Link className="p-fill" href={link} aria-hidden={true} />
+					<CustomLink
+						className="p-fill"
+						link={link}
+						aria-hidden={true}
+					></CustomLink>
 				</>
 			)}
 		</span>
@@ -335,12 +337,9 @@ function Th({
 	return (
 		<motion.div
 			key={String(isHideStatusColumn)}
-			variants={{
-				hidden: { opacity: 0, y: 10 },
-				show: { opacity: 1, y: 0 },
-			}}
-			initial="hidden"
+			initial="hide"
 			animate="show"
+			variants={fadeAnim}
 			transition={{
 				duration: 0.6,
 				delay: 0.3,

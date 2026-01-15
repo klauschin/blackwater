@@ -22,11 +22,6 @@ export const pEventStatus = defineType({
 			type: 'reference',
 			to: [{ type: 'settingsBrandColors' }],
 		},
-		{
-			name: 'link',
-			type: 'url',
-			description: 'Luma link or other services link',
-		},
 	],
 	preview: {
 		select: {
