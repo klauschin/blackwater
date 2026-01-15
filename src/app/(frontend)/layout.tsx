@@ -13,6 +13,7 @@ import DraftModeToast from '@/components/DraftModeToast';
 import { Layout } from '@/components/layout';
 import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
 import { Toaster } from 'sonner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const fontABCDisplay = localFont({
 	src: [
@@ -157,6 +158,7 @@ export default async function RootLayout({
 						</>
 					)}
 					<Analytics />
+					<SpeedInsights />
 				</body>
 			</html>
 		</ReactQueryProvider>
