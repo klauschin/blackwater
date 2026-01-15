@@ -359,17 +359,6 @@ export type Slug = {
 	source?: string;
 };
 
-export type PEventStatus = {
-	_id: string;
-	_type: 'pEventStatus';
-	_createdAt: string;
-	_updatedAt: string;
-	_rev: string;
-	title?: string;
-	slug?: Slug;
-	statusColor?: SettingsBrandColorsReference;
-};
-
 export type PEvents = {
 	_id: string;
 	_type: 'pEvents';
@@ -446,11 +435,12 @@ export type PEvent = {
 			_key: string;
 		} & PEventCategoryReference
 	>;
-	status?: Array<
-		{
-			_key: string;
-		} & PEventStatusReference
-	>;
+	statusList?: Array<{
+		eventStatus?: PEventStatusReference;
+		link?: Link;
+		_type: 'statusItem';
+		_key: string;
+	}>;
 	content?: PortableText;
 	sharing?: {
 		disableIndex?: boolean;
@@ -464,6 +454,18 @@ export type PEvent = {
 			_type: 'image';
 		};
 	};
+};
+
+export type PEventStatus = {
+	_id: string;
+	_type: 'pEventStatus';
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	title?: string;
+	slug?: Slug;
+	statusTextColor?: SettingsBrandColorsReference;
+	statusBgColor?: SettingsBrandColorsReference;
 };
 
 export type PBlogCategory = {
@@ -941,12 +943,12 @@ export type AllSanitySchemaTypes =
 	| SanityImageCrop
 	| SanityImageHotspot
 	| Slug
-	| PEventStatus
 	| PEvents
 	| PEventCategory
 	| PEventCategoryReference
 	| PEventStatusReference
 	| PEvent
+	| PEventStatus
 	| PBlogCategory
 	| GAuthorReference
 	| PBlogCategoryReference

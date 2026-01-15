@@ -97,8 +97,8 @@ export function PageEvents({ data }: PageEventsProps) {
 		return isAllStatusEmpty;
 	}, [displayEvents]);
 	const colStyle = isHideStatusColumn
-		? 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_10%_1fr]'
-		: 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_10%_1fr_230px]';
+		? 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_1fr_1fr]'
+		: 'grid-cols-[60%_1fr] lg:grid-cols-[3fr_1fr_1fr_230px]';
 
 	const goToPreviousMonth = () => {
 		if (currentMonthIndex > 0) {
@@ -179,7 +179,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							colStyle
 						)}
 					>
-						<Th className="px-0">codex</Th>
+						<Th className="lg:pl-0">codex</Th>
 						<Th
 							isHideStatusColumn={isHideStatusColumn}
 							className="text-right lg:text-left"
@@ -244,7 +244,7 @@ export function PageEvents({ data }: PageEventsProps) {
 								</Td>
 								<Td className="t-b-1 uppercase mb-auto text-right lg:text-left lg:mb-0">
 									{eventDatetime
-										? format(new Date(eventDatetime), 'iii, MM.dd.yy')
+										? format(new Date(eventDatetime), 'iii, MM.dd.yy, h:mm aaa')
 										: 'TBD'}
 								</Td>
 								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0 h-full flex items-center">
@@ -345,7 +345,7 @@ function Th({
 				delay: 0.3,
 				ease: [0, 0.5, 0.5, 1],
 			}}
-			className={cn('font-bold px-2', className)}
+			className={cn('font-bold lg:px-2', className)}
 			{...props}
 		/>
 	);
