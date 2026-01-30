@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
 	const { data } = await sanityFetch({
 		query: pEventsQuery,
-		tags: ['pEvents'],
+		tags: ['pEvents', 'pEvent'],
 	});
 
 	if (!data) return notFound();
