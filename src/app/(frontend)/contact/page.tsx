@@ -20,7 +20,7 @@ export default async function Page() {
 		tags: ['pContact'],
 	});
 
-	if (!data || data.sharing.disableIndex) return notFound();
+	if (!data) return notFound();
 
 	return <PageContact data={data} />;
 }

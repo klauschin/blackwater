@@ -58,7 +58,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 
 	freeform,
 	formFields,
-	link,
+	link(),
 	linkInput,
 	navDropdown,
 	navItem,

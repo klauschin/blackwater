@@ -1,7 +1,8 @@
 import { SlugField } from '@/sanity/schemaTypes/components/SlugField';
+import { defineField } from 'sanity';
 
-export default function slug({ initialValue, readOnly, group } = {}) {
-	return {
+export function slug({ initialValue, readOnly, group } = {}) {
+	return defineField({
 		title: 'Slug (Page URL)',
 		name: 'slug',
 		type: 'slug',
@@ -58,5 +59,5 @@ export default function slug({ initialValue, readOnly, group } = {}) {
 			return readOnly || !isAdmin;
 		},
 		group: group,
-	};
+	});
 }

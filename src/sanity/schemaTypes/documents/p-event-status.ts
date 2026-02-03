@@ -1,4 +1,4 @@
-import slug from '@/sanity/schemaTypes/objects/slug';
+import { slug } from '@/sanity/schemaTypes/objects/slug';
 import { TagsIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 

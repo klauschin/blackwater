@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { formatNewLineToBr } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
 const INSTRUCTIONS_LIST = [

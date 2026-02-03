@@ -1,5 +1,5 @@
 import sharing from '@/sanity/schemaTypes/objects/sharing';
-import slug from '@/sanity/schemaTypes/objects/slug';
+import { slug } from '@/sanity/schemaTypes/objects/slug';
 import { defineType } from 'sanity';
 
 export const pHome = defineType({

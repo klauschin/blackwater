@@ -270,10 +270,15 @@ export function formatNewLineToBr(
 /**
  * Converts a simple object's key-value pairs into a formatted HTML string with `<br>` separators.
  * Key names are converted to title case.
- * @param obj - The object to format.
+ * If a string is provided, it is returned as-is.
+ * @param obj - The object (or string) to format.
  * @returns The HTML string.
  */
-export function formatObjectToHtml(obj: Record<string, any>): string {
+export function formatObjectToHtml(obj: Record<string, any> | string): string {
+	if (typeof obj === 'string') {
+		return obj;
+	}
+
 	return Object.entries(obj)
 		.map(([key, value]) => {
 			const formattedKey = key
@@ -617,10 +622,10 @@ export function slugify(str: string | null | undefined): string | undefined {
 /**
  * Converts a string (typically space/hyphen separated) into camelCase.
  * @param str - The string to convert.
- * @returns The camelCase string or null.
+ * @returns The camelCase string (empty string if input is null/empty).
  */
-export function toCamelCase(str: string | null | undefined): string | null {
-	if (!str) return null;
+export function toCamelCase(str: string | null | undefined): string {
+	if (!str) return '';
 
 	return String(str)
 		.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
