@@ -147,7 +147,7 @@ export default async function RootLayout({
 					<HeadTrackingCode siteData={data} />
 				</head>
 
-				<body>
+				<body className="antialiased">
 					<Layout siteData={data}>{children}</Layout>
 					<SanityLive refreshOnFocus={isDraftModeEnabled} />
 					<Toaster />

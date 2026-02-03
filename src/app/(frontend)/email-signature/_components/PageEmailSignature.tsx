@@ -34,8 +34,8 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 	const clipboardRef = useRef(null);
 	const [buttonText, setButtonText] = useState(COPY_TEXT_INITIAL);
 
-	const [name, setName] = useState('Hsiang Chin');
-	const [position, setPosition] = useState('CXO');
+	const [name, setName] = useState('');
+	const [position, setPosition] = useState('');
 	const [subtext, setSubtext] = useState(
 		'A running community exploring movement & meaning.'
 	);
@@ -80,7 +80,7 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 			<div className="flex max-w-md flex-col gap-4">
 				<div className="flex w-full flex-wrap gap-2">
 					<div className="flex flex-1 flex-col gap-1">
-						<label htmlFor="email-signature-name" className="t-l-2">
+						<label htmlFor="email-signature-name" className="t-l-1 mb-1">
 							Name
 						</label>
 						<input
@@ -93,7 +93,7 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 						/>
 					</div>
 					<div className="flex flex-1 flex-col gap-1">
-						<label htmlFor="email-signature-position" className="t-l-2">
+						<label htmlFor="email-signature-position" className="t-l-1 mb-1">
 							Position
 						</label>
 						<input
@@ -107,20 +107,20 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 					</div>
 				</div>
 				<div className="flex w-full flex-col gap-1">
-					<label htmlFor="email-signature-subtext" className="t-l-2">
+					<label htmlFor="email-signature-subtext" className="t-l-1 mb-1">
 						Subtext
 					</label>
 					<textarea
 						id="email-signature-subtext"
 						value={subtext}
 						placeholder="Enter your subtext"
-						rows={2}
+						rows={3}
 						onChange={onHandleInputSubtext}
 						className="bg-alabaster min-h-12 rounded border border-white px-2 py-1"
 					/>
 				</div>
 				<fieldset className="hidden w-full rounded border border-white p-4">
-					<legend className="t-l-2 bg-alabaster px-2">Icon Color</legend>
+					<legend className="t-l-1 bg-alabaster px-2">Icon Color</legend>
 					<div className="grid grid-cols-3 items-center gap-3">
 						{ICON_COLOR.map((color, i) => (
 							<div key={i} className="flex items-center">
@@ -135,7 +135,7 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 								/>
 								<label
 									htmlFor={`icon-color-${color}`}
-									className="t-l-2 capitalize"
+									className="t-l-1 capitalize"
 								>
 									{color}
 								</label>
@@ -181,7 +181,7 @@ export function PageEmailSignature({ siteUrl }: PageEmailSignature) {
 									<strong style={{ fontWeight: '700' }}>{name}</strong>
 									{position ? ` ${position} ` : ' '}
 								</p>
-								{subtext && <p>{formatNewLineToBr(subtext)}</p>}
+								{subtext && <p>{subtext}</p>}
 								<a
 									href={`${siteUrl}/?ref=email-sig`}
 									target="_blank"
