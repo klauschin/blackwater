@@ -14,8 +14,8 @@ interface ContactFormData {
 }
 
 interface PageContactProps {
-	data?: { 
-		title?: string; 
+	data?: {
+		title?: string;
 		description?: string;
 		contactForm?: ContactFormData;
 	};
@@ -31,9 +31,13 @@ export function PageContact({ data }: PageContactProps) {
 				{description && <p>{description}</p>}
 			</div>
 			<div className="lg:flex-1">
+				{contactForm?.formTitle && (
+					<h4 className="mb-15">{contactForm?.formTitle}</h4>
+				)}
 				<CustomForm
 					data={contactForm}
-					className="[&_h4]:mb-15 [&_button[type=submit]]:mt-15"
+					className="[&_button[type=submit]]:mt-15 space-y-6"
+					fieldGapX={10}
 				/>
 			</div>
 		</div>

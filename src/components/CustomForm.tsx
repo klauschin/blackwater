@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm, FieldValues, Control, ControllerFieldState } from 'react-hook-form';
+import {
+	Controller,
+	useForm,
+	FieldValues,
+	Control,
+	ControllerFieldState,
+} from 'react-hook-form';
 import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { hasArrayValue, toCamelCase } from '@/lib/utils';
@@ -79,7 +85,6 @@ interface FormFieldWithName extends FormField {
 }
 
 interface CustomFormData {
-	formTitle?: string;
 	formFields?: FormField[];
 	successMessage?: string;
 	errorMessage?: string;
@@ -92,6 +97,7 @@ interface CustomFormData {
 interface CustomFormProps {
 	data?: CustomFormData;
 	className?: string;
+	fieldGapX?: number;
 }
 
 interface EmailData {
@@ -185,7 +191,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 					{...controllerField}
 					id={id}
 					placeholder={placeholder}
-					className={cn({ 'pr-8': fieldState.invalid })}
+					className={cn('h-40 resize-none')}
 				/>
 			);
 		case 'select':
@@ -283,9 +289,8 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 	);
 };
 
-export function CustomForm({ data, className }: CustomFormProps) {
+export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 	const {
-		formTitle,
 		formFields,
 		successMessage,
 		errorMessage,
@@ -327,7 +332,7 @@ export function CustomForm({ data, className }: CustomFormProps) {
 		};
 
 		try {
-			const response = await fetch('/api/submit-form', {
+			const response = await fetch('/api/contact-form/submit', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -356,55 +361,48 @@ export function CustomForm({ data, className }: CustomFormProps) {
 				bodyData: bodyData,
 				errorInfo: error instanceof Error ? error.message : String(error),
 			});
-		} finally {
-			setTimeout(() => {
-				if (formState === FORM_STATES.SUCCESS) form.reset();
-			}, 1000);
 		}
 	};
 
 	if (!hasArrayValue(formFields)) return null;
 
 	return (
-		<div className={cn(className)}>
-			{formTitle && <h4>{formTitle}</h4>}
-			<form
-				onSubmit={form.handleSubmit(onHandleSubmit)}
-				className={cn('space-y-5', className)}
+		<form
+			onSubmit={form.handleSubmit(onHandleSubmit)}
+			className={cn(className)}
+		>
+			<FieldGroup
+				className="flex flex-wrap gap-x-(--gap-x) gap-y-4"
+				style={{ '--gap-x': `${fieldGapX}px` } as React.CSSProperties}
 			>
-				<FieldGroup>
-					<div
-						className="flex flex-wrap gap-x-(--gap-x) gap-y-4"
-						style={{ '--gap-x': '10px' } as React.CSSProperties}
-					>
-						{formFieldData.map((field) => (
-							<FormItem key={field._key} field={field} form={form} />
-						))}
-					</div>
-				</FieldGroup>
-				{formState === FORM_STATES.SUCCESS && (
-					<p>{successMessage || 'Success. Your message has been sent.'}</p>
-				)}
-				{formState === FORM_STATES.ERROR && (
-					<p>
-						{errorMessage ||
-							'Error. There was an issue submitting your message. Please try again later.'}
-					</p>
-				)}
-				{legalConsent && (
-					<div className="mt-auto max-w-[340px] text-[10px]">
-						<CustomPortableText blocks={legalConsent} />
-					</div>
-				)}
-				<Button
-					type="submit"
-					disabled={formState === FORM_STATES.SUBMITTING}
-					className={cn('w-fit')}
-				>
-					{formState === FORM_STATES.SUBMITTING ? 'Sending...' : 'Submit'}
-				</Button>
-			</form>
-		</div>
+				{formFieldData.map((field) => (
+					<FormItem key={field._key} field={field} form={form} />
+				))}
+			</FieldGroup>
+			{formState === FORM_STATES.SUCCESS && (
+				<p className="t-b-1">
+					{successMessage || 'Success. Your message has been sent.'}
+				</p>
+			)}
+			{formState === FORM_STATES.ERROR && (
+				<p>
+					{errorMessage ||
+						'Error. There was an issue submitting your message. Please try again later.'}
+				</p>
+			)}
+			{legalConsent && (
+				<div className="mt-auto max-w-[340px] text-[10px]">
+					<CustomPortableText blocks={legalConsent} />
+				</div>
+			)}
+			<Button
+				type="submit"
+				disabled={formState === FORM_STATES.SUBMITTING}
+				className={cn('w-fit')}
+			>
+				{formState === FORM_STATES.SUBMITTING ? 'Sending...' : 'Submit'}
+			</Button>
+		</form>
 	);
 }
 
