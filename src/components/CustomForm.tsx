@@ -348,6 +348,7 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 					errorInfo: errorText,
 				});
 				setFormState(FORM_STATES.ERROR);
+				form.reset();
 				throw new Error(errorText);
 			}
 
