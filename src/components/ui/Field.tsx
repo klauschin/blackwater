@@ -96,7 +96,7 @@ function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
 		<div
 			data-slot="field-content"
 			className={cn(
-				'gap-1.5 group/field-content flex flex-1 flex-col leading-snug',
+				'gap-1 group/field-content flex flex-1 flex-col leading-snug',
 				className
 			)}
 			{...props}
@@ -112,7 +112,7 @@ function FieldLabel({
 		<Label
 			data-slot="field-label"
 			className={cn(
-				'has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug',
+				'has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 gap-1 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug text-xs',
 				'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
 				className
 			)}

@@ -758,6 +758,34 @@
                 {
                   "type": "string",
                   "value": "normal"
+                },
+                {
+                  "type": "string",
+                  "value": "h1"
+                },
+                {
+                  "type": "string",
+                  "value": "h2"
+                },
+                {
+                  "type": "string",
+                  "value": "h3"
+                },
+                {
+                  "type": "string",
+                  "value": "h4"
+                },
+                {
+                  "type": "string",
+                  "value": "h5"
+                },
+                {
+                  "type": "string",
+                  "value": "h6"
+                },
+                {
+                  "type": "string",
+                  "value": "blockquote"
                 }
               ]
             },
@@ -767,7 +795,16 @@
             "type": "objectAttribute",
             "value": {
               "type": "union",
-              "of": []
+              "of": [
+                {
+                  "type": "string",
+                  "value": "bullet"
+                },
+                {
+                  "type": "string",
+                  "value": "number"
+                }
+              ]
             },
             "optional": true
           },
@@ -778,16 +815,31 @@
               "of": {
                 "type": "object",
                 "attributes": {
-                  "_key": {
+                  "href": {
                     "type": "objectAttribute",
                     "value": {
                       "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "link"
                     }
                   }
                 },
                 "rest": {
-                  "type": "inline",
-                  "name": "link"
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -1615,6 +1667,14 @@
               "optional": true
             }
           }
+        },
+        "optional": true
+      },
+      "legalConsent": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "portableTextSimple"
         },
         "optional": true
       },

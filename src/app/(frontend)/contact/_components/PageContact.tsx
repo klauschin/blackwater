@@ -1,5 +1,5 @@
 'use client';
-
+import CustomPortableText from '@/components/CustomPortableText';
 import { CustomForm } from '@/components/CustomForm';
 
 interface ContactFormData {
@@ -10,7 +10,6 @@ interface ContactFormData {
 	sendToEmail?: string;
 	emailSubject?: string;
 	formFailureNotificationEmail?: string;
-	legalConsent?: any;
 }
 
 interface PageContactProps {
@@ -18,11 +17,12 @@ interface PageContactProps {
 		title?: string;
 		description?: string;
 		contactForm?: ContactFormData;
+		legalConsent?: any;
 	};
 }
 
 export function PageContact({ data }: PageContactProps) {
-	const { title, description, contactForm } = data || {};
+	const { title, description, contactForm, legalConsent } = data || {};
 
 	return (
 		<div className="px-contain m-auto flex flex-wrap justify-center h-main pt-[25vh]">
@@ -36,9 +36,14 @@ export function PageContact({ data }: PageContactProps) {
 				)}
 				<CustomForm
 					data={contactForm}
-					className="[&_button[type=submit]]:mt-15 space-y-6"
+					className="[&_button[type=submit]]:w-full [&_button[type=submit]]:mt-15 space-y-4 [&_label]:uppercase"
 					fieldGapX={10}
 				/>
+				{legalConsent && (
+					<div className="mt-4 text-xs">
+						<CustomPortableText blocks={legalConsent} />
+					</div>
+				)}
 			</div>
 		</div>
 	);

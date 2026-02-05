@@ -225,6 +225,9 @@ export const pageContactQuery = defineQuery(`
 			sendToEmail,
 			emailSubject,
 			formFailureNotificationEmail
+		},
+		legalConsent[]{
+			${portableTextContentFields}
 		}
 	}
 `);

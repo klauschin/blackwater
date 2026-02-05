@@ -52,6 +52,10 @@ export const pContact = defineType({
 				},
 			],
 		},
+		{
+			name: 'legalConsent',
+			type: 'portableTextSimple',
+		},
 		sharing(),
 	],
 });

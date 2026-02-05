@@ -14,7 +14,6 @@ import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { hasArrayValue, toCamelCase } from '@/lib/utils';
 import { formatObjectToHtml } from '@/lib/utils';
-import CustomPortableText from '@/components/CustomPortableText';
 
 import { Button } from '@/components/ui/Button';
 import {
@@ -91,7 +90,6 @@ interface CustomFormData {
 	sendToEmail?: string;
 	emailSubject?: string;
 	formFailureNotificationEmail?: string;
-	legalConsent?: any; // Type based on your CustomPortableText blocks type
 }
 
 interface CustomFormProps {
@@ -205,7 +203,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 						id={id}
 						className={cn('w-full', { ' pr-8': fieldState.invalid })}
 					>
-						<SelectValue placeholder="Select one" />
+						<SelectValue placeholder={placeholder} />
 					</SelectTrigger>
 					<SelectContent side="bottom" position="popper">
 						{selectOptions?.map((item) => (
@@ -250,8 +248,8 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 						<FieldContent>
 							<FieldLabel
 								htmlFor={id}
-								className={cn('capitalize', {
-									"gap-0 after:content-['*']": field.required,
+								className={cn({
+									"after:content-['*']": field.required,
 								})}
 							>
 								{fieldLabel}
@@ -297,10 +295,9 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 		sendToEmail,
 		emailSubject,
 		formFailureNotificationEmail,
-		legalConsent,
 	} = data || {};
-	const [formState, setFormState] = useState<FormState>(FORM_STATES.IDLE);
 
+	const [formState, setFormState] = useState<FormState>(FORM_STATES.IDLE);
 	const formFieldData: FormFieldWithName[] = (formFields || []).map((item) => {
 		return {
 			...item,
@@ -390,11 +387,6 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 					{errorMessage ||
 						'Error. There was an issue submitting your message. Please try again later.'}
 				</p>
-			)}
-			{legalConsent && (
-				<div className="mt-auto max-w-[340px] text-[10px]">
-					<CustomPortableText blocks={legalConsent} />
-				</div>
 			)}
 			<Button
 				type="submit"

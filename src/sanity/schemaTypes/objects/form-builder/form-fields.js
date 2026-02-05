@@ -59,9 +59,10 @@ export const formFields = defineType({
 			inputType: 'inputType',
 		},
 		prepare({ required, fieldLabel, inputType }) {
+			const statusText = required ? 'Required' : 'Optional';
 			return {
-				title: `${fieldLabel} ${required ? '(required)' : '(optional)'}`,
-				subtitle: `Type: ${inputType}`,
+				title: `${fieldLabel}`,
+				subtitle: `(${inputType}) — ${statusText}`,
 			};
 		},
 	},
