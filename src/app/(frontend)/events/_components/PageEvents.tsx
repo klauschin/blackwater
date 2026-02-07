@@ -5,6 +5,7 @@ import Link from 'next/link';
 import CustomLink from '@/components/CustomLink';
 import { format } from 'date-fns';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from '@/components/SvgIcons';
 import { buildRgbaCssString, hasArrayValue } from '@/lib/utils';
 import { fadeAnim } from '@/lib/animate';
 import { Button } from '@/components/ui/Button';
@@ -153,7 +154,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							size="sm"
 							className="uppercase t-b-2 cursor-pointer hover:opacity-60"
 						>
-							<ArrowLeft className="size-3.5" />
+							<ArrowLeft />
 							Previous
 						</Button>
 						/
@@ -250,12 +251,12 @@ export function PageEvents({ data }: PageEventsProps) {
 								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0 h-full flex items-center">
 									<p
 										className={cn('relative', {
-											'underline hover:opacity-60 transition-opacity':
-												locationLink,
+											'hover:opacity-60 transition-opacity': locationLink,
 										})}
 									>
 										{location}
 									</p>
+									{locationLink && <ArrowUpRight className="size-2 ml-1" />}
 									{locationLink && (
 										<Link
 											className="p-fill increase-target-size"
