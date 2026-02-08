@@ -31,11 +31,14 @@ export async function POST(req: NextRequest) {
 		return Response.json(info);
 	} catch (err) {
 		console.error(err);
+		const errorMessage =
+			err instanceof Error ? err.message : 'An unknown error occurred';
+		const errorDetails = err instanceof Error ? err.toString() : String(err);
 		return NextResponse.json(
 			{
 				status: 'error',
-				message: err.message,
-				details: err.toString(),
+				message: errorMessage,
+				details: errorDetails,
 			},
 			{ status: 500 }
 		);

@@ -30,13 +30,13 @@ export function PageContact({ data }: PageContactProps) {
 				{title && <h1 className="t-l-1 uppercase">{title}</h1>}
 				{description && <p>{description}</p>}
 			</div>
-			<div className="lg:flex-1">
+			<div className="lg:flex-1 flex flex-col justify-center">
 				{contactForm?.formTitle && (
 					<h4 className="mb-15">{contactForm?.formTitle}</h4>
 				)}
 				<CustomForm
 					data={contactForm}
-					className="[&_button[type=submit]]:w-full [&_button[type=submit]]:mt-15 space-y-4 [&_label]:uppercase"
+					className="[&_button[type=submit]]:w-full space-y-4 [&_label]:uppercase"
 					fieldGapX={10}
 				/>
 				{legalConsent && (
