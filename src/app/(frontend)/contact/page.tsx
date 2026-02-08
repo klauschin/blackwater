@@ -19,8 +19,9 @@ export default async function Page() {
 		query: pageContactQuery,
 		tags: ['pContact'],
 	});
+	const { sharing } = data;
 
-	if (!data) return notFound();
+	if (!data || sharing.disableIndex === true) return notFound();
 
 	return <PageContact data={data} />;
 }

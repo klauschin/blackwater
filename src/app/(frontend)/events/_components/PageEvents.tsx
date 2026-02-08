@@ -248,15 +248,18 @@ export function PageEvents({ data }: PageEventsProps) {
 										? format(new Date(eventDatetime), 'iii, MM.dd.yy, h:mm aaa')
 										: 'TBD'}
 								</Td>
-								<Td className="t-b-1 uppercase whitespace-pre-wrap text-balance mt-2 lg:mt-0 h-full flex items-center">
-									<p
-										className={cn('relative', {
-											'hover:opacity-60 transition-opacity': locationLink,
-										})}
-									>
-										{location}
-									</p>
-									{locationLink && <ArrowUpRight className="size-2 ml-1" />}
+								<Td
+									className={cn(
+										't-h-6 uppercase text-balance mt-2 lg:mt-0 whitespace-pre-line group/location'
+									)}
+								>
+									{location}
+									{locationLink && (
+										<span className="whitespace-nowrap -translate-y-0.25 ml-1 inline-block group-hover/location:translate-x-0.5 group-hover/location:-translate-y-0.5 transition-transform">
+											&#8203;
+											<ArrowUpRight className="size-2 inline-block" />
+										</span>
+									)}
 									{locationLink && (
 										<Link
 											className="p-fill increase-target-size"

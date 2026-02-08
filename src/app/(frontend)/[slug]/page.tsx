@@ -42,9 +42,8 @@ export default async function PageSlugRoute(props: MetadataProps) {
 		tags: [`pGeneral:${params.slug}`],
 	});
 
-	if (!data) {
-		return notFound();
-	}
+	const { sharing } = data;
+	if (!data || sharing.disableIndex === true) return notFound();
 
 	return <PageGeneral data={data} />;
 }
