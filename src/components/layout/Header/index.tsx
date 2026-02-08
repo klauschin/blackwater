@@ -25,7 +25,7 @@ export function Header({ data }: { data: HeaderProps }) {
 				aria-label={siteTitle}
 				className="w-24 text-foreground mr-auto lg:mx-auto h-full flex items-center hover:opacity-90 transition-opacity"
 			>
-				<LogoSvg />
+				<LogoSvg className="h-full" />
 				<span className="sr-only">{siteTitle}</span>
 			</Link>
 			<div className="t-b-2 ml-auto flex items-center gap-0.5 uppercase">
