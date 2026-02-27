@@ -2,10 +2,14 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
-import { LinkIcon, MasterDetailIcon, SearchIcon } from '@sanity/icons';
+import {
+	DocumentPdfIcon,
+	LinkIcon,
+	MasterDetailIcon,
+	SearchIcon,
+} from '@sanity/icons';
 import { Autocomplete, Card, Flex, Stack, Text } from '@sanity/ui';
-import { resolveHref } from '@/lib/utils';
-import { isValidUrl } from '@/lib/utils';
+import { isValidUrl, resolveHref, validateEmail } from '@/lib/utils';
 import { set } from 'sanity';
 
 const pageDocumentOrder = [
@@ -19,47 +23,92 @@ const pageDocumentOrder = [
 ];
 
 const fetchOptions = async () => {
-	const groqQuery = `*[_type in ${JSON.stringify(pageDocumentOrder)}] {
-		title,
-		_type,
-		_id,
-		"slug": slug.current,
-	}`;
+	const groqQuery = `{
+    "pages": * [_type in ${JSON.stringify(pageDocumentOrder)}] {
+      title,
+      _type,
+      _id,
+      "slug": slug.current,
+    },
+    "files": * [_type == "sanity.fileAsset" && mimeType == "application/pdf"] {
+      _id,
+      originalFilename,
+      url,
+      size
+    }
+  }`;
+
 	const data = await client.fetch(groqQuery);
-	return data
+
+	const sortOrderMap = new Map(pageDocumentOrder.map((type, i) => [type, i]));
+	const DEFAULT_RANK = pageDocumentOrder.length;
+
+	const getPageTitle = (type, title) => {
+		switch (type) {
+			case 'pHome':
+				return 'Home Page';
+			default:
+				return Array.isArray(title) ? toPlainText(title) : title;
+		}
+	};
+
+	const fileOptions = (data.files || []).map((fileItem) => ({
+		value: fileItem.url,
+		payload: {
+			pageTitle: fileItem.originalFilename,
+			_id: fileItem._id,
+			_type: 'pdf',
+			route: fileItem.url,
+			isInternal: false,
+			isFile: true,
+			fileSize: fileItem.size,
+		},
+	}));
+
+	const pageOptions = (data.pages || [])
 		.map(({ _type, slug, _id, title }) => ({
 			value: _id,
 			payload: {
-				pageTitle:
-					_type === 'pHome'
-						? 'Home Page'
-						: Array.isArray(title)
-							? toPlainText(title)
-							: title,
+				pageTitle: getPageTitle(_type, title),
 				_id,
 				_type,
 				slug,
 				route: resolveHref({ documentType: _type, slug }),
 				isInternal: true,
+				isFile: false,
 			},
 		}))
-		.sort(
-			(a, b) =>
-				(pageDocumentOrder.indexOf(a.payload._type) ||
-					pageDocumentOrder.length) -
-				(pageDocumentOrder.indexOf(b.payload._type) || pageDocumentOrder.length)
-		);
+		.sort((a, b) => {
+			const rankA = sortOrderMap.has(a.payload._type)
+				? sortOrderMap.get(a.payload._type)
+				: DEFAULT_RANK;
+			const rankB = sortOrderMap.has(b.payload._type)
+				? sortOrderMap.get(b.payload._type)
+				: DEFAULT_RANK;
+			return rankA - rankB;
+		});
+
+	return [...pageOptions, ...fileOptions];
 };
 
 const renderOption = (option) => {
 	const { isNew, payload } = option;
-	const { pageTitle, route } = payload;
+	const { pageTitle, route, isFile, fileSize } = payload;
+
+	// Format file size for display
+	const formatFileSize = (bytes) => {
+		if (!bytes) return '';
+		const mb = bytes / (1024 * 1024);
+		return mb < 1 ? `${(bytes / 1024).toFixed(0)} KB` : `${mb.toFixed(1)} MB`;
+	};
 
 	return (
 		<Card as="button" padding={[4, 2]}>
 			<Flex>
 				{isNew ? (
 					<LinkIcon style={{ fontSize: 36 }} />
+				) : isFile ? (
+					<DocumentPdfIcon style={{ fontSize: 36 }} />
 				) : (
 					<MasterDetailIcon style={{ fontSize: 36 }} />
 				)}
@@ -68,7 +117,9 @@ const renderOption = (option) => {
 						{pageTitle}
 					</Text>
 					<Text size={1} muted>
-						{route || option.value}
+						{isFile && fileSize
+							? `${route} • ${formatFileSize(fileSize)}`
+							: route || option.value}
 					</Text>
 				</Stack>
 			</Flex>
@@ -77,7 +128,8 @@ const renderOption = (option) => {
 };
 
 export const LinkInput = (props) => {
-	const { elementProps, onChange, value } = props;
+	const { inputProps } = props;
+	const { elementProps, onChange, value } = inputProps;
 	const [loading, setLoading] = useState(true);
 	const [pageItemData, setPageItemData] = useState([]);
 	const [optionsList, setOptionsList] = useState([]);
@@ -85,43 +137,45 @@ export const LinkInput = (props) => {
 	const handleChange = useCallback(
 		(selectedValue) => {
 			if (!selectedValue) {
-				const linkValue = {
-					_type: 'linkInput',
-					linkType: 'internal',
-					internalLink: undefined,
-					externalUrl: undefined,
-				};
-				onChange(set(linkValue));
-
+				onChange(
+					set({
+						_type: 'linkInput',
+						linkType: 'internal',
+						internalLink: undefined,
+						externalUrl: undefined,
+						isFile: false,
+					})
+				);
 				return;
 			}
 
-			// Find the selected option to determine if it's internal or external
 			const selectedOption = optionsList.find(
 				(option) => option.value === selectedValue
 			);
 
 			if (selectedOption?.payload?.isInternal) {
-				// For internal pages, create the link object with reference
-				const linkValue = {
-					_type: 'linkInput',
-					linkType: 'internal',
-					internalLink: {
-						_type: 'reference',
-						_ref: selectedValue,
-					},
-					externalUrl: undefined,
-				};
-				return onChange(set(linkValue));
+				onChange(
+					set({
+						_type: 'linkInput',
+						linkType: 'internal',
+						internalLink: {
+							_type: 'reference',
+							_ref: selectedValue,
+						},
+						externalUrl: undefined,
+						isFile: false,
+					})
+				);
 			} else {
-				// For external links, create the link object with URL
-				const linkValue = {
-					_type: 'linkInput',
-					linkType: 'external',
-					internalLink: undefined,
-					externalUrl: selectedValue,
-				};
-				return onChange(set(linkValue));
+				onChange(
+					set({
+						_type: 'linkInput',
+						linkType: 'external',
+						internalLink: undefined,
+						externalUrl: selectedValue,
+						isFile: selectedOption?.payload?.isFile || false,
+					})
+				);
 			}
 		},
 		[onChange, optionsList]
@@ -135,17 +189,29 @@ export const LinkInput = (props) => {
 				return (
 					payload.route?.toLowerCase().includes(queryLower) ||
 					payload.pageTitle?.toLowerCase().includes(queryLower) ||
-					payload._id.toLowerCase().includes(queryLower)
+					payload._id?.toLowerCase().includes(queryLower)
 				);
 			});
 
+			const isSpecialLink =
+				(query || '').startsWith('mailto:') || (query || '').startsWith('tel:');
+
+			const isEmail = validateEmail(query);
+			const processedQuery =
+				isEmail && !query.startsWith('mailto:') ? `mailto:${query}` : query;
+
 			const result = filteredOptions.length
 				? filteredOptions
-				: isValidUrl(query)
+				: isValidUrl(query) || isSpecialLink || isEmail
 					? [
 							{
-								value: query,
-								payload: { pageTitle: query, route: query, isInternal: false },
+								value: processedQuery,
+								payload: {
+									pageTitle: processedQuery,
+									route: processedQuery,
+									isInternal: false,
+									isFile: false,
+								},
 								isNew: true,
 							},
 						]
@@ -204,7 +270,12 @@ export const LinkInput = (props) => {
 			}
 
 			if (value.linkType === 'external' && value.externalUrl) {
-				return value.externalUrl;
+				// Check if it's a file URL
+				const fileOption = pageItemData.find(
+					// CHANGE variable name
+					(item) => item.payload.isFile && item.value === value.externalUrl
+				);
+				return fileOption ? fileOption.payload.pageTitle : value.externalUrl;
 			}
 
 			return '';

@@ -31,10 +31,22 @@ export const linkInput = defineType({
 			name: 'externalUrl',
 			title: 'External URL',
 			type: 'url',
+			validation: (Rule) =>
+				Rule.uri({
+					scheme: ['http', 'https', 'mailto', 'tel'],
+				}),
 			hidden: ({ parent }) => parent?.linkType !== 'external',
+		}),
+		defineField({
+			name: 'isFile',
+			type: 'boolean',
+			initialValue: false,
 		}),
 	],
 	components: {
-		input: LinkInput,
+		field: LinkInput,
+	},
+	options: {
+		collapsible: false,
 	},
 });

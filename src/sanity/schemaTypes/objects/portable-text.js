@@ -1,7 +1,21 @@
-import callToAction from '@/sanity/schemaTypes/objects/call-to-action';
 import customIframe from '@/sanity/schemaTypes/objects/custom-iframe';
 import customImage from '@/sanity/schemaTypes/objects/custom-image';
+import { link } from '@/sanity/schemaTypes/objects/link';
+import { BlockquoteIcon, InfoOutlineIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
+
+const H2 = (props) => <span className="t-h-2">{props.children}</span>;
+const H3 = (props) => <span className="t-h-3">{props.children}</span>;
+const H4 = (props) => <span className="t-h-4">{props.children}</span>;
+const Normal = (props) => <span className="t-b-1">{props.children}</span>;
+const Normal2 = (props) => <span className="t-b-2">{props.children}</span>;
+const Blockquote = (props) => {
+	return (
+		<blockquote className="before:inline before:content-[open-quote] after:inline after:content-[close-quote]">
+			{props.renderDefault(props)}
+		</blockquote>
+	);
+};
 
 export const portableText = defineType({
 	name: 'portableText',
@@ -11,33 +25,23 @@ export const portableText = defineType({
 			title: 'Block',
 			type: 'block',
 			styles: [
-				{ title: 'Paragraph', value: 'normal' },
-				{
-					title: 'Heading 1',
-					value: 'h1',
-				},
 				{
 					title: 'Heading 2',
 					value: 'h2',
+					component: H2,
 				},
 				{
 					title: 'Heading 3',
 					value: 'h3',
+					component: H3,
 				},
 				{
 					title: 'Heading 4',
 					value: 'h4',
+					component: H4,
 				},
-				{
-					title: 'Heading 5',
-					value: 'h5',
-				},
-				{
-					title: 'Heading 6',
-					value: 'h6',
-				},
-				{ title: 'Label', value: 'label' },
-				{ title: 'Quote', value: 'blockquote' },
+				{ title: 'Paragraph', value: 'normal', component: Normal },
+				{ title: 'Paragraph 2', value: 'normal-2', component: Normal2 },
 			],
 			lists: [
 				{ title: 'Bullet', value: 'bullet' },
@@ -48,18 +52,49 @@ export const portableText = defineType({
 					{ title: 'Bold', value: 'strong' },
 					{ title: 'Italic', value: 'em' },
 					{ title: 'Underline', value: 'underline' },
-					{ title: 'Strike', value: 'strike-through' },
 				],
 				annotations: [
 					{
-						name: 'link',
-						type: 'link',
+						name: 'blockquote',
+						type: 'object',
+						title: 'Quote',
+						icon: BlockquoteIcon,
+						fields: [
+							{
+								name: 'author',
+								type: 'string',
+							},
+							{
+								name: 'title',
+								type: 'string',
+							},
+							{
+								name: 'isHidden',
+								type: 'boolean',
+								initialValue: true,
+							},
+						],
+						components: { annotation: Blockquote },
 					},
-					callToAction({ title: 'Button', showLabel: false }),
+					link({
+						showLabel: false,
+						options: {
+							modal: { type: 'dialog' },
+						},
+					}),
+					link({
+						title: 'Button',
+						name: 'callToAction',
+						showLabel: false,
+						icon: InfoOutlineIcon,
+						options: {
+							modal: { type: 'dialog' },
+						},
+					}),
 				],
 			},
 		},
-		customImage({ hasLinkOptions: true }),
+		customImage({ hasLinkOptions: true, hasCaptionOptions: true }),
 		customIframe(),
 	],
 });

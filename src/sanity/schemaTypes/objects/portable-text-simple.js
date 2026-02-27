@@ -1,4 +1,5 @@
 import { defineField } from 'sanity';
+import { link } from '@/sanity/schemaTypes/objects/link';
 
 export const portableTextSimple = defineField({
 	name: 'portableTextSimple',
@@ -17,10 +18,12 @@ export const portableTextSimple = defineField({
 					{ title: 'Strike', value: 'strike-through' },
 				],
 				annotations: [
-					{
-						name: 'link',
-						type: 'link',
-					},
+					link({
+						showLabel: false,
+						options: {
+							modal: { type: 'dialog' },
+						},
+					}),
 				],
 			},
 		},
