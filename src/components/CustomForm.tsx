@@ -31,6 +31,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	SelectGroup,
 } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 
@@ -205,12 +206,15 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 					>
 						<SelectValue placeholder={placeholder} />
 					</SelectTrigger>
+
 					<SelectContent side="bottom" position="popper">
-						{selectOptions?.map((item) => (
-							<SelectItem key={item._key} value={item.value}>
-								{item.title}
-							</SelectItem>
-						))}
+						<SelectGroup>
+							{selectOptions?.map((item) => (
+								<SelectItem key={item._key} value={item.value}>
+									{item.title}
+								</SelectItem>
+							))}
+						</SelectGroup>
 					</SelectContent>
 				</Select>
 			);
