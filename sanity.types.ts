@@ -984,3 +984,1080 @@ export type AllSanitySchemaTypes =
 	| SanityImageAsset
 	| Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./src/sanity/lib/queries.ts
+// Variable: homeID
+// Query: *[_type == "pHome"][0]._id
+export type HomeIDResult = string | null;
+// Variable: siteDataQuery
+// Query: {		"announcement": *[_type == "gAnnouncement"][0]{			display,			messages,			autoplay,			autoplayInterval,			backgroundColor,			textColor,			emphasizeColor,			"link": 	_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		"header": *[_type == "gHeader"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			}		},		"footer": *[_type == "gFooter"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"menuLegal": menuLegal->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"toolbarMenu": toolbarMenu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			note		},		"sharing": *[_type == "settingsGeneral"][0]{			siteTitle,			shareGraphic,			'shareVideo': shareVideo.asset->url,			favicon,			faviconLight		},		"integrations": *[_type == "settingsIntegration"][0]{			gaIDs,			gtmIDs		},	}
+export type SiteDataQueryResult = {
+	announcement: {
+		display: 'all' | 'hidden' | 'homepage' | null;
+		messages: Array<{
+			content?: PortableTextSimple;
+			_key: string;
+		}> | null;
+		autoplay: boolean | null;
+		autoplayInterval: number | null;
+		backgroundColor: Color | null;
+		textColor: Color | null;
+		emphasizeColor: Color | null;
+		link: 'gAnnouncement';
+		linkType: null;
+		href: null;
+		isNewTab: null;
+	} | null;
+	header: {
+		menu: {
+			_id: string;
+			_type: 'settingsMenu';
+			title: string | null;
+			items: Array<
+				| {
+						title: string | null;
+						link: {
+							_type: 'link';
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+							isNewTab: boolean | null;
+						} | null;
+						dropdownItems: null;
+				  }
+				| {
+						title: string | null;
+						link: null;
+						dropdownItems: Array<{
+							_key: string;
+							title: string | null;
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+						}> | null;
+				  }
+			> | null;
+		} | null;
+	} | null;
+	footer: {
+		menu: {
+			_id: string;
+			_type: 'settingsMenu';
+			title: string | null;
+			items: Array<
+				| {
+						title: string | null;
+						link: {
+							_type: 'link';
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+							isNewTab: boolean | null;
+						} | null;
+						dropdownItems: null;
+				  }
+				| {
+						title: string | null;
+						link: null;
+						dropdownItems: Array<{
+							_key: string;
+							title: string | null;
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+						}> | null;
+				  }
+			> | null;
+		} | null;
+		menuLegal: {
+			_id: string;
+			_type: 'settingsMenu';
+			title: string | null;
+			items: Array<
+				| {
+						title: string | null;
+						link: {
+							_type: 'link';
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+							isNewTab: boolean | null;
+						} | null;
+						dropdownItems: null;
+				  }
+				| {
+						title: string | null;
+						link: null;
+						dropdownItems: Array<{
+							_key: string;
+							title: string | null;
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+						}> | null;
+				  }
+			> | null;
+		} | null;
+		toolbarMenu: {
+			_id: string;
+			_type: 'settingsMenu';
+			title: string | null;
+			items: Array<
+				| {
+						title: string | null;
+						link: {
+							_type: 'link';
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+							isNewTab: boolean | null;
+						} | null;
+						dropdownItems: null;
+				  }
+				| {
+						title: string | null;
+						link: null;
+						dropdownItems: Array<{
+							_key: string;
+							title: string | null;
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+						}> | null;
+				  }
+			> | null;
+		} | null;
+		note: string | null;
+	} | null;
+	sharing: {
+		siteTitle: string | null;
+		shareGraphic: {
+			asset?: SanityImageAssetReference;
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: 'image';
+		} | null;
+		shareVideo: string | null;
+		favicon: {
+			asset?: SanityImageAssetReference;
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: 'image';
+		} | null;
+		faviconLight: {
+			asset?: SanityImageAssetReference;
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: 'image';
+		} | null;
+	} | null;
+	integrations: {
+		gaIDs: Array<string> | null;
+		gtmIDs: Array<string> | null;
+	} | null;
+};
+// Variable: pageHomeQuery
+// Query: *[_type == "pHome"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"isHomepage": true,		landingTitle,		"textColor": textColor->color,		pageModules[]{				_type == 'freeform' => {			_type,	_key,	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	sectionAppearance {		...,		"backgroundColor": backgroundColor->color,		"textColor": textColor->color	}	},		}	}
+export type PageHomeQueryResult = {
+	_id: string;
+	_type: 'pHome';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	isHomepage: true;
+	landingTitle: string | null;
+	textColor: Color | null;
+	pageModules: Array<{
+		_type: 'freeform';
+		_key: string;
+		content: Array<
+			| {
+					children?: Array<{
+						marks?: Array<string>;
+						text?: string;
+						_type: 'span';
+						_key: string;
+					}>;
+					style?:
+						| 'blockquote'
+						| 'h1'
+						| 'h2'
+						| 'h3'
+						| 'h4'
+						| 'h5'
+						| 'h6'
+						| 'label'
+						| 'normal';
+					listItem?: 'bullet' | 'number';
+					markDefs: Array<
+						| {
+								link: {
+									_type: 'link';
+									linkType: 'external' | 'internal' | null;
+									href: string | null | '/';
+									isNewTab: boolean | null;
+								} | null;
+								_type: 'callToAction';
+								_key: string;
+								label: null;
+								isButton: true;
+						  }
+						| {
+								_key: string;
+								_type: 'link';
+								linkInput?: LinkInput;
+								isNewTab: boolean | null;
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+						  }
+					> | null;
+					level?: number;
+					_type: 'block';
+					_key: string;
+			  }
+			| {
+					embedSnippet?: string;
+					_type: 'iframe';
+					_key: string;
+					markDefs: null;
+			  }
+			| {
+					asset: SanityImageAssetReference | null;
+					media?: unknown;
+					hotspot: SanityImageHotspot | null;
+					crop: SanityImageCrop | null;
+					alt?: string;
+					link: {
+						_type: 'link';
+						linkType: 'external' | 'internal' | null;
+						href: string | null | '/';
+						isNewTab: boolean | null;
+					} | null;
+					_type: 'image';
+					_key: string;
+					markDefs: null;
+					customRatio: null;
+					meta: {
+						id: string | null;
+						alt: string | null;
+						type: string | null;
+						width: number | null;
+						height: number | null;
+						aspectRatio: number | null;
+						lqip: string | null;
+					} | null;
+			  }
+		> | null;
+		sectionAppearance: {
+			_type: 'sectionAppearance';
+			textAlign?: 'text-center' | 'text-justify' | 'text-left' | 'text-right';
+			maxWidth?: 'l' | 'm' | 'none' | 's' | 'xl' | 'xs';
+			spacingTop?:
+				| 0
+				| 1
+				| 10
+				| 11
+				| 12
+				| 14
+				| 16
+				| 2
+				| 20
+				| 24
+				| 28
+				| 3
+				| 32
+				| 36
+				| 4
+				| 40
+				| 44
+				| 48
+				| 5
+				| 52
+				| 56
+				| 6
+				| 60
+				| 64
+				| 7
+				| 72
+				| 8
+				| 80
+				| 9
+				| 96;
+			spacingTopDesktop?:
+				| 0
+				| 1
+				| 10
+				| 11
+				| 12
+				| 14
+				| 16
+				| 2
+				| 20
+				| 24
+				| 28
+				| 3
+				| 32
+				| 36
+				| 4
+				| 40
+				| 44
+				| 48
+				| 5
+				| 52
+				| 56
+				| 6
+				| 60
+				| 64
+				| 7
+				| 72
+				| 8
+				| 80
+				| 9
+				| 96;
+			spacingBottom?:
+				| 0
+				| 1
+				| 10
+				| 11
+				| 12
+				| 14
+				| 16
+				| 2
+				| 20
+				| 24
+				| 28
+				| 3
+				| 32
+				| 36
+				| 4
+				| 40
+				| 44
+				| 48
+				| 5
+				| 52
+				| 56
+				| 6
+				| 60
+				| 64
+				| 7
+				| 72
+				| 8
+				| 80
+				| 9
+				| 96;
+			spacingBottomDesktop?:
+				| 0
+				| 1
+				| 10
+				| 11
+				| 12
+				| 14
+				| 16
+				| 2
+				| 20
+				| 24
+				| 28
+				| 3
+				| 32
+				| 36
+				| 4
+				| 40
+				| 44
+				| 48
+				| 5
+				| 52
+				| 56
+				| 6
+				| 60
+				| 64
+				| 7
+				| 72
+				| 8
+				| 80
+				| 9
+				| 96;
+			backgroundColor: Color | null;
+			textColor: Color | null;
+		} | null;
+	}> | null;
+} | null;
+// Variable: page404Query
+// Query: *[_type == "p404" && _id == "p404"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		heading,		paragraph[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		callToAction{				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	}
+export type Page404QueryResult = {
+	_id: string;
+	_type: 'p404';
+	title: null;
+	slug: null;
+	sharing: {
+		siteTitle: string | null;
+	};
+	heading: string | null;
+	paragraph: Array<{
+		children?: Array<{
+			marks?: Array<string>;
+			text?: string;
+			_type: 'span';
+			_key: string;
+		}>;
+		style?: 'normal';
+		listItem?: never;
+		markDefs: Array<{
+			_key: string;
+			_type: 'link';
+			linkInput?: LinkInput;
+			isNewTab: boolean | null;
+			linkType: 'external' | 'internal' | null;
+			href: string | null | '/';
+		}> | null;
+		level?: number;
+		_type: 'block';
+		_key: string;
+	}> | null;
+	callToAction: {
+		label: string | null;
+		link: {
+			_type: 'link';
+			linkType: 'external' | 'internal' | null;
+			href: string | null | '/';
+			isNewTab: boolean | null;
+		} | null;
+		isButton: true;
+	} | null;
+} | null;
+// Variable: pageGeneralQuery
+// Query: *[_type == "pGeneral" && slug.current == $slug][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		content[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		_updatedAt	}
+export type PageGeneralQueryResult = {
+	_id: string;
+	_type: 'pGeneral';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	content: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: 'span';
+					_key: string;
+				}>;
+				style?:
+					| 'blockquote'
+					| 'h1'
+					| 'h2'
+					| 'h3'
+					| 'h4'
+					| 'h5'
+					| 'h6'
+					| 'label'
+					| 'normal';
+				listItem?: 'bullet' | 'number';
+				markDefs: Array<
+					| {
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+							_type: 'callToAction';
+							_key: string;
+							label: null;
+							isButton: true;
+					  }
+					| {
+							_key: string;
+							_type: 'link';
+							linkInput?: LinkInput;
+							isNewTab: boolean | null;
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+					  }
+				> | null;
+				level?: number;
+				_type: 'block';
+				_key: string;
+		  }
+		| {
+				embedSnippet?: string;
+				_type: 'iframe';
+				_key: string;
+				markDefs: null;
+		  }
+		| {
+				asset: SanityImageAssetReference | null;
+				media?: unknown;
+				hotspot: SanityImageHotspot | null;
+				crop: SanityImageCrop | null;
+				alt?: string;
+				link: {
+					_type: 'link';
+					linkType: 'external' | 'internal' | null;
+					href: string | null | '/';
+					isNewTab: boolean | null;
+				} | null;
+				_type: 'image';
+				_key: string;
+				markDefs: null;
+				customRatio: null;
+				meta: {
+					id: string | null;
+					alt: string | null;
+					type: string | null;
+					width: number | null;
+					height: number | null;
+					aspectRatio: number | null;
+					lqip: string | null;
+				} | null;
+		  }
+	> | null;
+	_updatedAt: string;
+} | null;
+// Variable: pageGeneralSlugsQuery
+// Query: *[_type == "pGeneral" && defined(slug.current)]  {"slug": slug.current}
+export type PageGeneralSlugsQueryResult = Array<{
+	slug: string | null;
+}>;
+// Variable: pageContactQuery
+// Query: *[_type == "pContact"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		description,		contactForm {			formTitle[]{					...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}			},				formFields[] {		placeholder,		_key,		required,		fieldLabel,		inputType,		size,		selectOptions[] {			_key,			"title": option,			"value": option		}	},			successMessage,			errorMessage,			sendToEmail,			emailSubject,			formFailureNotificationEmail		},		legalConsent[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		}	}
+export type PageContactQueryResult = {
+	_id: string;
+	_type: 'pContact';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	description: null;
+	contactForm: {
+		formTitle: null;
+		formFields: Array<{
+			placeholder: string | null;
+			_key: string;
+			required: boolean | null;
+			fieldLabel: string | null;
+			inputType:
+				| 'checkbox'
+				| 'email'
+				| 'file'
+				| 'select'
+				| 'tel'
+				| 'text'
+				| 'textarea'
+				| null;
+			size: null;
+			selectOptions: Array<{
+				_key: string;
+				title: string | null;
+				value: string | null;
+			}> | null;
+		}> | null;
+		successMessage: string | null;
+		errorMessage: string | null;
+		sendToEmail: string | null;
+		emailSubject: string | null;
+		formFailureNotificationEmail: string | null;
+	} | null;
+	legalConsent: null;
+} | null;
+// Variable: pEventsQuery
+// Query: *[_type == "pEvents"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},			subtitle,			eventDatetime,			location,			locationLink,			categories[]-> {				_id,				title,				"slug": slug.current,				categoryColor->{...color}			},			statusList[]{				_key,				link {						_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab				},				eventStatus-> {					_id,					title,					"slug": slug.current,					statusTextColor->{...color},					statusBgColor->{...color}				}			}		},	}
+export type PEventsQueryResult = {
+	_id: string;
+	_type: 'pEvents';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	eventList: Array<{
+		_id: string;
+		_type: 'pEvent';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		subtitle: string | null;
+		eventDatetime: string | null;
+		location: string | null;
+		locationLink: string | null;
+		categories: Array<{
+			_id: string;
+			title: string | null;
+			slug: string | null;
+			categoryColor:
+				| {
+						_type: 'color';
+						hex?: string;
+						alpha?: number;
+						hsl?: HslaColor;
+						hsv?: HsvaColor;
+						rgb?: RgbaColor;
+				  }
+				| {}
+				| null;
+		}> | null;
+		statusList: Array<{
+			_key: string;
+			link: {
+				_type: 'link';
+				linkType: 'external' | 'internal' | null;
+				href: string | null | '/';
+				isNewTab: boolean | null;
+			} | null;
+			eventStatus: {
+				_id: string;
+				title: string | null;
+				slug: string | null;
+				statusTextColor:
+					| {
+							_type: 'color';
+							hex?: string;
+							alpha?: number;
+							hsl?: HslaColor;
+							hsv?: HsvaColor;
+							rgb?: RgbaColor;
+					  }
+					| {}
+					| null;
+				statusBgColor:
+					| {
+							_type: 'color';
+							hex?: string;
+							alpha?: number;
+							hsl?: HslaColor;
+							hsv?: HsvaColor;
+							rgb?: RgbaColor;
+					  }
+					| {}
+					| null;
+			} | null;
+		}> | null;
+	}>;
+} | null;
+// Variable: pageBlogIndexQuery
+// Query: *[_type == "pBlogIndex"][0]{				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	"slug": "blog",	itemsPerPage,	paginationMethod,	loadMoreButtonLabel,	infiniteScrollCompleteLabel,	"itemsTotalCount": count(*[_type == "pBlog"])	}
+export type PageBlogIndexQueryResult = {
+	_id: string;
+	_type: 'pBlogIndex';
+	title: string | null;
+	slug: 'blog';
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	itemsPerPage: number | null;
+	paginationMethod: 'infinite-scroll' | 'load-more' | 'page-numbers' | null;
+	loadMoreButtonLabel: string | null;
+	infiniteScrollCompleteLabel: string | null;
+	itemsTotalCount: number;
+} | null;
+// Variable: pageBlogIndexWithArticleDataSSGQuery
+// Query: *[_type == "pBlogIndex"][0]{				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	"slug": "blog",	itemsPerPage,	paginationMethod,	loadMoreButtonLabel,	infiniteScrollCompleteLabel,	"itemsTotalCount": count(*[_type == "pBlog"]),			"articleList": *[_type == "pBlog"] | order(_updatedAt desc) [0...12] {				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt	}	}
+export type PageBlogIndexWithArticleDataSSGQueryResult = {
+	_id: string;
+	_type: 'pBlogIndex';
+	title: string | null;
+	slug: 'blog';
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	itemsPerPage: number | null;
+	paginationMethod: 'infinite-scroll' | 'load-more' | 'page-numbers' | null;
+	loadMoreButtonLabel: string | null;
+	infiniteScrollCompleteLabel: string | null;
+	itemsTotalCount: number;
+	articleList: Array<{
+		_id: string;
+		_type: 'pBlog';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		author: {
+			name: string | null;
+		} | null;
+		categories: Array<{
+			_id: string;
+			title: string | null;
+			slug: string | null;
+			categoryColor:
+				| {
+						_type: 'color';
+						hex?: string;
+						alpha?: number;
+						hsl?: HslaColor;
+						hsv?: HsvaColor;
+						rgb?: RgbaColor;
+				  }
+				| {}
+				| null;
+		}> | null;
+		excerpt: string | null;
+	}>;
+} | null;
+// Variable: pageBlogPaginationMethodQuery
+// Query: {		"articleTotalNumber": count(*[_type == "pBlog"]),		"itemsPerPage": *[_type == "pBlogIndex"][0].itemsPerPage	}
+export type PageBlogPaginationMethodQueryResult = {
+	articleTotalNumber: number;
+	itemsPerPage: number | null;
+};
+// Variable: pageBlogSlugsQuery
+// Query: *[_type == "pBlog" && defined(slug.current)]  {"slug": slug.current}
+export type PageBlogSlugsQueryResult = Array<{
+	slug: string | null;
+}>;
+// Variable: pageBlogSingleQuery
+// Query: *[_type == "pBlog" && slug.current == $slug][0]{					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	},	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	"relatedBlogs": relatedBlogs[]->{				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt	},		"defaultRelatedBlogs": *[_type == "pBlog"			&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0			&& _id != ^._id		] | order(publishedAt desc, _createdAt desc) [0...2] {					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt		}	}
+export type PageBlogSingleQueryResult = {
+	_id: string;
+	_type: 'pBlog';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	author: {
+		name: string | null;
+	} | null;
+	categories: Array<{
+		_id: string;
+		title: string | null;
+		slug: string | null;
+		categoryColor:
+			| {
+					_type: 'color';
+					hex?: string;
+					alpha?: number;
+					hsl?: HslaColor;
+					hsv?: HsvaColor;
+					rgb?: RgbaColor;
+			  }
+			| {}
+			| null;
+	}> | null;
+	content: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: 'span';
+					_key: string;
+				}>;
+				style?:
+					| 'blockquote'
+					| 'h1'
+					| 'h2'
+					| 'h3'
+					| 'h4'
+					| 'h5'
+					| 'h6'
+					| 'label'
+					| 'normal';
+				listItem?: 'bullet' | 'number';
+				markDefs: Array<
+					| {
+							link: {
+								_type: 'link';
+								linkType: 'external' | 'internal' | null;
+								href: string | null | '/';
+								isNewTab: boolean | null;
+							} | null;
+							_type: 'callToAction';
+							_key: string;
+							label: null;
+							isButton: true;
+					  }
+					| {
+							_key: string;
+							_type: 'link';
+							linkInput?: LinkInput;
+							isNewTab: boolean | null;
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+					  }
+				> | null;
+				level?: number;
+				_type: 'block';
+				_key: string;
+		  }
+		| {
+				embedSnippet?: string;
+				_type: 'iframe';
+				_key: string;
+				markDefs: null;
+		  }
+		| {
+				asset: SanityImageAssetReference | null;
+				media?: unknown;
+				hotspot: SanityImageHotspot | null;
+				crop: SanityImageCrop | null;
+				alt?: string;
+				link: {
+					_type: 'link';
+					linkType: 'external' | 'internal' | null;
+					href: string | null | '/';
+					isNewTab: boolean | null;
+				} | null;
+				_type: 'image';
+				_key: string;
+				markDefs: null;
+				customRatio: null;
+				meta: {
+					id: string | null;
+					alt: string | null;
+					type: string | null;
+					width: number | null;
+					height: number | null;
+					aspectRatio: number | null;
+					lqip: string | null;
+				} | null;
+		  }
+	> | null;
+	relatedBlogs: Array<{
+		_id: string;
+		_type: 'pBlog';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		author: {
+			name: string | null;
+		} | null;
+		categories: Array<{
+			_id: string;
+			title: string | null;
+			slug: string | null;
+			categoryColor:
+				| {
+						_type: 'color';
+						hex?: string;
+						alpha?: number;
+						hsl?: HslaColor;
+						hsv?: HsvaColor;
+						rgb?: RgbaColor;
+				  }
+				| {}
+				| null;
+		}> | null;
+		excerpt: string | null;
+	}> | null;
+	defaultRelatedBlogs: Array<{
+		_id: string;
+		_type: 'pBlog';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		author: {
+			name: string | null;
+		} | null;
+		categories: Array<{
+			_id: string;
+			title: string | null;
+			slug: string | null;
+			categoryColor:
+				| {
+						_type: 'color';
+						hex?: string;
+						alpha?: number;
+						hsl?: HslaColor;
+						hsv?: HsvaColor;
+						rgb?: RgbaColor;
+				  }
+				| {}
+				| null;
+		}> | null;
+		excerpt: string | null;
+	}>;
+} | null;
+
+// Query TypeMap
+import '@sanity/client';
+declare module '@sanity/client' {
+	interface SanityQueries {
+		'*[_type == "pHome"][0]._id': HomeIDResult;
+		'{\n\t\t"announcement": *[_type == "gAnnouncement"][0]{\n\t\t\tdisplay,\n\t\t\tmessages,\n\t\t\tautoplay,\n\t\t\tautoplayInterval,\n\t\t\tbackgroundColor,\n\t\t\ttextColor,\n\t\t\temphasizeColor,\n\t\t\t"link": \n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t"header": *[_type == "gHeader"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t}\n\t\t},\n\t\t"footer": *[_type == "gFooter"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"menuLegal": menuLegal->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"toolbarMenu": toolbarMenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\tnote\n\t\t},\n\t\t"sharing": *[_type == "settingsGeneral"][0]{\n\t\t\tsiteTitle,\n\t\t\tshareGraphic,\n\t\t\t\'shareVideo\': shareVideo.asset->url,\n\t\t\tfavicon,\n\t\t\tfaviconLight\n\t\t},\n\t\t"integrations": *[_type == "settingsIntegration"][0]{\n\t\t\tgaIDs,\n\t\t\tgtmIDs\n\t\t},\n\t}\n': SiteDataQueryResult;
+		'\n\t*[_type == "pHome"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"isHomepage": true,\n\t\tlandingTitle,\n\t\t"textColor": textColor->color,\n\t\tpageModules[]{\n\t\t\t\n\t_type == \'freeform\' => {\n\t\t\n\t_type,\n\t_key,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\tsectionAppearance {\n\t\t...,\n\t\t"backgroundColor": backgroundColor->color,\n\t\t"textColor": textColor->color\n\t}\n\n\t},\n\n\t\t}\n\t}\n': PageHomeQueryResult;
+		'\n\t*[_type == "p404" && _id == "p404"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\theading,\n\t\tparagraph[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\tcallToAction{\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t}\n': Page404QueryResult;
+		'\n\t*[_type == "pGeneral" && slug.current == $slug][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tcontent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\t_updatedAt\n\t}\n': PageGeneralQueryResult;
+		'\n  *[_type == "pGeneral" && defined(slug.current)]\n  {"slug": slug.current}\n': PageGeneralSlugsQueryResult;
+		'\n\t*[_type == "pContact"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tdescription,\n\t\tcontactForm {\n\t\t\tformTitle[]{\n\t\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t\n\tformFields[] {\n\t\tplaceholder,\n\t\t_key,\n\t\trequired,\n\t\tfieldLabel,\n\t\tinputType,\n\t\tsize,\n\t\tselectOptions[] {\n\t\t\t_key,\n\t\t\t"title": option,\n\t\t\t"value": option\n\t\t}\n\t}\n,\n\t\t\tsuccessMessage,\n\t\t\terrorMessage,\n\t\t\tsendToEmail,\n\t\t\temailSubject,\n\t\t\tformFailureNotificationEmail\n\t\t},\n\t\tlegalConsent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t}\n\t}\n': PageContactQueryResult;
+		'\n\t*[_type == "pEvents"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {\n\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t\tsubtitle,\n\t\t\teventDatetime,\n\t\t\tlocation,\n\t\t\tlocationLink,\n\t\t\tcategories[]-> {\n\t\t\t\t_id,\n\t\t\t\ttitle,\n\t\t\t\t"slug": slug.current,\n\t\t\t\tcategoryColor->{...color}\n\t\t\t},\n\t\t\tstatusList[]{\n\t\t\t\t_key,\n\t\t\t\tlink {\n\t\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t\t},\n\t\t\t\teventStatus-> {\n\t\t\t\t\t_id,\n\t\t\t\t\ttitle,\n\t\t\t\t\t"slug": slug.current,\n\t\t\t\t\tstatusTextColor->{...color},\n\t\t\t\t\tstatusBgColor->{...color}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t}\n': PEventsQueryResult;
+		'\n\t*[_type == "pBlogIndex"][0]{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t"slug": "blog",\n\titemsPerPage,\n\tpaginationMethod,\n\tloadMoreButtonLabel,\n\tinfiniteScrollCompleteLabel,\n\t"itemsTotalCount": count(*[_type == "pBlog"])\n\n\t}\n': PageBlogIndexQueryResult;
+		'\n\t*[_type == "pBlogIndex"][0]{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t"slug": "blog",\n\titemsPerPage,\n\tpaginationMethod,\n\tloadMoreButtonLabel,\n\tinfiniteScrollCompleteLabel,\n\t"itemsTotalCount": count(*[_type == "pBlog"])\n,\n\t\t\n\t"articleList": *[_type == "pBlog"] | order(_updatedAt desc) [0...12] {\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t}\n\n\t}\n': PageBlogIndexWithArticleDataSSGQueryResult;
+		'\n\t{\n\t\t"articleTotalNumber": count(*[_type == "pBlog"]),\n\t\t"itemsPerPage": *[_type == "pBlogIndex"][0].itemsPerPage\n\t}': PageBlogPaginationMethodQueryResult;
+		'\n  *[_type == "pBlog" && defined(slug.current)]\n  {"slug": slug.current}\n': PageBlogSlugsQueryResult;
+		'\n\t*[_type == "pBlog" && slug.current == $slug][0]{\n\t\t\n\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\t"relatedBlogs": relatedBlogs[]->{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t}\n,\n\t\t"defaultRelatedBlogs": *[_type == "pBlog"\n\t\t\t&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0\n\t\t\t&& _id != ^._id\n\t\t] | order(publishedAt desc, _createdAt desc) [0...2] {\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t\t}\n\t}\n': PageBlogSingleQueryResult;
+	}
+}

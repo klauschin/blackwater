@@ -1,9 +1,9 @@
 'use client';
 import CustomPortableText from '@/components/CustomPortableText';
 import { CustomForm } from '@/components/CustomForm';
-
+import { PortableTextSimple, PageContactQueryResult } from 'sanity.types';
 interface ContactFormData {
-	formTitle?: string;
+	formTitle?: PortableTextSimple;
 	formFields?: any[];
 	successMessage?: string;
 	errorMessage?: string;
@@ -13,12 +13,7 @@ interface ContactFormData {
 }
 
 interface PageContactProps {
-	data?: {
-		title?: string;
-		description?: string;
-		contactForm?: ContactFormData;
-		legalConsent?: any;
-	};
+	data?: PageContactQueryResult;
 }
 
 export function PageContact({ data }: PageContactProps) {
@@ -32,7 +27,9 @@ export function PageContact({ data }: PageContactProps) {
 			</div>
 			<div className="lg:flex-1 flex flex-col justify-center">
 				{contactForm?.formTitle && (
-					<h4 className="mb-15">{contactForm?.formTitle}</h4>
+					<div className="mb-15">
+						<CustomPortableText blocks={contactForm?.formTitle} />
+					</div>
 				)}
 				<CustomForm
 					data={contactForm}

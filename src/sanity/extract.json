@@ -778,16 +778,39 @@
               "of": {
                 "type": "object",
                 "attributes": {
-                  "_key": {
+                  "linkInput": {
                     "type": "objectAttribute",
                     "value": {
-                      "type": "string"
+                      "type": "inline",
+                      "name": "linkInput"
+                    },
+                    "optional": true
+                  },
+                  "isNewTab": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "optional": true
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "link"
                     }
                   }
                 },
                 "rest": {
-                  "type": "inline",
-                  "name": "link"
+                  "type": "object",
+                  "attributes": {
+                    "_key": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -917,14 +940,6 @@
                   "of": [
                     {
                       "type": "string",
-                      "value": "normal"
-                    },
-                    {
-                      "type": "string",
-                      "value": "h1"
-                    },
-                    {
-                      "type": "string",
                       "value": "h2"
                     },
                     {
@@ -937,19 +952,11 @@
                     },
                     {
                       "type": "string",
-                      "value": "h5"
+                      "value": "normal"
                     },
                     {
                       "type": "string",
-                      "value": "h6"
-                    },
-                    {
-                      "type": "string",
-                      "value": "label"
-                    },
-                    {
-                      "type": "string",
-                      "value": "blockquote"
+                      "value": "normal-2"
                     }
                   ]
                 },
@@ -982,26 +989,100 @@
                       {
                         "type": "object",
                         "attributes": {
-                          "_key": {
+                          "author": {
                             "type": "objectAttribute",
                             "value": {
                               "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "title": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "isHidden": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "boolean"
+                            },
+                            "optional": true
+                          },
+                          "_type": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "string",
+                              "value": "blockquote"
                             }
                           }
                         },
                         "rest": {
-                          "type": "inline",
-                          "name": "link"
+                          "type": "object",
+                          "attributes": {
+                            "_key": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
                         }
                       },
                       {
                         "type": "object",
                         "attributes": {
-                          "link": {
+                          "linkInput": {
                             "type": "objectAttribute",
                             "value": {
                               "type": "inline",
-                              "name": "link"
+                              "name": "linkInput"
+                            },
+                            "optional": true
+                          },
+                          "isNewTab": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "boolean"
+                            },
+                            "optional": true
+                          },
+                          "_type": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "string",
+                              "value": "link"
+                            }
+                          }
+                        },
+                        "rest": {
+                          "type": "object",
+                          "attributes": {
+                            "_key": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "attributes": {
+                          "linkInput": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "inline",
+                              "name": "linkInput"
+                            },
+                            "optional": true
+                          },
+                          "isNewTab": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "boolean"
                             },
                             "optional": true
                           },
@@ -1310,6 +1391,13 @@
             "type": "string"
           },
           "optional": true
+        },
+        "isFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
         }
       }
     }
@@ -1553,7 +1641,8 @@
             "formTitle": {
               "type": "objectAttribute",
               "value": {
-                "type": "string"
+                "type": "inline",
+                "name": "portableTextSimple"
               },
               "optional": true
             },

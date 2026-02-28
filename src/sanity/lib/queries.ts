@@ -1,8 +1,8 @@
 import { defineQuery } from 'next-sanity';
 
 export const homeID = defineQuery(`*[_type == "pHome"][0]._id`);
-// Base queries for common fields
-const baseFields = defineQuery(`
+
+const baseFields = `
 	_id,
 	_type,
 	title,
@@ -11,8 +11,8 @@ const baseFields = defineQuery(`
 		...sharing,
 		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,
 	}
-`);
-export const resolvedHrefQuery = defineQuery(`
+`;
+export const resolvedHrefQuery = `
 	"resolvedHref": select(
 			linkType == "external" => externalUrl,
 			linkType == "internal" => internalLink-> {
@@ -24,17 +24,17 @@ export const resolvedHrefQuery = defineQuery(`
 					null
 				)
 			}.url,
-			null)`);
-const linkFields = defineQuery(`
+			null)`;
+const linkFields = `
 	_type,
 	"linkType": linkInput.linkType,
 	"href": linkInput {
 		${resolvedHrefQuery}
 	}.resolvedHref,
 	isNewTab
-`);
+`;
 
-const menuFields = defineQuery(`
+const menuFields = `
 	_id,
 	_type,
 	title,
@@ -51,9 +51,9 @@ const menuFields = defineQuery(`
 			}
 		}
 	}
-`);
+`;
 
-export const imageMetaFields = defineQuery(`
+export const imageMetaFields = `
 	asset,
 	crop,
 	customRatio,
@@ -67,17 +67,17 @@ export const imageMetaFields = defineQuery(`
 		"aspectRatio": metadata.dimensions.aspectRatio,
 		"lqip": metadata.lqip
 	}
-`);
+`;
 
-const callToActionFields = defineQuery(`
+const callToActionFields = `
 	label,
 	link {
 		${linkFields}
 	},
 	"isButton": true
-`);
+`;
 
-const portableTextContentFields = defineQuery(`
+const portableTextContentFields = `
 	...,
 	markDefs[]{
 		...,
@@ -94,9 +94,9 @@ const portableTextContentFields = defineQuery(`
 			${linkFields}
 		}
 	}
-`);
+`;
 
-const freeformFields = defineQuery(`
+const freeformFields = `
 	_type,
 	_key,
 	content[]{
@@ -107,15 +107,15 @@ const freeformFields = defineQuery(`
 		"backgroundColor": backgroundColor->color,
 		"textColor": textColor->color
 	}
-`);
+`;
 
-const pageModuleFields = defineQuery(`
+const pageModuleFields = `
 	_type == 'freeform' => {
 		${freeformFields}
 	},
-`);
+`;
 
-const customFormFields = defineQuery(`
+const customFormFields = `
 	formFields[] {
 		placeholder,
 		_key,
@@ -129,9 +129,8 @@ const customFormFields = defineQuery(`
 			"value": option
 		}
 	}
-`);
+`;
 
-// Site configuration with caching recommendation
 export const siteDataQuery = defineQuery(`{
 		"announcement": *[_type == "gAnnouncement"][0]{
 			display,
@@ -174,7 +173,6 @@ export const siteDataQuery = defineQuery(`{
 	}
 `);
 
-// Page queries
 export const pageHomeQuery = defineQuery(`
 	*[_type == "pHome"][0]{
 		${baseFields},
@@ -217,8 +215,11 @@ export const pageGeneralSlugsQuery = defineQuery(`
 export const pageContactQuery = defineQuery(`
 	*[_type == "pContact"][0]{
 		${baseFields},
+		description,
 		contactForm {
-			formTitle,
+			formTitle[]{
+				${portableTextContentFields}
+			},
 			${customFormFields},
 			successMessage,
 			errorMessage,
@@ -264,39 +265,36 @@ export const pEventsQuery = defineQuery(`
 	}
 `);
 
-// Blog queries with pagination
-export const getBlogPostData = (type?: 'card' | undefined): string => {
-	const basePostFields = defineQuery(`
-		${baseFields},
-		author->{name},
-		categories[]-> {
-			_id,
-			title,
-			"slug": slug.current,
-			categoryColor->{...color}
-		}
-	`);
-
-	return type === 'card'
-		? defineQuery(`${basePostFields}, excerpt`)
-		: defineQuery(`
-			${basePostFields},
-			content[]{
-				${portableTextContentFields}
-			},
-			"relatedBlogs": relatedBlogs[]->{
-				${getBlogPostData('card')}
-			}
-		`);
-};
-
-export const articleListAllQuery = defineQuery(`
-	"articleList": *[_type == "pBlog"] | order(_updatedAt desc) [0...12] {
-		${getBlogPostData('card')}
+const blogPostBaseFields = `
+	${baseFields},
+	author->{name},
+	categories[]-> {
+		_id,
+		title,
+		"slug": slug.current,
+		categoryColor->{...color}
 	}
-`);
+`;
 
-const blogIndexBaseQuery = defineQuery(`
+export const blogPostCardFields = `${blogPostBaseFields}, excerpt`;
+
+export const blogPostFullFields = `
+	${blogPostBaseFields},
+	content[]{
+		${portableTextContentFields}
+	},
+	"relatedBlogs": relatedBlogs[]->{
+		${blogPostCardFields}
+	}
+`;
+
+export const articleListAllQuery = `
+	"articleList": *[_type == "pBlog"] | order(_updatedAt desc) [0...12] {
+		${blogPostCardFields}
+	}
+`;
+
+const blogIndexBaseQuery = `
 	${baseFields},
 	"slug": "blog",
 	itemsPerPage,
@@ -304,7 +302,7 @@ const blogIndexBaseQuery = defineQuery(`
 	loadMoreButtonLabel,
 	infiniteScrollCompleteLabel,
 	"itemsTotalCount": count(*[_type == "pBlog"])
-`);
+`;
 
 export const pageBlogIndexQuery = defineQuery(`
 	*[_type == "pBlogIndex"][0]{
@@ -321,7 +319,7 @@ export const pageBlogIndexWithArticleDataSSGQuery = defineQuery(`
 
 export const pageBlogPaginationMethodQuery = defineQuery(`
 	{
-		"articleTotalNumber": count(*[_type == "pBlog"])
+		"articleTotalNumber": count(*[_type == "pBlog"]),
 		"itemsPerPage": *[_type == "pBlogIndex"][0].itemsPerPage
 	}`);
 
@@ -332,12 +330,12 @@ export const pageBlogSlugsQuery = defineQuery(`
 
 export const pageBlogSingleQuery = defineQuery(`
 	*[_type == "pBlog" && slug.current == $slug][0]{
-		${getBlogPostData()},
+		${blogPostFullFields},
 		"defaultRelatedBlogs": *[_type == "pBlog"
 			&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0
 			&& _id != ^._id
 		] | order(publishedAt desc, _createdAt desc) [0...2] {
-			${getBlogPostData('card')}
+			${blogPostCardFields}
 		}
 	}
 `);

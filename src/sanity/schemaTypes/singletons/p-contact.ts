@@ -24,7 +24,7 @@ export const pContact = defineType({
 			fields: [
 				{
 					name: 'formTitle',
-					type: 'string',
+					type: 'portableTextSimple',
 				},
 				formBuilder(),
 				{

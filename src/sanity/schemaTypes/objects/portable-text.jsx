@@ -4,11 +4,11 @@ import { link } from '@/sanity/schemaTypes/objects/link';
 import { BlockquoteIcon, InfoOutlineIcon } from '@sanity/icons';
 import { defineType } from 'sanity';
 
-const H2 = (props) => <span className="t-h-2">{props.children}</span>;
-const H3 = (props) => <span className="t-h-3">{props.children}</span>;
-const H4 = (props) => <span className="t-h-4">{props.children}</span>;
-const Normal = (props) => <span className="t-b-1">{props.children}</span>;
-const Normal2 = (props) => <span className="t-b-2">{props.children}</span>;
+const H2 = (props) => <span>{props.children}</span>;
+const H3 = (props) => <span>{props.children}</span>;
+const H4 = (props) => <span>{props.children}</span>;
+const Normal = (props) => <span>{props.children}</span>;
+const Normal2 = (props) => <span>{props.children}</span>;
 const Blockquote = (props) => {
 	return (
 		<blockquote className="before:inline before:content-[open-quote] after:inline after:content-[close-quote]">
