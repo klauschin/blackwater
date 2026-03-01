@@ -1441,7 +1441,7 @@
     }
   },
   {
-    "name": "formFields",
+    "name": "formField",
     "type": "type",
     "value": {
       "type": "object",
@@ -1450,13 +1450,20 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "formFields"
+            "value": "formField"
           }
         },
         "required": {
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
+          },
+          "optional": true
+        },
+        "fieldName": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
           },
           "optional": true
         },
@@ -1538,6 +1545,23 @@
                 }
               }
             }
+          },
+          "optional": true
+        },
+        "fieldWidth": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "full"
+              },
+              {
+                "type": "string",
+                "value": "half"
+              }
+            ]
           },
           "optional": true
         }
@@ -1646,7 +1670,7 @@
               },
               "optional": true
             },
-            "formFields": {
+            "formField": {
               "type": "objectAttribute",
               "value": {
                 "type": "array",
@@ -1662,7 +1686,7 @@
                   },
                   "rest": {
                     "type": "inline",
-                    "name": "formFields"
+                    "name": "formField"
                   }
                 }
               },

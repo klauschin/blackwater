@@ -96,7 +96,7 @@ const portableTextContentFields = `
 	}
 `;
 
-const freeformFields = `
+const freeformField = `
 	_type,
 	_key,
 	content[]{
@@ -111,23 +111,22 @@ const freeformFields = `
 
 const pageModuleFields = `
 	_type == 'freeform' => {
-		${freeformFields}
+		${freeformField}
 	},
 `;
 
-const customFormFields = `
-	formFields[] {
-		placeholder,
+const formField = `
+	placeholder,
+	_key,
+	required,
+	fieldLabel,
+	fieldName,
+	fieldWidth,
+	inputType,
+	selectOptions[] {
 		_key,
-		required,
-		fieldLabel,
-		inputType,
-		size,
-		selectOptions[] {
-			_key,
-			"title": option,
-			"value": option
-		}
+		"title": option,
+		"value": option
 	}
 `;
 
@@ -220,7 +219,9 @@ export const pageContactQuery = defineQuery(`
 			formTitle[]{
 				${portableTextContentFields}
 			},
-			${customFormFields},
+			formField[] {
+				${formField}
+			},
 			successMessage,
 			errorMessage,
 			sendToEmail,

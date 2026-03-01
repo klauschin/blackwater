@@ -9,7 +9,7 @@ import { pEvents } from './documents/p-events';
 import { pEventStatus } from './documents/p-event-status';
 import { pGeneral } from './documents/p-general';
 // Objects
-import { formFields } from './objects/form-builder/form-fields';
+import { formField } from './objects/form-builder/form-field';
 import { link } from './objects/link';
 import { linkInput } from './objects/link-input';
 import { navDropdown } from './objects/nav-dropdown';
@@ -57,7 +57,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	pContact,
 
 	freeform,
-	formFields,
+	formField,
 	link(),
 	linkInput,
 	navDropdown,

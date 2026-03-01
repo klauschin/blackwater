@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-
+import React, { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Controller,
@@ -11,9 +10,7 @@ import {
 	ControllerFieldState,
 } from 'react-hook-form';
 import * as z from 'zod';
-import { cn } from '@/lib/utils';
-import { hasArrayValue, toCamelCase } from '@/lib/utils';
-import { formatObjectToHtml } from '@/lib/utils';
+import { cn, hasArrayValue, formatObjectToHtml } from '@/lib/utils';
 
 import { Button } from '@/components/ui/Button';
 import {
@@ -64,37 +61,56 @@ const VALIDATION_PATTERNS: Record<string, ValidationPattern> = {
 
 interface SelectOption {
 	_key: string;
-	value: string;
-	title: string;
+	value: string | null;
+	title: string | null;
 }
 
 interface FormField {
 	_key: string;
-	fieldLabel: string;
-	required?: boolean;
-	inputType?: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+	fieldName?: string | null;
+	fieldLabel: string | null;
+	required?: boolean | null;
+	inputType?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'checkbox' | 'file' | null;
 	minLength?: number;
-	placeholder?: string;
-	selectOptions?: SelectOption[];
-	fieldWidth?: 'full' | 'half';
-	description?: string;
-}
-
-interface FormFieldWithName extends FormField {
-	name: string;
+	placeholder?: string | null;
+	selectOptions?: SelectOption[] | null;
+	fieldWidth?: 'full' | 'half' | null;
+	description?: string | null;
 }
 
 interface CustomFormData {
-	formFields?: FormField[];
-	successMessage?: string;
-	errorMessage?: string;
-	sendToEmail?: string;
-	emailSubject?: string;
-	formFailureNotificationEmail?: string;
+	formField: Array<{
+		placeholder: string | null;
+		_key: string;
+		required: boolean | null;
+		fieldLabel: string | null;
+		inputType:
+			| 'checkbox'
+			| 'email'
+			| 'file'
+			| 'select'
+			| 'tel'
+			| 'text'
+			| 'textarea'
+			| null;
+		fieldName: string | null;
+		fieldWidth: 'full' | 'half' | null;
+		selectOptions: Array<{
+			_key: string;
+			title: string | null;
+			value: string | null;
+		}> | null;
+	}> | null;
+	successMessage: string | null;
+	errorMessage: string | null;
+	sendToEmail: string | null;
+	emailSubject: string | null;
+	formFailureNotificationEmail: string | null;
 }
 
 interface CustomFormProps {
-	data?: CustomFormData;
+	id: string;
+	data?: CustomFormData | null;
 	className?: string;
 	fieldGapX?: number;
 }
@@ -128,7 +144,7 @@ interface EmailResult {
 
 interface FieldComponentTypeProps {
 	id: string;
-	field: FormFieldWithName;
+	field: FormField;
 	fieldState: ControllerFieldState;
 	controllerField: any; // You can use ControllerRenderProps from react-hook-form for more specific typing
 }
@@ -139,14 +155,16 @@ interface FormItemProps {
 		handleSubmit: any;
 		reset: () => void;
 	};
-	field: FormFieldWithName;
+	field: FormField;
 }
 
 export function createDynamicResolver(fieldsArray: FormField[]) {
 	const shape: Record<string, z.ZodTypeAny> = {};
 
 	fieldsArray.forEach((field) => {
-		const { fieldLabel, required, inputType, minLength } = field;
+		const { fieldName, required, inputType, minLength } = field;
+		if (!fieldName) return;
+
 		let schema: z.ZodTypeAny = z.string();
 
 		if (required) {
@@ -170,7 +188,7 @@ export function createDynamicResolver(fieldsArray: FormField[]) {
 			});
 		}
 
-		shape[toCamelCase(fieldLabel)] = schema;
+		shape[fieldName] = schema;
 	});
 	return zodResolver(z.object(shape));
 }
@@ -196,7 +214,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 		case 'select':
 			return (
 				<Select
-					name={field.name}
+					name={field.fieldName ?? undefined}
 					value={controllerField.value}
 					onValueChange={controllerField.onChange}
 				>
@@ -210,7 +228,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 					<SelectContent side="bottom" position="popper">
 						<SelectGroup>
 							{selectOptions?.map((item) => (
-								<SelectItem key={item._key} value={item.value}>
+								<SelectItem key={item._key} value={item.value ?? ""}>
 									{item.title}
 								</SelectItem>
 							))}
@@ -236,11 +254,11 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 
 	return (
 		<Controller
-			name={field.name}
+			name={field.fieldName ?? ''}
 			control={form.control}
 			render={({ field: controllerField, fieldState }) => {
 				const isInvalid = fieldState.invalid;
-				const id = field.name + '-' + field._key;
+				const id = (field.fieldName ?? '') + '-' + field._key;
 				return (
 					<Field
 						orientation="horizontal"
@@ -291,9 +309,16 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 	);
 };
 
-export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
+const EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+export function CustomForm({
+	id,
+	data,
+	className,
+	fieldGapX,
+}: CustomFormProps) {
 	const {
-		formFields,
+		formField: formFields,
 		successMessage,
 		errorMessage,
 		sendToEmail,
@@ -301,21 +326,36 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 		formFailureNotificationEmail,
 	} = data || {};
 
-	const [formState, setFormState] = useState<FormState>(FORM_STATES.IDLE);
-	const formFieldData: FormFieldWithName[] = (formFields || []).map((item) => {
-		return {
-			...item,
-			name: toCamelCase(item.fieldLabel),
-		};
-	});
+	const STORAGE_KEY = `${id}_draft_custom_form_data`;
 
-	const defaultValues = formFieldData.reduce<Record<string, string>>(
-		(acc, { name }) => {
-			acc[name] = '';
+	const [formState, setFormState] = useState<FormState>(FORM_STATES.IDLE);
+
+	const defaultValues = useMemo(() => {
+		if (!hasArrayValue(formFields)) return {};
+
+		const savedItem =
+			typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+		if (savedItem) {
+			try {
+				const { data, timestamp } = JSON.parse(savedItem);
+				const isExpired = Date.now() - timestamp > EXPIRATION_TIME;
+
+				if (!isExpired) {
+					return data;
+				} else {
+					localStorage.removeItem(STORAGE_KEY);
+				}
+			} catch (e) {
+				console.error('Failed to parse draft data', e);
+			}
+		}
+
+		return formFields.reduce((acc: Record<string, string>, item) => {
+			const name = item.fieldName || '';
+			if (name) acc[name] = '';
 			return acc;
-		},
-		{}
-	);
+		}, {});
+	}, [formFields, STORAGE_KEY]);
 
 	const form = useForm({
 		resolver: createDynamicResolver(formFields || []),
@@ -323,12 +363,14 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 		mode: 'onSubmit',
 	});
 
+	if (!hasArrayValue(formFields)) return null;
+
 	const onHandleSubmit = async (formData: FieldValues) => {
 		setFormState(FORM_STATES.SUBMITTING);
 
 		const bodyData = {
-			sendToEmail: sendToEmail,
-			emailSubject: emailSubject,
+			sendToEmail: sendToEmail ?? undefined,
+			emailSubject: emailSubject ?? undefined,
 			formData: formData,
 		};
 
@@ -366,8 +408,6 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 		}
 	};
 
-	if (!hasArrayValue(formFields)) return null;
-
 	return (
 		<form
 			onSubmit={form.handleSubmit(onHandleSubmit)}
@@ -377,7 +417,7 @@ export function CustomForm({ data, className, fieldGapX }: CustomFormProps) {
 				className="flex flex-wrap gap-x-(--gap-x) gap-y-4"
 				style={{ '--gap-x': `${fieldGapX}px` } as React.CSSProperties}
 			>
-				{formFieldData.map((field) => (
+				{formFields.map((field) => (
 					<FormItem key={field._key} field={field} form={form} />
 				))}
 			</FieldGroup>

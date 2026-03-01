@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 
-export const formFields = defineType({
-	name: 'formFields',
-	title: 'Form Fields',
+export const formField = defineType({
+	name: 'formField',
+	title: 'Form Field',
 	type: 'object',
 	fields: [
 		defineField({
@@ -11,9 +11,15 @@ export const formFields = defineType({
 			initialValue: false,
 		}),
 		defineField({
+			name: 'fieldName',
+			type: 'string',
+			description:
+				'Used to identify data during form processing, allowing the system to recognize which value belongs to which field upon submission. For example, in Salesforce Lead objects, you can refer to the object’s Field Name to correctly map and populate this field.',
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
 			name: 'fieldLabel',
 			type: 'string',
-			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
 			name: 'inputType',
@@ -51,17 +57,30 @@ export const formFields = defineType({
 			],
 			hidden: ({ parent }) => parent.inputType !== 'select',
 		}),
+		defineField({
+			name: 'fieldWidth',
+			type: 'string',
+			initialValue: 'full',
+			options: {
+				layout: 'dropdown',
+				list: [
+					{ value: 'full', title: 'Full' },
+					{ value: 'half', title: 'Half' },
+				],
+			},
+		}),
 	],
 	preview: {
 		select: {
 			required: 'required',
 			fieldLabel: 'fieldLabel',
+			fieldName: 'fieldName',
 			inputType: 'inputType',
 		},
-		prepare({ required, fieldLabel, inputType }) {
+		prepare({ required, fieldLabel, fieldName, inputType }) {
 			const statusText = required ? 'Required' : 'Optional';
 			return {
-				title: `${fieldLabel}`,
+				title: `${fieldName || fieldLabel}`,
 				subtitle: `(${inputType}) — ${statusText}`,
 			};
 		},
