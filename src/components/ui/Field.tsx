@@ -49,7 +49,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
 		<div
 			data-slot="field-group"
 			className={cn(
-				'gap-5 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4 group/field-group @container/field-group flex w-full flex-col',
+				'data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4 group/field-group @container/field-group flex w-full flex-col',
 				className
 			)}
 			{...props}
@@ -234,10 +234,12 @@ function FieldStatus({
 	fieldState = {},
 	isFocused,
 	isShowErrorOnFocus = false,
+	className,
 }: {
 	fieldState?: any;
 	isFocused?: boolean;
 	isShowErrorOnFocus?: boolean;
+	className?: string;
 }) {
 	const showError = fieldState.invalid && !!fieldState.error;
 	const [isTooltipTriggered, setIsTooltipTriggered] = useState(false);
@@ -245,7 +247,7 @@ function FieldStatus({
 	return isShowErrorOnFocus ? (
 		<Tooltip open={(!!showError && isFocused) || isTooltipTriggered}>
 			<TooltipTrigger
-				className="absolute top-1/2 right-2 -translate-y-1/2"
+				className={cn('absolute top-1/2 right-2 -translate-y-1/2', className)}
 				asChild
 			>
 				{showError && (
@@ -267,7 +269,7 @@ function FieldStatus({
 	) : (
 		<Tooltip open={isTooltipTriggered}>
 			<TooltipTrigger
-				className="absolute top-1/2 right-2 -translate-y-1/2"
+				className={cn('absolute top-1/2 right-2 -translate-y-1/2', className)}
 				asChild
 			>
 				{showError && (

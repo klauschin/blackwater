@@ -18,15 +18,10 @@ export function PageContact({ data }: PageContactProps) {
 			</div>
 			<div className="lg:flex-1 flex flex-col justify-center">
 				<div className="max-w-md">
-					{contactForm?.formTitle && (
-						<div className="t-b-2 mb-15 wysiwyg">
-							<CustomPortableText blocks={contactForm?.formTitle as any} />
-						</div>
-					)}
 					<CustomForm
 						id="page-contact-form"
 						data={contactForm}
-						className="[&_button[type=submit]]:w-full space-y-4 [&_label]:uppercase"
+						className="[&_button[type=submit]]:w-full [&_label]:uppercase"
 						fieldGapX={10}
 					/>
 					{legalConsent && (

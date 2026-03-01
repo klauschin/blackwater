@@ -1,5 +1,5 @@
 'use client';
-
+import CustomPortableText from '@/components/CustomPortableText';
 import React, { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -31,6 +31,7 @@ import {
 	SelectGroup,
 } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { PortableText } from 'sanity.types';
 
 // Type definitions
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
@@ -70,7 +71,15 @@ interface FormField {
 	fieldName?: string | null;
 	fieldLabel: string | null;
 	required?: boolean | null;
-	inputType?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'checkbox' | 'file' | null;
+	inputType?:
+		| 'text'
+		| 'email'
+		| 'tel'
+		| 'textarea'
+		| 'select'
+		| 'checkbox'
+		| 'file'
+		| null;
 	minLength?: number;
 	placeholder?: string | null;
 	selectOptions?: SelectOption[] | null;
@@ -79,6 +88,7 @@ interface FormField {
 }
 
 interface CustomFormData {
+	formTitle: any;
 	formField: Array<{
 		placeholder: string | null;
 		_key: string;
@@ -228,7 +238,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 					<SelectContent side="bottom" position="popper">
 						<SelectGroup>
 							{selectOptions?.map((item) => (
-								<SelectItem key={item._key} value={item.value ?? ""}>
+								<SelectItem key={item._key} value={item.value ?? ''}>
 									{item.title}
 								</SelectItem>
 							))}
@@ -249,7 +259,7 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 };
 
 const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
-	const { fieldLabel, fieldWidth, description } = field;
+	const { fieldLabel, fieldWidth, description, inputType } = field;
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 
 	return (
@@ -299,6 +309,9 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 									fieldState={fieldState}
 									isFocused={isFocused}
 									isShowErrorOnFocus={true}
+									className={cn({
+										'top-5': inputType === 'textarea',
+									})}
 								/>
 							</div>
 						</FieldContent>
@@ -318,6 +331,7 @@ export function CustomForm({
 	fieldGapX,
 }: CustomFormProps) {
 	const {
+		formTitle,
 		formField: formFields,
 		successMessage,
 		errorMessage,
@@ -413,6 +427,20 @@ export function CustomForm({
 			onSubmit={form.handleSubmit(onHandleSubmit)}
 			className={cn(className)}
 		>
+			<div className="t-b-2 mb-15 wysiwyg">
+				{formTitle && <CustomPortableText blocks={formTitle as any} />}
+				{formState === FORM_STATES.SUCCESS && (
+					<p className="t-b-1 bg-success p-2">
+						{successMessage || 'Success. Your message has been sent.'}
+					</p>
+				)}
+				{formState === FORM_STATES.ERROR && (
+					<p className="t-b-1 bg-error p-2">
+						{errorMessage ||
+							'Error. There was an issue submitting your message. Please try again later.'}
+					</p>
+				)}
+			</div>
 			<FieldGroup
 				className="flex flex-wrap gap-x-(--gap-x) gap-y-4"
 				style={{ '--gap-x': `${fieldGapX}px` } as React.CSSProperties}
@@ -421,21 +449,10 @@ export function CustomForm({
 					<FormItem key={field._key} field={field} form={form} />
 				))}
 			</FieldGroup>
-			{formState === FORM_STATES.SUCCESS && (
-				<p className="t-b-1">
-					{successMessage || 'Success. Your message has been sent.'}
-				</p>
-			)}
-			{formState === FORM_STATES.ERROR && (
-				<p>
-					{errorMessage ||
-						'Error. There was an issue submitting your message. Please try again later.'}
-				</p>
-			)}
 			<Button
 				type="submit"
 				disabled={formState === FORM_STATES.SUBMITTING}
-				className={cn('w-fit')}
+				className="mt-15"
 			>
 				{formState === FORM_STATES.SUBMITTING ? 'Sending...' : 'Submit'}
 			</Button>
