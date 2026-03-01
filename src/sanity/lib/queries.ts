@@ -241,6 +241,7 @@ export const pEventsQuery = defineQuery(`
 			${baseFields},
 			subtitle,
 			eventDatetime,
+			dateStatus,
 			location,
 			locationLink,
 			categories[]-> {

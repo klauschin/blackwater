@@ -1,5 +1,7 @@
+import { defineField } from 'sanity';
+
 export default function sharing({ disableIndex = false } = {}) {
-	return {
+	return defineField({
 		title: 'SEO + Social Sharing',
 		name: 'sharing',
 		type: 'object',
@@ -8,14 +10,14 @@ export default function sharing({ disableIndex = false } = {}) {
 			collapsed: true,
 		},
 		fields: [
-			{
+			defineField({
 				title: 'Disable Index',
 				name: 'disableIndex',
 				type: 'boolean',
 				description: 'Instruct search engines not to index or follow this page',
 				initialValue: disableIndex,
-			},
-			{
+			}),
+			defineField({
 				title: 'Title',
 				name: 'metaTitle',
 				type: 'string',
@@ -25,8 +27,8 @@ export default function sharing({ disableIndex = false } = {}) {
 					Rule.max(50).warning(
 						'Longer titles may be truncated by search engines'
 					),
-			},
-			{
+			}),
+			defineField({
 				title: 'Description',
 				name: 'metaDesc',
 				type: 'text',
@@ -37,13 +39,13 @@ export default function sharing({ disableIndex = false } = {}) {
 					Rule.max(160).warning(
 						'Longer descriptions may be truncated by search engines'
 					),
-			},
-			{
+			}),
+			defineField({
 				title: 'Share Graphic',
 				name: 'shareGraphic',
 				type: 'image',
 				description: '1200 x 630px',
-			},
+			}),
 		],
-	};
+	});
 }

@@ -1,7 +1,7 @@
 import sharing from '@/sanity/schemaTypes/objects/sharing';
 import { slug } from '@/sanity/schemaTypes/objects/slug';
 import { BookIcon } from '@sanity/icons';
-import { defineType } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
 export const pEvent = defineType({
 	title: 'Event',
@@ -9,28 +9,44 @@ export const pEvent = defineType({
 	type: 'document',
 	icon: BookIcon,
 	fields: [
-		{ name: 'title', type: 'string', validation: (Rule) => [Rule.required()] },
-		{ name: 'subtitle', type: 'string' },
+		defineField({
+			name: 'title',
+			type: 'string',
+			validation: (Rule) => [Rule.required()],
+		}),
+		defineField({ name: 'subtitle', type: 'string' }),
 		slug(),
-		{
+		defineField({
 			name: 'eventDatetime',
 			type: 'datetime',
 			options: {
 				dateFormat: 'MM/DD/YY',
-				calendarTodayLabel: 'Today',
 			},
 			validation: (Rule) => Rule.required(),
-		},
-		{
+		}),
+		defineField({
+			name: 'dateStatus',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Confirmed', value: 'confirmed' },
+					{ title: 'TBA', value: 'tba' },
+					{ title: 'Postponed', value: 'postponed' },
+				],
+				layout: 'radio',
+			},
+			initialValue: 'confirmed',
+		}),
+		defineField({
 			name: 'location',
 			type: 'string',
 			validation: (Rule) => Rule.required(),
-		},
-		{
+		}),
+		defineField({
 			name: 'locationLink',
 			type: 'url',
-		},
-		{
+		}),
+		defineField({
 			name: 'categories',
 			type: 'array',
 			of: [
@@ -40,8 +56,8 @@ export const pEvent = defineType({
 				},
 			],
 			validation: (Rule) => Rule.unique(),
-		},
-		{
+		}),
+		defineField({
 			name: 'statusList',
 			type: 'array',
 			of: [
@@ -73,11 +89,11 @@ export const pEvent = defineType({
 				},
 			],
 			validation: (Rule) => Rule.unique(),
-		},
-		{
+		}),
+		defineField({
 			name: 'content',
 			type: 'portableText',
-		},
+		}),
 		sharing(),
 	],
 	preview: {

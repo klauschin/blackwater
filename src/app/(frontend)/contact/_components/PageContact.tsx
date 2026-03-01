@@ -20,7 +20,7 @@ export function PageContact({ data }: PageContactProps) {
 				<div className="max-w-md">
 					{contactForm?.formTitle && (
 						<div className="t-b-2 mb-15 wysiwyg">
-							<CustomPortableText blocks={contactForm?.formTitle} />
+							<CustomPortableText blocks={contactForm?.formTitle as any} />
 						</div>
 					)}
 					<CustomForm
@@ -31,7 +31,7 @@ export function PageContact({ data }: PageContactProps) {
 					/>
 					{legalConsent && (
 						<div className="mt-4 t-b-2 wysiwyg">
-							<CustomPortableText blocks={legalConsent} />
+							<CustomPortableText blocks={legalConsent as any} />
 						</div>
 					)}
 				</div>

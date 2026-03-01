@@ -21,7 +21,6 @@ export const pBlogCategory = defineType({
 			type: 'reference',
 			to: [{ type: 'settingsBrandColors' }],
 		},
-		sharing(),
 	],
 	preview: {
 		select: {

@@ -209,6 +209,7 @@ export function PageEvents({ data }: PageEventsProps) {
 							_id,
 							statusList,
 							eventDatetime,
+							dateStatus,
 							location,
 							locationLink,
 						} = item || {};
@@ -244,9 +245,9 @@ export function PageEvents({ data }: PageEventsProps) {
 									)}
 								</Td>
 								<Td className="t-b-1 uppercase mb-auto text-right lg:text-left lg:mb-0">
-									{eventDatetime
+									{(!dateStatus || dateStatus === 'confirmed') && eventDatetime
 										? format(new Date(eventDatetime), 'iii, MM.dd.yy, h:mm aaa')
-										: 'TBD'}
+										: dateStatus || 'TBA'}
 								</Td>
 								<Td
 									className={cn(
@@ -307,6 +308,8 @@ export function PageEvents({ data }: PageEventsProps) {
 
 function StatusItem({ data }: { data: any }) {
 	const { link, eventStatus } = data;
+
+	if (!eventStatus) return null;
 	const { title, statusTextColor, statusBgColor } = eventStatus || {};
 	return (
 		<span
