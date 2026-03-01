@@ -15,7 +15,7 @@ export default function PageGeneral({ data }: PageGeneralProps) {
 	const { title, content, _updatedAt } = data || {};
 
 	return (
-		<section className="p-general flex flex-col lg:flex-row justify-center px-contain max-w-6xl mx-auto my-48 gap-10">
+		<section className="p-general flex flex-col lg:flex-row justify-center px-contain max-w-6xl mx-auto lg:my-48 my-12 gap-10">
 			<div className="flex-1 lg:sticky lg:top-header h-fit">
 				{title && <h1 className="t-b-1 uppercase">{title}</h1>}
 				{_updatedAt && (

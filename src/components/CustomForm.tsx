@@ -1,6 +1,7 @@
 'use client';
+import { motion } from 'motion/react';
 import CustomPortableText from '@/components/CustomPortableText';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Controller,
@@ -31,7 +32,6 @@ import {
 	SelectGroup,
 } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { PortableText } from 'sanity.types';
 
 // Type definitions
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
@@ -89,7 +89,7 @@ interface FormField {
 
 interface CustomFormData {
 	formTitle: any;
-	formField: Array<{
+	formFields: Array<{
 		placeholder: string | null;
 		_key: string;
 		required: boolean | null;
@@ -225,14 +225,14 @@ const FieldComponentType: React.FC<FieldComponentTypeProps> = ({
 			return (
 				<Select
 					name={field.fieldName ?? undefined}
-					value={controllerField.value}
+					value={controllerField.value || undefined}
 					onValueChange={controllerField.onChange}
 				>
 					<SelectTrigger
 						id={id}
 						className={cn('w-full', { ' pr-8': fieldState.invalid })}
 					>
-						<SelectValue placeholder={placeholder} />
+						<SelectValue placeholder={placeholder ?? undefined} />
 					</SelectTrigger>
 
 					<SelectContent side="bottom" position="popper">
@@ -332,7 +332,7 @@ export function CustomForm({
 }: CustomFormProps) {
 	const {
 		formTitle,
-		formField: formFields,
+		formFields,
 		successMessage,
 		errorMessage,
 		sendToEmail,
@@ -347,29 +347,12 @@ export function CustomForm({
 	const defaultValues = useMemo(() => {
 		if (!hasArrayValue(formFields)) return {};
 
-		const savedItem =
-			typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
-		if (savedItem) {
-			try {
-				const { data, timestamp } = JSON.parse(savedItem);
-				const isExpired = Date.now() - timestamp > EXPIRATION_TIME;
-
-				if (!isExpired) {
-					return data;
-				} else {
-					localStorage.removeItem(STORAGE_KEY);
-				}
-			} catch (e) {
-				console.error('Failed to parse draft data', e);
-			}
-		}
-
 		return formFields.reduce((acc: Record<string, string>, item) => {
 			const name = item.fieldName || '';
 			if (name) acc[name] = '';
 			return acc;
 		}, {});
-	}, [formFields, STORAGE_KEY]);
+	}, [formFields]);
 
 	const form = useForm({
 		resolver: createDynamicResolver(formFields || []),
@@ -405,9 +388,9 @@ export function CustomForm({
 					errorInfo: errorText,
 				});
 				setFormState(FORM_STATES.ERROR);
-				form.reset();
 				throw new Error(errorText);
 			}
+			form.reset();
 
 			setFormState(FORM_STATES.SUCCESS);
 		} catch (error) {
@@ -452,7 +435,7 @@ export function CustomForm({
 			<Button
 				type="submit"
 				disabled={formState === FORM_STATES.SUBMITTING}
-				className="mt-15"
+				className="mt-15 cursor-pointer"
 			>
 				{formState === FORM_STATES.SUBMITTING ? 'Sending...' : 'Submit'}
 			</Button>

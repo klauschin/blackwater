@@ -219,7 +219,7 @@ export const pageContactQuery = defineQuery(`
 			formTitle[]{
 				${portableTextContentFields}
 			},
-			formField[] {
+			formFields[] {
 				${formField}
 			},
 			successMessage,

@@ -1,6 +1,6 @@
 import { ThListIcon } from '@sanity/icons';
 
-export default function formBuilder({ name = 'formField' } = {}) {
+export default function formBuilder({ name = 'formFields' } = {}) {
 	return {
 		name: name,
 		icon: ThListIcon,

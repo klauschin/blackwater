@@ -1670,7 +1670,7 @@
               },
               "optional": true
             },
-            "formField": {
+            "formFields": {
               "type": "objectAttribute",
               "value": {
                 "type": "array",
