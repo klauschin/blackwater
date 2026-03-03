@@ -1,6 +1,7 @@
 import { LinkIcon, MasterDetailIcon, WarningOutlineIcon } from '@sanity/icons';
 import { resolveHref } from '@/lib/utils';
 import { defineType } from 'sanity';
+import { link } from '@/sanity/schemaTypes/objects/link';
 
 export const navItem = defineType({
 	title: 'Item',
@@ -14,12 +15,10 @@ export const navItem = defineType({
 			type: 'string',
 			validation: (Rule) => Rule.required(),
 		},
-		{
-			title: 'Link',
-			name: 'link',
-			type: 'link',
+		link({
+			showLabel: false,
 			validation: (Rule) => Rule.required(),
-		},
+		}),
 	],
 	preview: {
 		select: {
