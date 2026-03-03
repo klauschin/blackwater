@@ -1,7 +1,8 @@
 'use client';
 import { motion } from 'motion/react';
+import { fadeAnim } from '@/lib/animate';
 import CustomPortableText from '@/components/CustomPortableText';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Controller,
@@ -322,8 +323,6 @@ const FormItem: React.FC<FormItemProps> = ({ form, field }) => {
 	);
 };
 
-const EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
 export function CustomForm({
 	id,
 	data,
@@ -339,8 +338,6 @@ export function CustomForm({
 		emailSubject,
 		formFailureNotificationEmail,
 	} = data || {};
-
-	const STORAGE_KEY = `${id}_draft_custom_form_data`;
 
 	const [formState, setFormState] = useState<FormState>(FORM_STATES.IDLE);
 
@@ -396,7 +393,6 @@ export function CustomForm({
 		} catch (error) {
 			console.error('Form submission error:', error);
 			setFormState(FORM_STATES.ERROR);
-			// Note: 'response' is not in scope here - this was a bug in the original code
 			sendErrorNotificationEmail({
 				emailTo: formFailureNotificationEmail || '',
 				bodyData: bodyData,
@@ -413,15 +409,37 @@ export function CustomForm({
 			<div className="t-b-2 mb-15 wysiwyg">
 				{formTitle && <CustomPortableText blocks={formTitle as any} />}
 				{formState === FORM_STATES.SUCCESS && (
-					<p className="t-b-1 bg-success p-2">
+					<motion.p
+						key={FORM_STATES.SUCCESS}
+						initial="hide"
+						animate="show"
+						variants={fadeAnim}
+						transition={{
+							duration: 0.6,
+							delay: 0.3,
+							ease: [0, 0.71, 0.2, 1.01],
+						}}
+						className="t-b-1 bg-success p-2"
+					>
 						{successMessage || 'Success. Your message has been sent.'}
-					</p>
+					</motion.p>
 				)}
 				{formState === FORM_STATES.ERROR && (
-					<p className="t-b-1 bg-error p-2">
+					<motion.p
+						key={FORM_STATES.ERROR}
+						initial="hide"
+						animate="show"
+						variants={fadeAnim}
+						transition={{
+							duration: 0.6,
+							delay: 0.3,
+							ease: [0, 0.71, 0.2, 1.01],
+						}}
+						className="t-b-1 bg-error p-2"
+					>
 						{errorMessage ||
 							'Error. There was an issue submitting your message. Please try again later.'}
-					</p>
+					</motion.p>
 				)}
 			</div>
 			<FieldGroup
@@ -437,7 +455,30 @@ export function CustomForm({
 				disabled={formState === FORM_STATES.SUBMITTING}
 				className="mt-15 cursor-pointer"
 			>
-				{formState === FORM_STATES.SUBMITTING ? 'Sending...' : 'Submit'}
+				{formState === FORM_STATES.SUBMITTING ? (
+					<svg
+						className="mr-3 -ml-1 size-5 animate-spin text-accent"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<circle
+							className="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							strokeWidth="4"
+						></circle>
+						<path
+							className="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+						></path>
+					</svg>
+				) : (
+					'Submit'
+				)}
 			</Button>
 		</form>
 	);
