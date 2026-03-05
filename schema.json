@@ -1,5 +1,29 @@
 [
   {
+    "type": "type",
+    "name": "navItem.link",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "linkInput": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "linkInput"
+          },
+          "optional": true
+        },
+        "isNewTab": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "socialLink",
     "type": "type",
     "value": {
@@ -1265,7 +1289,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "link"
+            "name": "navItem.link"
           },
           "optional": true
         }

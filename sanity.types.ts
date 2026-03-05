@@ -13,6 +13,11 @@
  */
 
 // Source: schema.json
+export type NavItemLink = {
+	linkInput?: LinkInput;
+	isNewTab?: boolean;
+};
+
 export type SocialLink = {
 	_type: 'socialLink';
 	icon?:
@@ -247,7 +252,7 @@ export type PortableText = Array<
 export type NavItem = {
 	_type: 'navItem';
 	title?: string;
-	link?: Link;
+	link?: NavItemLink;
 };
 
 export type NavDropdown = {
@@ -924,6 +929,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+	| NavItemLink
 	| SocialLink
 	| SettingsBrandColorsReference
 	| SectionAppearance
@@ -1018,7 +1024,7 @@ export type SiteDataQueryResult = {
 				| {
 						title: string | null;
 						link: {
-							_type: 'link';
+							_type: null;
 							linkType: 'external' | 'internal' | null;
 							href: string | null | '/';
 							isNewTab: boolean | null;
@@ -1032,7 +1038,7 @@ export type SiteDataQueryResult = {
 							_key: string;
 							title: string | null;
 							link: {
-								_type: 'link';
+								_type: null;
 								linkType: 'external' | 'internal' | null;
 								href: string | null | '/';
 								isNewTab: boolean | null;
@@ -1051,7 +1057,7 @@ export type SiteDataQueryResult = {
 				| {
 						title: string | null;
 						link: {
-							_type: 'link';
+							_type: null;
 							linkType: 'external' | 'internal' | null;
 							href: string | null | '/';
 							isNewTab: boolean | null;
@@ -1065,7 +1071,7 @@ export type SiteDataQueryResult = {
 							_key: string;
 							title: string | null;
 							link: {
-								_type: 'link';
+								_type: null;
 								linkType: 'external' | 'internal' | null;
 								href: string | null | '/';
 								isNewTab: boolean | null;
@@ -1082,7 +1088,7 @@ export type SiteDataQueryResult = {
 				| {
 						title: string | null;
 						link: {
-							_type: 'link';
+							_type: null;
 							linkType: 'external' | 'internal' | null;
 							href: string | null | '/';
 							isNewTab: boolean | null;
@@ -1096,7 +1102,7 @@ export type SiteDataQueryResult = {
 							_key: string;
 							title: string | null;
 							link: {
-								_type: 'link';
+								_type: null;
 								linkType: 'external' | 'internal' | null;
 								href: string | null | '/';
 								isNewTab: boolean | null;
@@ -1113,7 +1119,7 @@ export type SiteDataQueryResult = {
 				| {
 						title: string | null;
 						link: {
-							_type: 'link';
+							_type: null;
 							linkType: 'external' | 'internal' | null;
 							href: string | null | '/';
 							isNewTab: boolean | null;
@@ -1127,7 +1133,7 @@ export type SiteDataQueryResult = {
 							_key: string;
 							title: string | null;
 							link: {
-								_type: 'link';
+								_type: null;
 								linkType: 'external' | 'internal' | null;
 								href: string | null | '/';
 								isNewTab: boolean | null;
