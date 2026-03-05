@@ -1,6 +1,7 @@
 'use client';
 
-import { buildRgbaCssString, cn, getSpacingClass } from '@/lib/utils';
+import { cn, getSpacingClass } from '@/lib/utils';
+import { buildRgbaCssString } from '@/lib/image-utils';
 import CustomPortableText from '@/components/CustomPortableText';
 
 type MaxWidthType = 'none' | 'xl' | 'l' | 'm' | 's' | 'xs';

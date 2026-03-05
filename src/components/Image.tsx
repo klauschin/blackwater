@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
-import { buildImageSrc } from '@/lib/utils';
+import { buildImageSrc } from '@/lib/image-utils';
 import clsx from 'clsx';
 // import { SanityImage, type ImageProps } from 'next-sanity/image';
 import { type ImageProps } from 'next-sanity/image';

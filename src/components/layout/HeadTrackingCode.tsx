@@ -17,11 +17,7 @@ export default function HeadTrackingCode({ siteData }: HeadTrackingCodeProps) {
 	const { integrations } = siteData || {};
 	const { gaIDs, gtmIDs } = integrations || {};
 
-	const isSanityRoute =
-		typeof window !== 'undefined' &&
-		window.location.pathname.startsWith('/sanity');
-
-	if (process.env.NODE_ENV !== 'production' || isSanityRoute) {
+	if (process.env.NODE_ENV !== 'production') {
 		return null;
 	}
 

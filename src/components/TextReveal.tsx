@@ -7,7 +7,8 @@ import React, {
 	useRef,
 	useState,
 } from 'react';
-import { buildRgbaCssString, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { buildRgbaCssString } from '@/lib/image-utils';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { motion, useInView } from 'motion/react';
 

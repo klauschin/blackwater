@@ -1,5 +1,6 @@
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
+import { cache } from 'react';
 import { VisualEditing } from 'next-sanity/visual-editing';
 import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
@@ -14,6 +15,20 @@ import { Layout } from '@/components/layout';
 import HeadTrackingCode from '@/components/layout/HeadTrackingCode';
 import { Toaster } from 'sonner';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+
+const SITE_DATA_TAGS = [
+	'gAnnouncement',
+	'gHeader',
+	'gFooter',
+	'settingsMenu',
+	'settingsGeneral',
+	'settingsIntegration',
+	'settingsBrandColors',
+] as const;
+
+const getCachedSiteData = cache((stega: boolean) =>
+	sanityFetch({ query: siteDataQuery, tags: [...SITE_DATA_TAGS], stega })
+);
 
 const fontABCDisplay = localFont({
 	src: [
@@ -40,11 +55,7 @@ const baselTypewriter = localFont({
 export async function generateMetadata(): Promise<Metadata> {
 	const {
 		data: { sharing },
-	} = await sanityFetch({
-		query: siteDataQuery,
-		tags: ['settingsGeneral'],
-		stega: false,
-	});
+	} = await getCachedSiteData(false);
 
 	const { siteTitle } = sharing || {};
 	const siteFavicon = sharing?.favicon || false;
@@ -118,18 +129,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const { isEnabled: isDraftModeEnabled } = await draftMode();
-	const { data } = await sanityFetch({
-		query: siteDataQuery,
-		tags: [
-			'gAnnouncement',
-			'gHeader',
-			'gFooter',
-			'settingsMenu',
-			'settingsGeneral',
-			'settingsIntegration',
-			'settingsBrandColors',
-		],
-	});
+	const { data } = await getCachedSiteData(true);
 
 	return (
 		<ReactQueryProvider>

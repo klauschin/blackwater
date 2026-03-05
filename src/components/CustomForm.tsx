@@ -189,8 +189,7 @@ export function createDynamicResolver(fieldsArray: FormField[]) {
 		}
 
 		if (inputType === 'tel') {
-			const phoneRegex = new RegExp(VALIDATION_PATTERNS.phone.value);
-			schema = z.string().regex(phoneRegex, VALIDATION_PATTERNS.phone.message);
+			schema = z.string().regex(VALIDATION_PATTERNS.phone.value, VALIDATION_PATTERNS.phone.message);
 		}
 
 		if (minLength) {

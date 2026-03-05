@@ -4,9 +4,10 @@ import { TZDate } from '@date-fns/tz';
 import { format } from 'date-fns';
 
 export function LocationCurrentTime() {
-	const [time, setTime] = useState(new Date());
+	const [time, setTime] = useState<Date | null>(null);
 	const [showColon, setShowColon] = useState(true);
 	useEffect(() => {
+		setTime(new Date());
 		const timerId = setInterval(() => {
 			setTime(new Date());
 			setShowColon((prev) => !prev);
@@ -14,6 +15,8 @@ export function LocationCurrentTime() {
 
 		return () => clearInterval(timerId);
 	}, []);
+
+	if (!time) return null;
 
 	const tzDate = new TZDate(time, 'Asia/Singapore');
 	const formattedTime = format(tzDate, 'iiii, p');

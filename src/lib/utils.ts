@@ -1,59 +1,11 @@
-import { imageBuilder } from '@/sanity/lib/image';
-import {
-	FaFacebookF,
-	FaGithub,
-	FaInstagram,
-	FaLinkedin,
-	FaSpotify,
-	FaXTwitter,
-	FaYoutube,
-} from 'react-icons/fa6';
 import { clsx, ClassValue } from 'clsx';
-import sanitizeHtml from 'sanitize-html';
 import { twMerge } from 'tailwind-merge';
-import { IconType } from 'react-icons';
-
-// For the Sanity Image Builder functions
-interface BuildImageOptions {
-	width?: number;
-	height?: number;
-	format?: 'jpg' | 'pjpg' | 'png' | 'webp'; // Sanity ImageFormat type
-	quality?: number;
-}
-
-interface BuildImageSrcSetOptions extends BuildImageOptions {
-	srcSizes: number[];
-	aspectRatio?: number; // percentage, e.g., 100 for 1:1, 50 for 2:1
-}
-
-interface SanityRgb {
-	r: number;
-	g: number;
-	b: number;
-	a: number;
-}
-
-interface SanityColor {
-	hex: string;
-	rgb: SanityRgb;
-}
 
 // For resolveHref function
 interface LinkResolverArgs {
 	documentType: string | null;
 	slug?: string | null;
 }
-
-// For getIcon function
-type SocialIconKey =
-	| 'facebook'
-	| 'instagram'
-	| 'linkedin'
-	| 'spotify'
-	| 'x'
-	| 'youTube'
-	| 'github'
-	| string;
 
 // --- UTILITIES / GET ---
 
@@ -100,32 +52,6 @@ export function getUrlBaseAndPath(url: string): string {
  */
 export function hasArrayValue<T>(arr: T[] | unknown): arr is T[] {
 	return Array.isArray(arr) && arr.length > 0;
-}
-
-/**
- * Maps a string key to a corresponding React Icon component.
- * @param icon - The string key for the social media icon.
- * @returns The React Icon component (IconType) or null.
- */
-export function getIcon(icon: SocialIconKey): IconType | null {
-	switch (icon) {
-		case 'facebook':
-			return FaFacebookF;
-		case 'instagram':
-			return FaInstagram;
-		case 'linkedin':
-			return FaLinkedin;
-		case 'spotify':
-			return FaSpotify;
-		case 'x':
-			return FaXTwitter;
-		case 'youTube':
-			return FaYoutube;
-		case 'github':
-			return FaGithub;
-		default:
-			return null;
-	}
 }
 
 // --- UTILITIES / FORMAT ---
@@ -249,22 +175,6 @@ export function formatDateUsStandard(date: Date): string {
 		formatPad(date.getMonth() + 1), // getMonth() is 0-indexed
 		date.getFullYear(),
 	].join('/');
-}
-
-/**
- * Replaces newlines in a text string with `<br>` tags and sanitizes the output.
- * @param text - The input text string.
- * @returns The HTML string with newlines converted to `<br>` tags, or undefined.
- */
-export function formatNewLineToBr(
-	text: string | null | undefined
-): string | undefined {
-	if (!text) return undefined;
-
-	return sanitizeHtml(text.replace(/\n/g, '<br>'), {
-		allowedTags: ['br'],
-		allowedAttributes: {},
-	});
 }
 
 /**
@@ -484,115 +394,6 @@ export function sleeper<T>(ms: number): (x: T) => Promise<T> {
 	return function (x: T): Promise<T> {
 		return new Promise((resolve) => setTimeout(() => resolve(x), ms));
 	};
-}
-
-// --- REACT SPECIFIC / SANITY IMAGE ---
-
-/**
- * Builds a single image source URL using Sanity's image builder.
- * Assumes 'image' is a Sanity Image asset object.
- * @param image - The Sanity image object.
- * @param options - Image build options (width, height, format, quality).
- * @returns The final image URL string or false if invalid/error.
- */
-export function buildImageSrc(
-	image: any, // Use a more specific Sanity Image type if available
-	{ width, height, format, quality = 80 }: BuildImageOptions = {}
-): string {
-	if (!image || !imageBuilder) {
-		return '';
-	}
-
-	try {
-		let imgSrc = imageBuilder.image(image);
-
-		if (width) {
-			imgSrc = imgSrc.width(Math.round(width));
-		}
-
-		if (height) {
-			imgSrc = imgSrc.height(Math.round(height));
-		}
-
-		if (format) {
-			imgSrc = imgSrc.format(format);
-		}
-
-		if (quality) {
-			imgSrc = imgSrc.quality(quality);
-		}
-
-		// Assumes the image builder returns an object with a .url() method
-		return imgSrc?.fit('max').auto('format').url() || '';
-	} catch (error) {
-		console.error('Error building image source:', error);
-		return '';
-	}
-}
-
-/**
- * Builds an image srcset string for responsive images using Sanity's image builder.
- * @param image - The Sanity image object.
- * @param options - Srcset build options (srcSizes, aspectRatio, format, quality).
- * @returns The final srcset string or false if invalid/error.
- */
-export function buildImageSrcSet(
-	image: any, // Use a more specific Sanity Image type if available
-	{ srcSizes, aspectRatio = 1, format, quality = 80 }: BuildImageSrcSetOptions
-): string | false {
-	if (!image || !srcSizes || srcSizes.length === 0) {
-		return false;
-	}
-
-	try {
-		const sizes = srcSizes
-			.map((width) => {
-				// Calculate height based on aspect ratio
-				const height = aspectRatio
-					? Math.round((width * aspectRatio) / 100)
-					: undefined;
-
-				const imgSrc = buildImageSrc(image, {
-					width,
-					height,
-					format,
-					quality,
-				});
-
-				// buildImageSrc already applies format, so this check might be redundant
-				// if (format) {
-				//   imgSrc = imgSrc.format(format);
-				// }
-
-				return imgSrc ? `${imgSrc} ${width}w` : '';
-			})
-			.filter(Boolean); // Filter out any false/empty strings
-
-		return sizes.length ? sizes.join(',') : false;
-	} catch (error) {
-		console.error('Error building image srcset:', error);
-		return false;
-	}
-}
-
-/**
- * Converts a Sanity color object (with RGB values) to an RGBA CSS string.
- * @param color - The Sanity color object.
- * @returns An RGBA CSS string (e.g., 'rgba(r, g, b, a)') or false.
- */
-export function buildRgbaCssString(
-	color: SanityColor | null | undefined
-): string | false {
-	if (!color) {
-		return false;
-	}
-
-	const r = color?.rgb?.r ?? 255;
-	const g = color?.rgb?.g ?? 255;
-	const b = color?.rgb?.b ?? 255;
-	const a = color?.rgb?.a ?? 1;
-
-	return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
 /**

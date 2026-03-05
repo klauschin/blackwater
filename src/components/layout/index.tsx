@@ -17,12 +17,13 @@ type LayoutProps = {
 export function Layout({ children, siteData }: LayoutProps) {
 	const { header, footer, sharing } = siteData || {};
 	const pathname = usePathname();
+	const gaID = siteData?.integrations?.gaID;
 
 	useEffect(() => {
-		if (siteData?.integrations?.gaID) {
-			gtag.pageview(pathname, siteData?.integrations?.gaID);
+		if (gaID) {
+			gtag.pageview(pathname, gaID);
 		}
-	}, [siteData, pathname]);
+	}, [gaID, pathname]);
 
 	const headerData = {
 		...header,
