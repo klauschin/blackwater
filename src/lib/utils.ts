@@ -571,6 +571,10 @@ export const resolveHref = ({
 			return `/event/${slug}`;
 		case 'pContact':
 			return `/contact`;
+		case 'pCuratedIndex':
+			return '/curated';
+		case 'pCurated':
+			return `/curated/${slug}`;
 		case 'externalUrl':
 			// The slug is expected to be the full external URL here
 			return slug || undefined;

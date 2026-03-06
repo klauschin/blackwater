@@ -20,6 +20,8 @@ export const resolvedHrefQuery = `
 					_type == "pHome" => "/",
 					_type == "pBlogIndex" => "/blog",
 					_type == "pBlog" => "/blog/" + slug.current,
+					_type == "pCuratedIndex" => "/curated",
+					_type == "pCurated" => "/curated/" + slug.current,
 					defined(slug.current) => "/" + slug.current,
 					null
 				)
@@ -338,6 +340,67 @@ export const pageBlogSingleQuery = defineQuery(`
 			&& _id != ^._id
 		] | order(publishedAt desc, _createdAt desc) [0...2] {
 			${blogPostCardFields}
+		}
+	}
+`);
+
+// — Curated —
+
+const curatedProductBaseFields = `
+	${baseFields},
+	price,
+	"category": category->{ _id, title, "slug": slug.current },
+	mainImage {
+		${imageMetaFields}
+	},
+	excerpt
+`;
+
+export const pageCuratedIndexQuery = defineQuery(`
+	*[_type == "pCuratedIndex"][0]{
+		${baseFields},
+		"slug": "curated",
+		subtitle,
+		description,
+		"featuredProduct": featuredProduct->{
+			${curatedProductBaseFields}
+		},
+		"productList": *[_type == "pCurated"] | order(_createdAt desc) {
+			${curatedProductBaseFields}
+		},
+		"categories": *[_type == "pCuratedCategory"] | order(title asc) {
+			_id,
+			title,
+			"slug": slug.current
+		}
+	}
+`);
+
+export const pageCuratedSlugsQuery = defineQuery(`
+	*[_type == "pCurated" && defined(slug.current)]
+	{"slug": slug.current}
+`);
+
+export const pageCuratedSingleQuery = defineQuery(`
+	*[_type == "pCurated" && slug.current == $slug][0]{
+		${baseFields},
+		price,
+		purchaseLink,
+		"category": category->{ _id, title, "slug": slug.current },
+		mainImage {
+			${imageMetaFields}
+		},
+		content[]{
+			${portableTextContentFields}
+		},
+		"relatedProducts": relatedProducts[]->{
+			${curatedProductBaseFields}
+		},
+		"defaultRelatedProducts": *[_type == "pCurated"
+			&& category._ref == ^.category._ref
+			&& _id != ^._id
+		] | order(_createdAt desc) [0...3] {
+			${curatedProductBaseFields}
 		}
 	}
 `);

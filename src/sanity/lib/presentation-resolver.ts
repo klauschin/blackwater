@@ -26,6 +26,14 @@ export const mainDocuments = defineDocuments([
 		route: '/contact',
 		filter: `_type == "pContact"`,
 	},
+	{
+		route: '/curated',
+		filter: `_type == "pCuratedIndex"`,
+	},
+	{
+		route: '/curated/:slug',
+		filter: `_type == "pCurated" && slug.current == $slug`,
+	},
 ]);
 
 export const locations = {
@@ -65,6 +73,28 @@ export const locations = {
 				{
 					title: doc?.title || 'Untitled',
 					href: resolveHref({ documentType: 'pBlog', slug: doc?.slug }) || '',
+				},
+			],
+		}),
+	}),
+	pCuratedIndex: defineLocations({
+		message: 'This document is used to render the curated picks page',
+		tone: 'positive',
+		locations: [
+			{
+				title: 'Curated',
+				href: resolveHref({ documentType: 'pCuratedIndex' }) || '',
+			},
+		],
+	}),
+	pCurated: defineLocations({
+		select: { title: 'title', slug: 'slug.current' },
+		resolve: (doc) => ({
+			locations: [
+				{
+					title: doc?.title || 'Untitled',
+					href:
+						resolveHref({ documentType: 'pCurated', slug: doc?.slug }) || '',
 				},
 			],
 		}),

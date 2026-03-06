@@ -1,6 +1,8 @@
 import { type SchemaTypeDefinition } from 'sanity';
 // Documents
 import { pBlog } from './documents/p-blog';
+import { pCurated } from './documents/p-curated';
+import { pCuratedCategory } from './documents/p-curated-category';
 import { pBlogCategory } from './documents/p-blog-category';
 import { pBlogIndex } from './documents/p-blog-index';
 import { pEvent } from './documents/p-event';
@@ -25,6 +27,7 @@ import { gFooter } from './singletons/g-footer';
 import { gHeader } from './singletons/g-header';
 import { p404 } from './singletons/p-404';
 import { pContact } from './singletons/p-contact';
+import { pCuratedIndex } from './singletons/p-curated-index';
 import { pHome } from './singletons/p-home';
 // Singletons
 import { settingsBrandColors } from './singletons/settings-color';
@@ -55,6 +58,9 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	pEvents,
 	pEventStatus,
 	pContact,
+	pCuratedIndex,
+	pCurated,
+	pCuratedCategory,
 
 	freeform,
 	formField,

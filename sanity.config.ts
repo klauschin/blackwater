@@ -9,6 +9,7 @@ import { gFooter } from '@/sanity/schemaTypes/singletons/g-footer';
 import { gHeader } from '@/sanity/schemaTypes/singletons/g-header';
 import { p404 } from '@/sanity/schemaTypes/singletons/p-404';
 import { pContact } from '@/sanity/schemaTypes/singletons/p-contact';
+import { pCuratedIndex } from '@/sanity/schemaTypes/singletons/p-curated-index';
 import { pHome } from '@/sanity/schemaTypes/singletons/p-home';
 import { settingsGeneral } from '@/sanity/schemaTypes/singletons/settings-general';
 import { settingsIntegration } from '@/sanity/schemaTypes/singletons/settings-integrations';
@@ -49,6 +50,7 @@ const singletonDocuments = [
 	settingsGeneral.name,
 	p404.name,
 	pContact.name,
+	pCuratedIndex.name,
 	gAnnouncement.name,
 ];
 

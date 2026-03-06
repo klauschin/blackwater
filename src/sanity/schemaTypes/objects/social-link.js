@@ -1,4 +1,4 @@
-import { getIcon } from '@/lib/utils';
+import { getIcon } from '@/lib/icons';
 import { defineType } from 'sanity';
 
 export const socialLink = defineType({

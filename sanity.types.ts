@@ -314,6 +314,117 @@ export type Freeform = {
 	sectionAppearance?: SectionAppearance;
 };
 
+export type PCuratedReference = {
+	_ref: string;
+	_type: 'reference';
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: 'pCurated';
+};
+
+export type PCuratedIndex = {
+	_id: string;
+	_type: 'pCuratedIndex';
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	title?: string;
+	slug?: Slug;
+	subtitle?: string;
+	description?: string;
+	featuredProduct?: PCuratedReference;
+	sharing?: {
+		disableIndex?: boolean;
+		metaTitle?: string;
+		metaDesc?: string;
+		shareGraphic?: {
+			asset?: SanityImageAssetReference;
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: 'image';
+		};
+	};
+};
+
+export type SanityImageCrop = {
+	_type: 'sanity.imageCrop';
+	top?: number;
+	bottom?: number;
+	left?: number;
+	right?: number;
+};
+
+export type SanityImageHotspot = {
+	_type: 'sanity.imageHotspot';
+	x?: number;
+	y?: number;
+	height?: number;
+	width?: number;
+};
+
+export type PCuratedCategoryReference = {
+	_ref: string;
+	_type: 'reference';
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: 'pCuratedCategory';
+};
+
+export type PCurated = {
+	_id: string;
+	_type: 'pCurated';
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	title?: string;
+	slug?: Slug;
+	category?: PCuratedCategoryReference;
+	mainImage?: {
+		asset?: SanityImageAssetReference;
+		media?: unknown;
+		hotspot?: SanityImageHotspot;
+		crop?: SanityImageCrop;
+		alt?: string;
+		_type: 'image';
+	};
+	price?: string;
+	purchaseLink?: string;
+	excerpt?: string;
+	content?: PortableText;
+	relatedProducts?: Array<
+		{
+			_key: string;
+		} & PCuratedReference
+	>;
+	sharing?: {
+		disableIndex?: boolean;
+		metaTitle?: string;
+		metaDesc?: string;
+		shareGraphic?: {
+			asset?: SanityImageAssetReference;
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: 'image';
+		};
+	};
+};
+
+export type PCuratedCategory = {
+	_id: string;
+	_type: 'pCuratedCategory';
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	title?: string;
+	slug?: Slug;
+};
+
+export type Slug = {
+	_type: 'slug';
+	current?: string;
+	source?: string;
+};
+
 export type PContact = {
 	_id: string;
 	_type: 'pContact';
@@ -349,28 +460,6 @@ export type PContact = {
 			_type: 'image';
 		};
 	};
-};
-
-export type SanityImageCrop = {
-	_type: 'sanity.imageCrop';
-	top?: number;
-	bottom?: number;
-	left?: number;
-	right?: number;
-};
-
-export type SanityImageHotspot = {
-	_type: 'sanity.imageHotspot';
-	x?: number;
-	y?: number;
-	height?: number;
-	width?: number;
-};
-
-export type Slug = {
-	_type: 'slug';
-	current?: string;
-	source?: string;
 };
 
 export type PEvents = {
@@ -943,10 +1032,15 @@ export type AllSanitySchemaTypes =
 	| Link
 	| FormField
 	| Freeform
-	| PContact
+	| PCuratedReference
+	| PCuratedIndex
 	| SanityImageCrop
 	| SanityImageHotspot
+	| PCuratedCategoryReference
+	| PCurated
+	| PCuratedCategory
 	| Slug
+	| PContact
 	| PEvents
 	| PEventCategory
 	| PEventCategoryReference
@@ -997,7 +1091,7 @@ export type HomeIDResult = string | null;
 
 // Source: src/sanity/lib/queries.ts
 // Variable: siteDataQuery
-// Query: {		"announcement": *[_type == "gAnnouncement"][0]{			display,			messages,			autoplay,			autoplayInterval,			backgroundColor,			textColor,			emphasizeColor,			"link": 	_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		"header": *[_type == "gHeader"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			}		},		"footer": *[_type == "gFooter"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"menuLegal": menuLegal->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"toolbarMenu": toolbarMenu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			note		},		"sharing": *[_type == "settingsGeneral"][0]{			siteTitle,			shareGraphic,			'shareVideo': shareVideo.asset->url,			favicon,			faviconLight		},		"integrations": *[_type == "settingsIntegration"][0]{			gaIDs,			gtmIDs		},	}
+// Query: {		"announcement": *[_type == "gAnnouncement"][0]{			display,			messages,			autoplay,			autoplayInterval,			backgroundColor,			textColor,			emphasizeColor,			"link": 	_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		"header": *[_type == "gHeader"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			}		},		"footer": *[_type == "gFooter"][0]{			menu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"menuLegal": menuLegal->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			"toolbarMenu": toolbarMenu->{					_id,	_type,	title,	items[]{		title,		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		dropdownItems[]{			_key,			title,			link {					_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab			}		}	}			},			note		},		"sharing": *[_type == "settingsGeneral"][0]{			siteTitle,			shareGraphic,			'shareVideo': shareVideo.asset->url,			favicon,			faviconLight		},		"integrations": *[_type == "settingsIntegration"][0]{			gaIDs,			gtmIDs		},	}
 export type SiteDataQueryResult = {
 	announcement: {
 		display: 'all' | 'hidden' | 'homepage' | null;
@@ -1177,7 +1271,7 @@ export type SiteDataQueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageHomeQuery
-// Query: *[_type == "pHome"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"isHomepage": true,		landingTitle,		"textColor": textColor->color,		pageModules[]{				_type == 'freeform' => {			_type,	_key,	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	sectionAppearance {		...,		"backgroundColor": backgroundColor->color,		"textColor": textColor->color	}	},		}	}
+// Query: *[_type == "pHome"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"isHomepage": true,		landingTitle,		"textColor": textColor->color,		pageModules[]{				_type == 'freeform' => {			_type,	_key,	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	sectionAppearance {		...,		"backgroundColor": backgroundColor->color,		"textColor": textColor->color	}	},		}	}
 export type PageHomeQueryResult = {
 	_id: string;
 	_type: 'pHome';
@@ -1415,7 +1509,7 @@ export type PageHomeQueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: page404Query
-// Query: *[_type == "p404" && _id == "p404"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		heading,		paragraph[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		callToAction{				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	}
+// Query: *[_type == "p404" && _id == "p404"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		heading,		paragraph[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		callToAction{				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	}
 export type Page404QueryResult = {
 	_id: 'p404';
 	_type: 'p404';
@@ -1460,7 +1554,7 @@ export type Page404QueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageGeneralQuery
-// Query: *[_type == "pGeneral" && slug.current == $slug][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		content[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		_updatedAt	}
+// Query: *[_type == "pGeneral" && slug.current == $slug][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		content[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		_updatedAt	}
 export type PageGeneralQueryResult = {
 	_id: string;
 	_type: 'pGeneral';
@@ -1568,7 +1662,7 @@ export type PageGeneralSlugsQueryResult = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageContactQuery
-// Query: *[_type == "pContact"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		description,		contactForm {			formTitle[]{					...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}			},			formFields[] {					placeholder,	_key,	required,	fieldLabel,	fieldName,	fieldWidth,	inputType,	selectOptions[] {		_key,		"title": option,		"value": option	}			},			successMessage,			errorMessage,			sendToEmail,			emailSubject,			formFailureNotificationEmail		},		legalConsent[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		}	}
+// Query: *[_type == "pContact"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		description,		contactForm {			formTitle[]{					...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}			},			formFields[] {					placeholder,	_key,	required,	fieldLabel,	fieldName,	fieldWidth,	inputType,	selectOptions[] {		_key,		"title": option,		"value": option	}			},			successMessage,			errorMessage,			sendToEmail,			emailSubject,			formFailureNotificationEmail		},		legalConsent[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		}	}
 export type PageContactQueryResult = {
 	_id: string;
 	_type: 'pContact';
@@ -1667,7 +1761,7 @@ export type PageContactQueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pEventsQuery
-// Query: *[_type == "pEvents"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},			subtitle,			eventDatetime,			dateStatus,			location,			locationLink,			categories[]-> {				_id,				title,				"slug": slug.current,				categoryColor->{...color}			},			statusList[]{				_key,				link {						_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab				},				eventStatus-> {					_id,					title,					"slug": slug.current,					statusTextColor->{...color},					statusBgColor->{...color}				}			}		},	}
+// Query: *[_type == "pEvents"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},			subtitle,			eventDatetime,			dateStatus,			location,			locationLink,			categories[]-> {				_id,				title,				"slug": slug.current,				categoryColor->{...color}			},			statusList[]{				_key,				link {						_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab				},				eventStatus-> {					_id,					title,					"slug": slug.current,					statusTextColor->{...color},					statusBgColor->{...color}				}			}		},	}
 export type PEventsQueryResult = {
 	_id: string;
 	_type: 'pEvents';
@@ -1896,7 +1990,7 @@ export type PageBlogSlugsQueryResult = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageBlogSingleQuery
-// Query: *[_type == "pBlog" && slug.current == $slug][0]{					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	},	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	"relatedBlogs": relatedBlogs[]->{				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt	},		"defaultRelatedBlogs": *[_type == "pBlog"			&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0			&& _id != ^._id		] | order(publishedAt desc, _createdAt desc) [0...2] {					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt		}	}
+// Query: *[_type == "pBlog" && slug.current == $slug][0]{					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	},	content[]{			...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}	},	"relatedBlogs": relatedBlogs[]->{				_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt	},		"defaultRelatedBlogs": *[_type == "pBlog"			&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0			&& _id != ^._id		] | order(publishedAt desc, _createdAt desc) [0...2] {					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	author->{name},	categories[]-> {		_id,		title,		"slug": slug.current,		categoryColor->{...color}	}, excerpt		}	}
 export type PageBlogSingleQueryResult = {
 	_id: string;
 	_type: 'pBlog';
@@ -2099,22 +2193,368 @@ export type PageBlogSingleQueryResult = {
 	}>;
 } | null;
 
+// Source: src/sanity/lib/queries.ts
+// Variable: pageCuratedIndexQuery
+// Query: *[_type == "pCuratedIndex"][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		"slug": "curated",		subtitle,		description,		"featuredProduct": featuredProduct->{					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	price,	"category": category->{ _id, title, "slug": slug.current },	mainImage {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	}	},	excerpt		},		"productList": *[_type == "pCurated"] | order(_createdAt desc) {					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	price,	"category": category->{ _id, title, "slug": slug.current },	mainImage {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	}	},	excerpt		},		"categories": *[_type == "pCuratedCategory"] | order(title asc) {			_id,			title,			"slug": slug.current		}	}
+export type PageCuratedIndexQueryResult = {
+	_id: string;
+	_type: 'pCuratedIndex';
+	title: string | null;
+	slug: 'curated';
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	subtitle: string | null;
+	description: string | null;
+	featuredProduct: {
+		_id: string;
+		_type: 'pCurated';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		price: string | null;
+		category: {
+			_id: string;
+			title: string | null;
+			slug: string | null;
+		} | null;
+		mainImage: {
+			asset: SanityImageAssetReference | null;
+			crop: SanityImageCrop | null;
+			customRatio: null;
+			hotspot: SanityImageHotspot | null;
+			meta: {
+				id: string | null;
+				alt: string | null;
+				type: string | null;
+				width: number | null;
+				height: number | null;
+				aspectRatio: number | null;
+				lqip: string | null;
+			} | null;
+		} | null;
+		excerpt: string | null;
+	} | null;
+	productList: Array<{
+		_id: string;
+		_type: 'pCurated';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		price: string | null;
+		category: {
+			_id: string;
+			title: string | null;
+			slug: string | null;
+		} | null;
+		mainImage: {
+			asset: SanityImageAssetReference | null;
+			crop: SanityImageCrop | null;
+			customRatio: null;
+			hotspot: SanityImageHotspot | null;
+			meta: {
+				id: string | null;
+				alt: string | null;
+				type: string | null;
+				width: number | null;
+				height: number | null;
+				aspectRatio: number | null;
+				lqip: string | null;
+			} | null;
+		} | null;
+		excerpt: string | null;
+	}>;
+	categories: Array<{
+		_id: string;
+		title: string | null;
+		slug: string | null;
+	}>;
+} | null;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: pageCuratedSlugsQuery
+// Query: *[_type == "pCurated" && defined(slug.current)]	{"slug": slug.current}
+export type PageCuratedSlugsQueryResult = Array<{
+	slug: string | null;
+}>;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: pageCuratedSingleQuery
+// Query: *[_type == "pCurated" && slug.current == $slug][0]{			_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},		price,		purchaseLink,		"category": category->{ _id, title, "slug": slug.current },		mainImage {				asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	}		},		content[]{				...,	markDefs[]{		...,		_type == "link" => {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		},		_type == "callToAction" => {				label,	link {			_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab	},	"isButton": true		}	},	_type == "image" => {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	},		link {				_type,	"linkType": linkInput.linkType,	"href": linkInput {			"resolvedHref": select(			linkType == "external" => externalUrl,			linkType == "internal" => internalLink-> {				"url": select(					_type == "pHome" => "/",					_type == "pBlogIndex" => "/blog",					_type == "pBlog" => "/blog/" + slug.current,					_type == "pCuratedIndex" => "/curated",					_type == "pCurated" => "/curated/" + slug.current,					defined(slug.current) => "/" + slug.current,					null				)			}.url,			null)	}.resolvedHref,	isNewTab		}	}		},		"relatedProducts": relatedProducts[]->{					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	price,	"category": category->{ _id, title, "slug": slug.current },	mainImage {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	}	},	excerpt		},		"defaultRelatedProducts": *[_type == "pCurated"			&& category._ref == ^.category._ref			&& _id != ^._id		] | order(_createdAt desc) [0...3] {					_id,	_type,	title,	"slug": slug.current,	"sharing":{		...sharing,		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,	},	price,	"category": category->{ _id, title, "slug": slug.current },	mainImage {			asset,	crop,	customRatio,	hotspot,	"meta": asset-> {		"id": assetId,		"alt": coalesce(^.alt, altText),		"type": mimeType,		"width": metadata.dimensions.width,		"height": metadata.dimensions.height,		"aspectRatio": metadata.dimensions.aspectRatio,		"lqip": metadata.lqip	}	},	excerpt		}	}
+export type PageCuratedSingleQueryResult = {
+	_id: string;
+	_type: 'pCurated';
+	title: string | null;
+	slug: string | null;
+	sharing:
+		| {
+				disableIndex?: boolean;
+				metaTitle?: string;
+				metaDesc?: string;
+				shareGraphic?: {
+					asset?: SanityImageAssetReference;
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: 'image';
+				};
+				siteTitle: string | null;
+		  }
+		| {
+				siteTitle: string | null;
+		  };
+	price: string | null;
+	purchaseLink: string | null;
+	category: {
+		_id: string;
+		title: string | null;
+		slug: string | null;
+	} | null;
+	mainImage: {
+		asset: SanityImageAssetReference | null;
+		crop: SanityImageCrop | null;
+		customRatio: null;
+		hotspot: SanityImageHotspot | null;
+		meta: {
+			id: string | null;
+			alt: string | null;
+			type: string | null;
+			width: number | null;
+			height: number | null;
+			aspectRatio: number | null;
+			lqip: string | null;
+		} | null;
+	} | null;
+	content: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: 'span';
+					_key: string;
+				}>;
+				style?: 'h2' | 'h3' | 'h4' | 'normal-2' | 'normal';
+				listItem?: 'bullet' | 'number';
+				markDefs: Array<
+					| {
+							author?: string;
+							title?: string;
+							isHidden?: boolean;
+							_type: 'blockquote';
+							_key: string;
+					  }
+					| {
+							linkInput?: LinkInput;
+							isNewTab?: boolean;
+							_type: 'callToAction';
+							_key: string;
+							label: null;
+							link: null;
+							isButton: true;
+					  }
+					| {
+							linkInput?: LinkInput;
+							isNewTab: boolean | null;
+							_type: 'link';
+							_key: string;
+							linkType: 'external' | 'internal' | null;
+							href: string | null | '/';
+					  }
+				> | null;
+				level?: number;
+				_type: 'block';
+				_key: string;
+		  }
+		| {
+				embedSnippet?: string;
+				_type: 'iframe';
+				_key: string;
+				markDefs: null;
+		  }
+		| {
+				asset: SanityImageAssetReference | null;
+				media?: unknown;
+				hotspot: SanityImageHotspot | null;
+				crop: SanityImageCrop | null;
+				alt?: string;
+				link: {
+					_type: 'link';
+					linkType: 'external' | 'internal' | null;
+					href: string | null | '/';
+					isNewTab: boolean | null;
+				} | null;
+				_type: 'image';
+				_key: string;
+				markDefs: null;
+				customRatio: null;
+				meta: {
+					id: string | null;
+					alt: string | null;
+					type: string | null;
+					width: number | null;
+					height: number | null;
+					aspectRatio: number | null;
+					lqip: string | null;
+				} | null;
+		  }
+	> | null;
+	relatedProducts: Array<{
+		_id: string;
+		_type: 'pCurated';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		price: string | null;
+		category: {
+			_id: string;
+			title: string | null;
+			slug: string | null;
+		} | null;
+		mainImage: {
+			asset: SanityImageAssetReference | null;
+			crop: SanityImageCrop | null;
+			customRatio: null;
+			hotspot: SanityImageHotspot | null;
+			meta: {
+				id: string | null;
+				alt: string | null;
+				type: string | null;
+				width: number | null;
+				height: number | null;
+				aspectRatio: number | null;
+				lqip: string | null;
+			} | null;
+		} | null;
+		excerpt: string | null;
+	}> | null;
+	defaultRelatedProducts: Array<{
+		_id: string;
+		_type: 'pCurated';
+		title: string | null;
+		slug: string | null;
+		sharing:
+			| {
+					disableIndex?: boolean;
+					metaTitle?: string;
+					metaDesc?: string;
+					shareGraphic?: {
+						asset?: SanityImageAssetReference;
+						media?: unknown;
+						hotspot?: SanityImageHotspot;
+						crop?: SanityImageCrop;
+						_type: 'image';
+					};
+					siteTitle: string | null;
+			  }
+			| {
+					siteTitle: string | null;
+			  };
+		price: string | null;
+		category: {
+			_id: string;
+			title: string | null;
+			slug: string | null;
+		} | null;
+		mainImage: {
+			asset: SanityImageAssetReference | null;
+			crop: SanityImageCrop | null;
+			customRatio: null;
+			hotspot: SanityImageHotspot | null;
+			meta: {
+				id: string | null;
+				alt: string | null;
+				type: string | null;
+				width: number | null;
+				height: number | null;
+				aspectRatio: number | null;
+				lqip: string | null;
+			} | null;
+		} | null;
+		excerpt: string | null;
+	}>;
+} | null;
+
 // Query TypeMap
 import '@sanity/client';
 declare module '@sanity/client' {
 	interface SanityQueries {
 		'*[_type == "pHome"][0]._id': HomeIDResult;
-		'{\n\t\t"announcement": *[_type == "gAnnouncement"][0]{\n\t\t\tdisplay,\n\t\t\tmessages,\n\t\t\tautoplay,\n\t\t\tautoplayInterval,\n\t\t\tbackgroundColor,\n\t\t\ttextColor,\n\t\t\temphasizeColor,\n\t\t\t"link": \n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t"header": *[_type == "gHeader"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t}\n\t\t},\n\t\t"footer": *[_type == "gFooter"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"menuLegal": menuLegal->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"toolbarMenu": toolbarMenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\tnote\n\t\t},\n\t\t"sharing": *[_type == "settingsGeneral"][0]{\n\t\t\tsiteTitle,\n\t\t\tshareGraphic,\n\t\t\t\'shareVideo\': shareVideo.asset->url,\n\t\t\tfavicon,\n\t\t\tfaviconLight\n\t\t},\n\t\t"integrations": *[_type == "settingsIntegration"][0]{\n\t\t\tgaIDs,\n\t\t\tgtmIDs\n\t\t},\n\t}\n': SiteDataQueryResult;
-		'\n\t*[_type == "pHome"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"isHomepage": true,\n\t\tlandingTitle,\n\t\t"textColor": textColor->color,\n\t\tpageModules[]{\n\t\t\t\n\t_type == \'freeform\' => {\n\t\t\n\t_type,\n\t_key,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\tsectionAppearance {\n\t\t...,\n\t\t"backgroundColor": backgroundColor->color,\n\t\t"textColor": textColor->color\n\t}\n\n\t},\n\n\t\t}\n\t}\n': PageHomeQueryResult;
-		'\n\t*[_type == "p404" && _id == "p404"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\theading,\n\t\tparagraph[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\tcallToAction{\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t}\n': Page404QueryResult;
-		'\n\t*[_type == "pGeneral" && slug.current == $slug][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tcontent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\t_updatedAt\n\t}\n': PageGeneralQueryResult;
+		'{\n\t\t"announcement": *[_type == "gAnnouncement"][0]{\n\t\t\tdisplay,\n\t\t\tmessages,\n\t\t\tautoplay,\n\t\t\tautoplayInterval,\n\t\t\tbackgroundColor,\n\t\t\ttextColor,\n\t\t\temphasizeColor,\n\t\t\t"link": \n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t"header": *[_type == "gHeader"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t}\n\t\t},\n\t\t"footer": *[_type == "gFooter"][0]{\n\t\t\tmenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"menuLegal": menuLegal->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\t"toolbarMenu": toolbarMenu->{\n\t\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\titems[]{\n\t\ttitle,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\tdropdownItems[]{\n\t\t\t_key,\n\t\t\ttitle,\n\t\t\tlink {\n\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t}\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\tnote\n\t\t},\n\t\t"sharing": *[_type == "settingsGeneral"][0]{\n\t\t\tsiteTitle,\n\t\t\tshareGraphic,\n\t\t\t\'shareVideo\': shareVideo.asset->url,\n\t\t\tfavicon,\n\t\t\tfaviconLight\n\t\t},\n\t\t"integrations": *[_type == "settingsIntegration"][0]{\n\t\t\tgaIDs,\n\t\t\tgtmIDs\n\t\t},\n\t}\n': SiteDataQueryResult;
+		'\n\t*[_type == "pHome"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"isHomepage": true,\n\t\tlandingTitle,\n\t\t"textColor": textColor->color,\n\t\tpageModules[]{\n\t\t\t\n\t_type == \'freeform\' => {\n\t\t\n\t_type,\n\t_key,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\tsectionAppearance {\n\t\t...,\n\t\t"backgroundColor": backgroundColor->color,\n\t\t"textColor": textColor->color\n\t}\n\n\t},\n\n\t\t}\n\t}\n': PageHomeQueryResult;
+		'\n\t*[_type == "p404" && _id == "p404"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\theading,\n\t\tparagraph[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\tcallToAction{\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t}\n': Page404QueryResult;
+		'\n\t*[_type == "pGeneral" && slug.current == $slug][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tcontent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\t_updatedAt\n\t}\n': PageGeneralQueryResult;
 		'\n  *[_type == "pGeneral" && defined(slug.current)]\n  {"slug": slug.current}\n': PageGeneralSlugsQueryResult;
-		'\n\t*[_type == "pContact"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tdescription,\n\t\tcontactForm {\n\t\t\tformTitle[]{\n\t\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\tformFields[] {\n\t\t\t\t\n\tplaceholder,\n\t_key,\n\trequired,\n\tfieldLabel,\n\tfieldName,\n\tfieldWidth,\n\tinputType,\n\tselectOptions[] {\n\t\t_key,\n\t\t"title": option,\n\t\t"value": option\n\t}\n\n\t\t\t},\n\t\t\tsuccessMessage,\n\t\t\terrorMessage,\n\t\t\tsendToEmail,\n\t\t\temailSubject,\n\t\t\tformFailureNotificationEmail\n\t\t},\n\t\tlegalConsent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t}\n\t}\n': PageContactQueryResult;
-		'\n\t*[_type == "pEvents"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {\n\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t\tsubtitle,\n\t\t\teventDatetime,\n\t\t\tdateStatus,\n\t\t\tlocation,\n\t\t\tlocationLink,\n\t\t\tcategories[]-> {\n\t\t\t\t_id,\n\t\t\t\ttitle,\n\t\t\t\t"slug": slug.current,\n\t\t\t\tcategoryColor->{...color}\n\t\t\t},\n\t\t\tstatusList[]{\n\t\t\t\t_key,\n\t\t\t\tlink {\n\t\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t\t},\n\t\t\t\teventStatus-> {\n\t\t\t\t\t_id,\n\t\t\t\t\ttitle,\n\t\t\t\t\t"slug": slug.current,\n\t\t\t\t\tstatusTextColor->{...color},\n\t\t\t\t\tstatusBgColor->{...color}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t}\n': PEventsQueryResult;
+		'\n\t*[_type == "pContact"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tdescription,\n\t\tcontactForm {\n\t\t\tformTitle[]{\n\t\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t\t},\n\t\t\tformFields[] {\n\t\t\t\t\n\tplaceholder,\n\t_key,\n\trequired,\n\tfieldLabel,\n\tfieldName,\n\tfieldWidth,\n\tinputType,\n\tselectOptions[] {\n\t\t_key,\n\t\t"title": option,\n\t\t"value": option\n\t}\n\n\t\t\t},\n\t\t\tsuccessMessage,\n\t\t\terrorMessage,\n\t\t\tsendToEmail,\n\t\t\temailSubject,\n\t\t\tformFailureNotificationEmail\n\t\t},\n\t\tlegalConsent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t}\n\t}\n': PageContactQueryResult;
+		'\n\t*[_type == "pEvents"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"eventList": *[_type == "pEvent"] | order(eventDatetime asc) {\n\t\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t\tsubtitle,\n\t\t\teventDatetime,\n\t\t\tdateStatus,\n\t\t\tlocation,\n\t\t\tlocationLink,\n\t\t\tcategories[]-> {\n\t\t\t\t_id,\n\t\t\t\ttitle,\n\t\t\t\t"slug": slug.current,\n\t\t\t\tcategoryColor->{...color}\n\t\t\t},\n\t\t\tstatusList[]{\n\t\t\t\t_key,\n\t\t\t\tlink {\n\t\t\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t\t\t},\n\t\t\t\teventStatus-> {\n\t\t\t\t\t_id,\n\t\t\t\t\ttitle,\n\t\t\t\t\t"slug": slug.current,\n\t\t\t\t\tstatusTextColor->{...color},\n\t\t\t\t\tstatusBgColor->{...color}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t}\n': PEventsQueryResult;
 		'\n\t*[_type == "pBlogIndex"][0]{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t"slug": "blog",\n\titemsPerPage,\n\tpaginationMethod,\n\tloadMoreButtonLabel,\n\tinfiniteScrollCompleteLabel,\n\t"itemsTotalCount": count(*[_type == "pBlog"])\n\n\t}\n': PageBlogIndexQueryResult;
 		'\n\t*[_type == "pBlogIndex"][0]{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t"slug": "blog",\n\titemsPerPage,\n\tpaginationMethod,\n\tloadMoreButtonLabel,\n\tinfiniteScrollCompleteLabel,\n\t"itemsTotalCount": count(*[_type == "pBlog"])\n,\n\t\t\n\t"articleList": *[_type == "pBlog"] | order(_updatedAt desc) [0...12] {\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t}\n\n\t}\n': PageBlogIndexWithArticleDataSSGQueryResult;
 		'\n\t{\n\t\t"articleTotalNumber": count(*[_type == "pBlog"]),\n\t\t"itemsPerPage": *[_type == "pBlogIndex"][0].itemsPerPage\n\t}': PageBlogPaginationMethodQueryResult;
 		'\n  *[_type == "pBlog" && defined(slug.current)]\n  {"slug": slug.current}\n': PageBlogSlugsQueryResult;
-		'\n\t*[_type == "pBlog" && slug.current == $slug][0]{\n\t\t\n\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\t"relatedBlogs": relatedBlogs[]->{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t}\n,\n\t\t"defaultRelatedBlogs": *[_type == "pBlog"\n\t\t\t&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0\n\t\t\t&& _id != ^._id\n\t\t] | order(publishedAt desc, _createdAt desc) [0...2] {\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t\t}\n\t}\n': PageBlogSingleQueryResult;
+		'\n\t*[_type == "pBlog" && slug.current == $slug][0]{\n\t\t\n\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n,\n\tcontent[]{\n\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t},\n\t"relatedBlogs": relatedBlogs[]->{\n\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t}\n,\n\t\t"defaultRelatedBlogs": *[_type == "pBlog"\n\t\t\t&& count(categories[@._ref in ^.^.categories[]._ref ]) > 0\n\t\t\t&& _id != ^._id\n\t\t] | order(publishedAt desc, _createdAt desc) [0...2] {\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tauthor->{name},\n\tcategories[]-> {\n\t\t_id,\n\t\ttitle,\n\t\t"slug": slug.current,\n\t\tcategoryColor->{...color}\n\t}\n, excerpt\n\t\t}\n\t}\n': PageBlogSingleQueryResult;
+		'\n\t*[_type == "pCuratedIndex"][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\t"slug": "curated",\n\t\tsubtitle,\n\t\tdescription,\n\t\t"featuredProduct": featuredProduct->{\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tprice,\n\t"category": category->{ _id, title, "slug": slug.current },\n\tmainImage {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n\n\t},\n\texcerpt\n\n\t\t},\n\t\t"productList": *[_type == "pCurated"] | order(_createdAt desc) {\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tprice,\n\t"category": category->{ _id, title, "slug": slug.current },\n\tmainImage {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n\n\t},\n\texcerpt\n\n\t\t},\n\t\t"categories": *[_type == "pCuratedCategory"] | order(title asc) {\n\t\t\t_id,\n\t\t\ttitle,\n\t\t\t"slug": slug.current\n\t\t}\n\t}\n': PageCuratedIndexQueryResult;
+		'\n\t*[_type == "pCurated" && defined(slug.current)]\n\t{"slug": slug.current}\n': PageCuratedSlugsQueryResult;
+		'\n\t*[_type == "pCurated" && slug.current == $slug][0]{\n\t\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\t\tprice,\n\t\tpurchaseLink,\n\t\t"category": category->{ _id, title, "slug": slug.current },\n\t\tmainImage {\n\t\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n\n\t\t},\n\t\tcontent[]{\n\t\t\t\n\t...,\n\tmarkDefs[]{\n\t\t...,\n\t\t_type == "link" => {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t},\n\t\t_type == "callToAction" => {\n\t\t\t\n\tlabel,\n\tlink {\n\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t},\n\t"isButton": true\n\n\t\t}\n\t},\n\t_type == "image" => {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n,\n\t\tlink {\n\t\t\t\n\t_type,\n\t"linkType": linkInput.linkType,\n\t"href": linkInput {\n\t\t\n\t"resolvedHref": select(\n\t\t\tlinkType == "external" => externalUrl,\n\t\t\tlinkType == "internal" => internalLink-> {\n\t\t\t\t"url": select(\n\t\t\t\t\t_type == "pHome" => "/",\n\t\t\t\t\t_type == "pBlogIndex" => "/blog",\n\t\t\t\t\t_type == "pBlog" => "/blog/" + slug.current,\n\t\t\t\t\t_type == "pCuratedIndex" => "/curated",\n\t\t\t\t\t_type == "pCurated" => "/curated/" + slug.current,\n\t\t\t\t\tdefined(slug.current) => "/" + slug.current,\n\t\t\t\t\tnull\n\t\t\t\t)\n\t\t\t}.url,\n\t\t\tnull)\n\t}.resolvedHref,\n\tisNewTab\n\n\t\t}\n\t}\n\n\t\t},\n\t\t"relatedProducts": relatedProducts[]->{\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tprice,\n\t"category": category->{ _id, title, "slug": slug.current },\n\tmainImage {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n\n\t},\n\texcerpt\n\n\t\t},\n\t\t"defaultRelatedProducts": *[_type == "pCurated"\n\t\t\t&& category._ref == ^.category._ref\n\t\t\t&& _id != ^._id\n\t\t] | order(_createdAt desc) [0...3] {\n\t\t\t\n\t\n\t_id,\n\t_type,\n\ttitle,\n\t"slug": slug.current,\n\t"sharing":{\n\t\t...sharing,\n\t\t"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,\n\t}\n,\n\tprice,\n\t"category": category->{ _id, title, "slug": slug.current },\n\tmainImage {\n\t\t\n\tasset,\n\tcrop,\n\tcustomRatio,\n\thotspot,\n\t"meta": asset-> {\n\t\t"id": assetId,\n\t\t"alt": coalesce(^.alt, altText),\n\t\t"type": mimeType,\n\t\t"width": metadata.dimensions.width,\n\t\t"height": metadata.dimensions.height,\n\t\t"aspectRatio": metadata.dimensions.aspectRatio,\n\t\t"lqip": metadata.lqip\n\t}\n\n\t},\n\texcerpt\n\n\t\t}\n\t}\n': PageCuratedSingleQueryResult;
 	}
 }
