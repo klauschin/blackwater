@@ -9,7 +9,8 @@ import {
 	SearchIcon,
 } from '@sanity/icons';
 import { Autocomplete, Card, Flex, Stack, Text } from '@sanity/ui';
-import { isValidUrl, resolveHref, validateEmail } from '@/lib/utils';
+import { isValidUrl, validateEmail } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { set } from 'sanity';
 
 const pageDocumentOrder = [

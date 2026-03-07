@@ -1,5 +1,4 @@
 import type { PortableTextBlock } from '@portabletext/types';
-import type { ImgObject } from '@/components/Image';
 
 export const getPortableTextPreview = (content: PortableTextBlock[]) => {
 	if (!content) {

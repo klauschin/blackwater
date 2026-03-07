@@ -1,10 +1,37 @@
 'use client';
 import CustomPortableText from '@/components/CustomPortableText';
 import { CustomForm } from '@/components/CustomForm';
-import { PageContactQueryResult } from 'sanity.types';
+
+interface PageContactData {
+	title?: string | null;
+	description?: string | null;
+	contactForm?: {
+		formTitle: any;
+		formFields: Array<{
+			placeholder: string | null;
+			_key: string;
+			required: boolean | null;
+			fieldLabel: string | null;
+			inputType: 'checkbox' | 'email' | 'file' | 'select' | 'tel' | 'text' | 'textarea' | null;
+			fieldName: string | null;
+			fieldWidth: 'full' | 'half' | null;
+			selectOptions: Array<{
+				_key: string;
+				title: string | null;
+				value: string | null;
+			}> | null;
+		}> | null;
+		successMessage: string | null;
+		errorMessage: string | null;
+		sendToEmail: string | null;
+		emailSubject: string | null;
+		formFailureNotificationEmail: string | null;
+	} | null;
+	legalConsent?: any;
+}
 
 interface PageContactProps {
-	data?: PageContactQueryResult;
+	data?: PageContactData;
 }
 
 export function PageContact({ data }: PageContactProps) {

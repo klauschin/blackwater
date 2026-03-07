@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { checkIfLinkIsActive } from '@/lib/utils';
+import { checkIfLinkIsActive } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import CustomLink from '@/components/CustomLink';
 import { Button } from '@/components/ui/Button';

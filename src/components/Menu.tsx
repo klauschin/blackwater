@@ -1,10 +1,9 @@
 import { SettingsMenu } from 'sanity.types';
 import { usePathname } from 'next/navigation';
-import { checkIfLinkIsActive } from '@/lib/utils';
+import { checkIfLinkIsActive } from '@/lib/routes';
 import CustomLink from '@/components/CustomLink';
 import Dropdown from '@/components/MenuDropdown';
-import { cn } from '@/lib/utils';
-import { hasArrayValue } from '@/lib/utils';
+import { hasArrayValue, cn } from '@/lib/utils';
 
 type MenuProps = {
 	data: SettingsMenu;

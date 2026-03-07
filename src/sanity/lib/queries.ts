@@ -1,5 +1,5 @@
 import { defineQuery } from 'next-sanity';
-
+import { resolvedHrefGroq } from '@/lib/routes';
 export const homeID = defineQuery(`*[_type == "pHome"][0]._id`);
 
 const baseFields = `
@@ -12,26 +12,12 @@ const baseFields = `
 		"siteTitle": *[_type == "settingsGeneral"][0].siteTitle,
 	}
 `;
-export const resolvedHrefQuery = `
-	"resolvedHref": select(
-			linkType == "external" => externalUrl,
-			linkType == "internal" => internalLink-> {
-				"url": select(
-					_type == "pHome" => "/",
-					_type == "pBlogIndex" => "/blog",
-					_type == "pBlog" => "/blog/" + slug.current,
-					_type == "pCuratedIndex" => "/curated",
-					_type == "pCurated" => "/curated/" + slug.current,
-					defined(slug.current) => "/" + slug.current,
-					null
-				)
-			}.url,
-			null)`;
+
 const linkFields = `
 	_type,
 	"linkType": linkInput.linkType,
 	"href": linkInput {
-		${resolvedHrefQuery}
+		${resolvedHrefGroq}
 	}.resolvedHref,
 	isNewTab
 `;
@@ -56,18 +42,30 @@ const menuFields = `
 `;
 
 export const imageMetaFields = `
-	asset,
-	crop,
+	...,
+  asset,
+  crop,
+  hotspot,
+  "altText": asset->altText,
+  "metadata": asset->metadata {
+    lqip,
+    dimensions,
+    mimeType
+  }
+`;
+
+export const imageBlockMetaFields = `
+  image{
+		${imageMetaFields}
+	},
 	customRatio,
-	hotspot,
-	"meta": asset-> {
-		"id": assetId,
-		"alt": coalesce(^.alt, altText),
-		"type": mimeType,
-		"width": metadata.dimensions.width,
-		"height": metadata.dimensions.height,
-		"aspectRatio": metadata.dimensions.aspectRatio,
-		"lqip": metadata.lqip
+	imageMobile{
+		${imageMetaFields}
+	},
+	customRatioMobile,
+	caption,
+	link{
+		${linkFields}
 	}
 `;
 
@@ -91,7 +89,7 @@ const portableTextContentFields = `
 		}
 	},
 	_type == "image" => {
-		${imageMetaFields},
+		${imageBlockMetaFields},
 		link {
 			${linkFields}
 		}
@@ -163,7 +161,7 @@ export const siteDataQuery = defineQuery(`{
 		"sharing": *[_type == "settingsGeneral"][0]{
 			siteTitle,
 			shareGraphic,
-			'shareVideo': shareVideo.asset->url,
+			"shareVideo": shareVideo.asset->url,
 			favicon,
 			faviconLight
 		},
@@ -344,16 +342,18 @@ export const pageBlogSingleQuery = defineQuery(`
 	}
 `);
 
-// — Curated —
-
 const curatedProductBaseFields = `
 	${baseFields},
 	price,
-	"category": category->{ _id, title, "slug": slug.current },
+	purchaseLink,
+	categories[]->{ _id, title, "slug": slug.current },
+	brands[]->{ _id, title, "slug": slug.current },
 	mainImage {
-		${imageMetaFields}
+		${imageBlockMetaFields}
 	},
-	excerpt
+	content[]{
+		${portableTextContentFields}
+	}
 `;
 
 export const pageCuratedIndexQuery = defineQuery(`
@@ -383,16 +383,7 @@ export const pageCuratedSlugsQuery = defineQuery(`
 
 export const pageCuratedSingleQuery = defineQuery(`
 	*[_type == "pCurated" && slug.current == $slug][0]{
-		${baseFields},
-		price,
-		purchaseLink,
-		"category": category->{ _id, title, "slug": slug.current },
-		mainImage {
-			${imageMetaFields}
-		},
-		content[]{
-			${portableTextContentFields}
-		},
+		${curatedProductBaseFields},
 		"relatedProducts": relatedProducts[]->{
 			${curatedProductBaseFields}
 		},

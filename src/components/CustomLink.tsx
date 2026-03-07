@@ -3,7 +3,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import useKey from '@/hooks/useKey';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 
 /**
  * CustomLink component for handling both internal and external links
@@ -68,7 +68,7 @@ export default function CustomLink({
 			target={isMailTo || isOpenNewTab ? '_blank' : undefined}
 			rel={isOpenNewTab ? 'noopener noreferrer' : undefined}
 			onClick={handleClick}
-			className={clsx(className)}
+			className={cn(className)}
 			{...props}
 		>
 			{children}

@@ -10,6 +10,7 @@ import { pEventCategory } from './documents/p-event-category';
 import { pEvents } from './documents/p-events';
 import { pEventStatus } from './documents/p-event-status';
 import { pGeneral } from './documents/p-general';
+import { pBrand } from './documents/p-brand';
 // Objects
 import { formField } from './objects/form-builder/form-field';
 import { link } from './objects/link';
@@ -61,7 +62,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 	pCuratedIndex,
 	pCurated,
 	pCuratedCategory,
-
+	pBrand,
 	freeform,
 	formField,
 	link(),

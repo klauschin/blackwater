@@ -1,7 +1,8 @@
 import sharing from '@/sanity/schemaTypes/objects/sharing';
 import { slug } from '@/sanity/schemaTypes/objects/slug';
-import { StarIcon } from '@sanity/icons';
+import { StarIcon, ImageIcon } from '@sanity/icons';
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import customImage from '@/sanity/schemaTypes/objects/custom-image';
 
 export const pCurated = defineType({
 	title: 'Curated Product',
@@ -16,23 +17,28 @@ export const pCurated = defineType({
 		}),
 		slug(),
 		defineField({
-			name: 'category',
-			type: 'reference',
-			to: [{ type: 'pCuratedCategory' }],
-		}),
-		defineField({
-			name: 'mainImage',
-			title: 'Main Image',
-			type: 'image',
-			options: { hotspot: true },
-			fields: [
-				defineField({
-					name: 'alt',
-					type: 'string',
-					title: 'Alt Text',
+			name: 'categories',
+			type: 'array',
+			of: [
+				defineArrayMember({
+					type: 'reference',
+					to: [{ type: 'pCuratedCategory' }],
 				}),
 			],
+			validation: (Rule) => Rule.required(),
 		}),
+		defineField({
+			name: 'brands',
+			type: 'array',
+			of: [
+				defineArrayMember({
+					type: 'reference',
+					to: [{ type: 'pBrand' }],
+				}),
+			],
+			validation: (Rule) => Rule.unique(),
+		}),
+		customImage({ title: 'Main Image', name: 'mainImage' }),
 		defineField({
 			name: 'price',
 			type: 'string',
@@ -58,8 +64,7 @@ export const pCurated = defineType({
 			title: 'Related Products',
 			name: 'relatedProducts',
 			type: 'array',
-			description:
-				'If left empty, will pull products from the same category',
+			description: 'If left empty, will pull products from the same category',
 			of: [
 				defineArrayMember({
 					type: 'reference',
@@ -75,13 +80,18 @@ export const pCurated = defineType({
 			title: 'title',
 			slug: 'slug',
 			category: 'category.title',
-			media: 'mainImage',
+			mainImage: 'mainImage',
 		},
-		prepare({ title = 'Untitled', slug = {}, category, media }) {
+		prepare({
+			title = 'Untitled',
+			slug = {},
+			category,
+			mainImage,
+		}: Record<string, any>) {
 			return {
 				title,
 				subtitle: `[${category ?? '(no category)'}] — /curated/${slug?.current ?? '(no slug)'}`,
-				media,
+				media: mainImage?.image.asset || ImageIcon,
 			};
 		},
 	},

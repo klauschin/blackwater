@@ -50,7 +50,7 @@ export function getUrlBaseAndPath(url: string): string {
  * @param arr - The value to check.
  * @returns True if the value is a non-empty array, otherwise false.
  */
-export function hasArrayValue<T>(arr: T[] | unknown): arr is T[] {
+export function hasArrayValue<T>(arr: T[] | null | undefined): arr is T[] {
 	return Array.isArray(arr) && arr.length > 0;
 }
 
@@ -522,65 +522,3 @@ export function getSpacingClass(
 	// Cast value to keyof typeof classMap to ensure it's a valid number string
 	return (classMap && classMap[value as keyof typeof classMap]) || null;
 }
-
-/**
- * Checks if a link should be considered active based on the current path and target URL.
- * @param args - Object containing the current pathName, target url, and an optional flag for child links.
- * @returns True if the link is active, otherwise false.
- */
-export const checkIfLinkIsActive = ({
-	pathName,
-	url,
-	isChild,
-}: {
-	pathName: string;
-	url: string;
-	isChild?: boolean;
-}): boolean => {
-	if (isChild) {
-		// Compares the first segment of the pathName and url (e.g., /blog/post vs /blog)
-		return (pathName.split('/')[1] || '') === (url.split('/')[1] || '');
-	} else {
-		return pathName === url;
-	}
-};
-
-/**
- * Resolves a Sanity document type and slug into a public URL path.
- * @param args - Object containing the Sanity documentType and slug.
- * @returns The resolved URL path string or undefined.
- */
-export const resolveHref = ({
-	documentType,
-	slug,
-}: LinkResolverArgs): string | undefined => {
-	if (!documentType) return undefined;
-
-	switch (documentType) {
-		case 'pHome':
-			return '/';
-		case 'pGeneral':
-			return `/${slug}`;
-		case 'pBlogIndex':
-			return '/blog';
-		case 'pBlog':
-			return `/blog/${slug}`;
-		case 'pEvents':
-			return '/event';
-		case 'pEvent':
-			return `/event/${slug}`;
-		case 'pContact':
-			return `/contact`;
-		case 'pCuratedIndex':
-			return '/curated';
-		case 'pCurated':
-			return `/curated/${slug}`;
-		case 'externalUrl':
-			// The slug is expected to be the full external URL here
-			return slug || undefined;
-
-		default:
-			console.warn('Invalid document type:', documentType);
-			return undefined;
-	}
-};

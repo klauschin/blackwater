@@ -1,7 +1,7 @@
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadata-fields
 import type { Metadata } from 'next';
 import { imageBuilder } from '@/sanity/lib/image';
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { formatUrl } from '@/lib/utils';
 
 type Props = {
@@ -28,7 +28,7 @@ export default function defineMetadata({ data }: Props): Metadata {
 	const disableIndex = sharing?.disableIndex;
 	const pageRoute = resolveHref({
 		documentType: _type ?? null,
-		slug: slug,
+		slug: slug ?? null,
 	});
 
 	return {

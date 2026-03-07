@@ -31,11 +31,11 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
 			if (link?.href) {
 				return (
 					<CustomLink link={link}>
-						<Img image={value} />
+						<Img imageObj={value} />
 					</CustomLink>
 				);
 			}
-			return <Img image={value} />;
+			return <Img imageObj={value} />;
 		},
 		iframe: ({ value }) => {
 			const { embedSnippet } = value;

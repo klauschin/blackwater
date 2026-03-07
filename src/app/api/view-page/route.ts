@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { redirect } from 'next/navigation';
 import { client } from '@/sanity/lib/client';
 import * as queries from '@/sanity/lib/queries';
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);

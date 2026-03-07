@@ -1,5 +1,5 @@
 import { LinkIcon, MasterDetailIcon, WarningOutlineIcon } from '@sanity/icons';
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { defineField, defineType } from 'sanity';
 
 export function link({ title, name, showLabel = true, ...props } = {}) {

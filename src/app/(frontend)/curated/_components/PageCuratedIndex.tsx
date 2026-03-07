@@ -24,11 +24,11 @@ export function PageCuratedIndex({ data }: Props) {
 
 	const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-	const filteredProducts = useMemo(() => {
-		if (!productList) return [];
-		if (!activeCategory) return productList;
-		return productList.filter((p) => p.category?.slug === activeCategory);
-	}, [productList, activeCategory]);
+	// const filteredProducts = useMemo(() => {
+	// 	if (!productList) return [];
+	// 	if (!activeCategory) return productList;
+	// 	return productList.filter((p) => p.category?.slug === activeCategory);
+	// }, [productList, activeCategory]);
 
 	return (
 		<div className="px-contain mx-auto min-h-[inherit] py-10 lg:py-17.5">
@@ -90,28 +90,23 @@ export function PageCuratedIndex({ data }: Props) {
 						className="group grid grid-cols-1 lg:grid-cols-2 gap-6 border border-foreground/20 p-4 lg:p-6 hover:bg-foreground/5 transition-colors"
 					>
 						{featuredProduct.mainImage && (
-							<div className="aspect-[4/3] overflow-hidden bg-foreground/5">
+							<div className="aspect-4/3 overflow-hidden bg-foreground/5">
 								<Img
 									className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-									image={featuredProduct.mainImage as any}
+									imageObj={featuredProduct.mainImage as any}
 									alt={featuredProduct.title ?? ''}
 								/>
 							</div>
 						)}
 						<div className="flex flex-col justify-center gap-3">
-							{featuredProduct.category && (
+							{/* {featuredProduct.category && (
 								<span className="t-h-6 uppercase text-muted">
 									{featuredProduct.category.title}
 								</span>
-							)}
+							)} */}
 							<h2 className="t-h-3 uppercase">{featuredProduct.title}</h2>
 							{featuredProduct.price && (
 								<p className="t-h-5 uppercase">{featuredProduct.price}</p>
-							)}
-							{featuredProduct.excerpt && (
-								<p className="t-b-1 text-muted line-clamp-3">
-									{featuredProduct.excerpt}
-								</p>
 							)}
 							<span className="t-h-6 uppercase underline underline-offset-4 mt-2 group-hover:opacity-60 transition-opacity self-start">
 								View pick →
@@ -159,7 +154,7 @@ export function PageCuratedIndex({ data }: Props) {
 			)}
 
 			{/* Product grid */}
-			{filteredProducts.length > 0 ? (
+			{/* {filteredProducts.length > 0 ? (
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px border border-foreground/20">
 					{filteredProducts.map((product, index) => (
 						<motion.article
@@ -214,7 +209,7 @@ export function PageCuratedIndex({ data }: Props) {
 				<p className="py-8 text-center t-b-1 text-muted">
 					No products in this category yet.
 				</p>
-			)}
+			)} */}
 		</div>
 	);
 }

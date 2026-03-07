@@ -1,5 +1,5 @@
 import { LinkIcon, MasterDetailIcon, WarningOutlineIcon } from '@sanity/icons';
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { defineType } from 'sanity';
 import { link } from '@/sanity/schemaTypes/objects/link';
 

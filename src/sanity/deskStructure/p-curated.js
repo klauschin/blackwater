@@ -1,9 +1,16 @@
 import { StarIcon, TagsIcon } from '@sanity/icons';
 
-export const pageCuratedCategory = (S) => {
+const pageCuratedCategory = (S) => {
 	return S.listItem()
 		.title('Categories')
 		.child(S.documentTypeList('pCuratedCategory').title('Categories'))
+		.icon(TagsIcon);
+};
+
+const pageBrand = (S) => {
+	return S.listItem()
+		.title('Brands')
+		.child(S.documentTypeList('pBrand').title('Brands'))
 		.icon(TagsIcon);
 };
 
@@ -30,6 +37,7 @@ export const pageCurated = (S) => {
 						.icon(StarIcon),
 					S.divider(),
 					pageCuratedCategory(S),
+					pageBrand(S),
 				])
 		)
 		.icon(StarIcon);

@@ -1,169 +1,170 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { JSX, useState } from 'react';
 import Image from 'next/image';
-import { useInView } from 'react-intersection-observer';
+import { cn } from '@/lib/utils';
 import { buildImageSrc } from '@/lib/image-utils';
-import clsx from 'clsx';
-// import { SanityImage, type ImageProps } from 'next-sanity/image';
-import { type ImageProps } from 'next-sanity/image';
-export type ImgObject = {
-	src: {
-		_key?: string | null;
-		_type?: 'image' | (string & {});
-		asset: {
-			_type: 'reference';
-			_ref: string;
-		};
-		crop: {
-			top: number;
-			bottom: number;
-			left: number;
-			right: number;
-		} | null;
-		hotspot: {
-			x: number;
-			y: number;
-			height: number;
-			width: number;
-		} | null;
-		alt?: string | undefined;
-	};
-	width?: number;
-	height?: number;
-	aspectRatio?: number;
-	customRatio?: number;
-	alt?: string;
-};
+import Caption from '@/components/Caption';
+import type {
+	SanityImageAssetReference,
+	SanityImageCrop,
+	SanityImageHotspot,
+} from 'sanity.types';
 
-function getImageId(image: any) {
-	if (!image) return null;
-	if (typeof image === 'string') return image;
-	if (image?.asset) return image.asset._ref || image.asset._id;
-	return image._ref || image._id || null;
+interface ImageWithMeta {
+	asset?: SanityImageAssetReference | null;
+	crop?: SanityImageCrop | null;
+	hotspot?: SanityImageHotspot | null;
+	altText?: string | null;
+	metadata?: {
+		lqip?: string | null;
+		dimensions?: {
+			width?: number | null;
+			height?: number | null;
+			aspectRatio?: number | null;
+		} | null;
+		mimeType?: string | null;
+	} | null;
 }
 
-function getImageDimensions(id: string) {
-	if (!id) return null;
-	const dimensions = id.split('-')[2];
-	const [width, height] = dimensions.split('x').map((num) => parseInt(num, 10));
-	return { width, height, aspectRatio: width / height };
+export interface ImageBlockObj {
+	image?: ImageWithMeta | null;
+	imageMobile?: ImageWithMeta | null;
+	customRatio?: number | null;
+	customRatioMobile?: number | null;
+	caption?: string | null;
 }
 
-type ImgProps = Omit<ImageProps, 'src' | 'alt'> & {
-	image: ImgObject;
-	responsiveImage?: ImgObject;
+interface ImgProps {
+	imageObj?: ImageBlockObj | null;
 	alt?: string;
 	className?: string;
+	fill?: 'cover' | 'contain';
 	breakpoint?: number;
 	quality?: number;
-	format?: 'jpg' | 'pjpg' | 'png' | 'webp';
-};
+	format?: string;
+	sizes?: string;
+}
 
 function Img({
-	image,
+	imageObj,
 	alt,
 	className,
-	responsiveImage,
-	breakpoint = 640,
+	fill,
+	breakpoint = 768,
 	quality = 80,
 	format = 'webp',
-}: ImgProps) {
-	const { ref, inView } = useInView({ triggerOnce: true });
+	sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+}: ImgProps): JSX.Element | null {
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [error, setError] = useState(false);
-	const pictureRef = useRef<HTMLPictureElement | null>(null);
-	const [renderedWidth, setRenderedWidth] = useState(0);
 
-	const imageId = getImageId(image);
-	const dimensions = getImageDimensions(imageId);
-	const aspectRatio = image?.customRatio || dimensions?.aspectRatio || 1;
-	const placeholderSrc = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${aspectRatio * 100} 100'%3E%3C/svg%3E`;
-	const imageWidth = dimensions?.width || 0;
-	const imageHeight = Math.round(imageWidth / aspectRatio);
-	const imageOptions = {
-		width: imageWidth,
-		height: imageHeight,
-		format,
-		quality,
-	};
-	const src = renderedWidth
-		? buildImageSrc(image, imageOptions)
-		: placeholderSrc;
-	const responsiveImageData = useMemo(() => {
-		if (!responsiveImage) return null;
+	if (!imageObj) return null;
 
-		const id = getImageId(responsiveImage);
-		const dimensions = getImageDimensions(id);
-		const ratio =
-			responsiveImage?.customRatio || dimensions?.aspectRatio || aspectRatio;
-		const width = dimensions?.width || imageWidth;
-		const height = Math.round(width / ratio);
+	const fillClass =
+		fill === 'cover'
+			? 'img-object-cover'
+			: fill === 'contain'
+				? 'img-object-contain'
+				: null;
+	const {
+		image,
+		imageMobile: responsiveImage,
+		caption,
+		customRatio,
+		customRatioMobile,
+	} = imageObj;
 
-		return {
-			src: buildImageSrc(responsiveImage, {
-				width,
-				height,
-				format,
-				quality,
-			}),
-			width,
-			height,
+	if (!image) return null;
+
+	const { metadata, altText } = image;
+	const { dimensions, lqip } = metadata || {};
+	const { width: rawWidth, aspectRatio } = dimensions || {};
+	const width = rawWidth ?? undefined;
+	const height = width
+		? Math.round(width / (customRatio || aspectRatio || 1))
+		: undefined;
+	const imageAlt = alt || altText || 'Image';
+	const src =
+		buildImageSrc(image, { width, height, format: format as any, quality }) ||
+		'';
+
+	let responsiveProps = null;
+	if (responsiveImage) {
+		const { dimensions: rDimensions } = responsiveImage.metadata || {};
+		const rWidth = rDimensions?.width ?? undefined;
+		const rHeight = rWidth
+			? Math.round(
+					rWidth / (customRatioMobile || rDimensions?.aspectRatio || 1)
+				)
+			: undefined;
+		responsiveProps = {
+			src:
+				buildImageSrc(responsiveImage, {
+					width: rWidth,
+					height: rHeight,
+					format: format as any,
+					quality,
+				}) || '',
+			width: rWidth,
+			height: rHeight,
 		};
-	}, [responsiveImage, format, quality, aspectRatio, imageWidth]);
+	}
 
-	useEffect(() => {
-		if (inView && pictureRef.current) {
-			setRenderedWidth(pictureRef.current.offsetWidth);
-		}
-	}, [inView]);
+	const imageEl = (
+		<Image
+			src={src}
+			width={width}
+			height={height}
+			fill={!width || !height ? true : undefined}
+			sizes={sizes}
+			quality={quality}
+			alt={imageAlt}
+			blurDataURL={lqip || undefined}
+			onError={() => {
+				setError(true);
+				setIsLoaded(false);
+			}}
+			onLoad={() => setIsLoaded(true)}
+			className={cn({
+				lazyload: !isLoaded,
+				lazyloaded: isLoaded,
+				loading: !isLoaded && !error,
+				className,
+			})}
+		/>
+	);
 
-	const handleImageError = () => {
-		setError(true);
-		setIsLoaded(false);
-	};
+	const content = responsiveProps ? (
+		<picture className={cn(fillClass, className)}>
+			<source
+				media={`(min-width: ${breakpoint + 1}px)`}
+				srcSet={src}
+				width={width}
+				height={height}
+			/>
+			<source
+				media={`(max-width: ${breakpoint}px)`}
+				srcSet={responsiveProps.src}
+				width={responsiveProps.width}
+				height={responsiveProps.height}
+			/>
+			{imageEl}
+		</picture>
+	) : fillClass ? (
+		<span className={cn(fillClass, className)}>{imageEl}</span>
+	) : (
+		imageEl
+	);
 
-	if (!image || !imageId) return null;
-	if (error) console.error(`Failed to load image ${imageId}`);
+	if (!caption) return content;
 
 	return (
-		<picture ref={pictureRef} className={className}>
-			{responsiveImage && responsiveImageData && (
-				<>
-					<source
-						media={`(min-width: ${breakpoint + 1}px)`}
-						width={imageWidth}
-						height={imageHeight}
-						srcSet={src}
-					/>
-					<source
-						media={`(max-width: ${breakpoint}px)`}
-						width={responsiveImageData.width}
-						height={responsiveImageData.height}
-						srcSet={responsiveImageData.src}
-					/>
-				</>
-			)}
-			<Image
-				ref={ref}
-				width={imageWidth}
-				height={imageHeight}
-				sizes={`${renderedWidth}px`}
-				quality={quality}
-				alt={alt || image?.alt || 'image'}
-				src={src}
-				onError={handleImageError}
-				onLoad={() => renderedWidth > 0 && setIsLoaded(true)}
-				className={clsx({
-					lazyload: !isLoaded,
-					lazyloaded: isLoaded,
-					loading: !isLoaded && !error,
-				})}
-				role="img"
-				loading="lazy"
-			/>
-		</picture>
+		<div className={cn('relative', className)}>
+			{content}
+			<Caption className="absolute bottom-2 left-2" caption={caption} />
+		</div>
 	);
 }
 
-export default React.memo(Img);
+export default Img;

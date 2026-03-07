@@ -1,4 +1,4 @@
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { defineField, defineType } from 'sanity';
 
 export const settingsRedirect = defineType({

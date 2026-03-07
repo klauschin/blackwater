@@ -1,11 +1,12 @@
 'use client';
-
+import React from 'react';
 import Link from 'next/link';
 import Img from '@/components/Image';
 import CustomPortableText from '@/components/CustomPortableText';
 import { fadeAnim } from '@/lib/animate';
 import { motion } from 'motion/react';
 import type { PageCuratedSingleQueryResult } from 'sanity.types';
+import { hasArrayValue } from '@/lib/utils';
 
 type Props = {
 	data: NonNullable<PageCuratedSingleQueryResult>;
@@ -14,7 +15,7 @@ type Props = {
 export default function PageCuratedSingle({ data }: Props) {
 	const {
 		title,
-		category,
+		categories,
 		mainImage,
 		price,
 		purchaseLink,
@@ -30,7 +31,6 @@ export default function PageCuratedSingle({ data }: Props) {
 
 	return (
 		<div className="px-contain mx-auto min-h-[inherit] py-10 lg:py-17.5">
-			{/* Breadcrumb */}
 			<motion.nav
 				className="t-h-6 uppercase text-muted mb-8 flex items-center gap-2"
 				initial="hide"
@@ -44,52 +44,58 @@ export default function PageCuratedSingle({ data }: Props) {
 				>
 					Curated
 				</Link>
-				{category && (
-					<>
-						<span>/</span>
-						<span>{category.title}</span>
-					</>
-				)}
+
+				<>
+					<span>/</span>
+					<span>
+						{hasArrayValue(categories) &&
+							categories.map((item: any, index: number) => {
+								return (
+									<React.Fragment key={index}>{item.title}</React.Fragment>
+								);
+							})}
+					</span>
+				</>
 			</motion.nav>
 
 			{/* Product hero */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-24">
 				{/* Image */}
 				<motion.div
-					className="aspect-[4/3] overflow-hidden bg-foreground/5"
+					className="relative aspect-4/3 overflow-hidden bg-foreground"
 					initial="hide"
 					animate="show"
 					variants={fadeAnim}
 					transition={{ duration: 0.8, delay: 0.05, ease: [0, 0.5, 0.5, 1] }}
 				>
 					{mainImage ? (
-						<Img
-							className="w-full h-full object-cover"
-							image={mainImage as any}
-							alt={title ?? ''}
-						/>
+						<Img fill="contain" imageObj={mainImage as any} alt={title ?? ''} />
 					) : (
-						<div className="w-full h-full bg-foreground/5" />
+						<div className="w-full h-full bg-foreground" />
 					)}
 				</motion.div>
 
 				{/* Details */}
 				<div className="flex flex-col gap-4 justify-center">
-					{category && (
-						<motion.span
-							className="t-h-6 uppercase text-muted"
-							initial="hide"
-							animate="show"
-							variants={fadeAnim}
-							transition={{
-								duration: 0.6,
-								delay: 0.1,
-								ease: [0, 0.71, 0.2, 1.01],
-							}}
-						>
-							{category.title}
-						</motion.span>
-					)}
+					{hasArrayValue(categories) &&
+						categories.map((item: any, index: number) => {
+							return (
+								<motion.span
+									key={item._id || index}
+									className="t-h-6 uppercase text-muted"
+									initial="hide"
+									animate="show"
+									variants={fadeAnim}
+									transition={{
+										duration: 0.6,
+										delay: 0.1,
+										ease: [0, 0.71, 0.2, 1.01],
+									}}
+								>
+									{item.title}
+								</motion.span>
+							);
+						})}
 
 					<motion.h1
 						className="t-h-2 uppercase"
@@ -192,7 +198,7 @@ export default function PageCuratedSingle({ data }: Props) {
 										<div className="aspect-[4/3] overflow-hidden bg-foreground/5 mb-4">
 											<Img
 												className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-												image={product.mainImage as any}
+												imageObj={product.mainImage as any}
 												alt={product.title ?? ''}
 											/>
 										</div>
@@ -200,11 +206,6 @@ export default function PageCuratedSingle({ data }: Props) {
 										<div className="aspect-[4/3] bg-foreground/5 mb-4" />
 									)}
 									<div className="flex flex-col gap-1.5">
-										{product.category && (
-											<span className="t-h-6 uppercase text-muted">
-												{product.category.title}
-											</span>
-										)}
 										<h3 className="t-h-5 uppercase leading-tight">
 											{product.title}
 										</h3>

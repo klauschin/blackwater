@@ -2,7 +2,7 @@
  * Sets up the Presentation Resolver API,
  * see https://www.sanity.io/docs/presentation-resolver-api for more information.
  */
-import { resolveHref } from '@/lib/utils';
+import { resolveHref } from '@/lib/routes';
 import { defineDocuments, defineLocations } from 'sanity/presentation';
 
 export const mainDocuments = defineDocuments([
