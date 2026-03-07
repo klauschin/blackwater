@@ -344,6 +344,7 @@ export const pageBlogSingleQuery = defineQuery(`
 
 const curatedProductBaseFields = `
 	${baseFields},
+	excerpt,
 	price,
 	purchaseLink,
 	categories[]->{ _id, title, "slug": slug.current },
@@ -388,7 +389,7 @@ export const pageCuratedSingleQuery = defineQuery(`
 			${curatedProductBaseFields}
 		},
 		"defaultRelatedProducts": *[_type == "pCurated"
-			&& category._ref == ^.category._ref
+			&& count(categories[@._ref in ^.^.categories[]._ref]) > 0
 			&& _id != ^._id
 		] | order(_createdAt desc) [0...3] {
 			${curatedProductBaseFields}

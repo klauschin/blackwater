@@ -6,7 +6,6 @@
 		"predev": "npm run typegen",
 		"dev": "next",
 		"build": "next build",
-		"prebuild": "npm run typegen",
 		"start": "next start",
 		"typegen": "sanity schema extract && sanity typegen generate",
 		"start:web": "next start",

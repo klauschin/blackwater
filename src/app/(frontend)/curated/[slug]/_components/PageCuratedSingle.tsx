@@ -15,7 +15,9 @@ type Props = {
 export default function PageCuratedSingle({ data }: Props) {
 	const {
 		title,
+		excerpt,
 		categories,
+		brands,
 		mainImage,
 		price,
 		purchaseLink,
@@ -45,17 +47,19 @@ export default function PageCuratedSingle({ data }: Props) {
 					Curated
 				</Link>
 
-				<>
-					<span>/</span>
-					<span>
-						{hasArrayValue(categories) &&
-							categories.map((item: any, index: number) => {
-								return (
-									<React.Fragment key={index}>{item.title}</React.Fragment>
-								);
-							})}
-					</span>
-				</>
+				{hasArrayValue(categories) && (
+					<>
+						<span>/</span>
+						<span>
+							{categories.map((item: any, index: number) => (
+								<React.Fragment key={index}>
+									{index > 0 && ', '}
+									{item.title}
+								</React.Fragment>
+							))}
+						</span>
+					</>
+				)}
 			</motion.nav>
 
 			{/* Product hero */}
@@ -77,25 +81,30 @@ export default function PageCuratedSingle({ data }: Props) {
 
 				{/* Details */}
 				<div className="flex flex-col gap-4 justify-center">
-					{hasArrayValue(categories) &&
-						categories.map((item: any, index: number) => {
-							return (
-								<motion.span
-									key={item._id || index}
-									className="t-h-6 uppercase text-muted"
-									initial="hide"
-									animate="show"
-									variants={fadeAnim}
-									transition={{
-										duration: 0.6,
-										delay: 0.1,
-										ease: [0, 0.71, 0.2, 1.01],
-									}}
-								>
+					{/* Category + Brand row */}
+					<motion.div
+						className="flex flex-wrap items-center gap-x-3 gap-y-1"
+						initial="hide"
+						animate="show"
+						variants={fadeAnim}
+						transition={{ duration: 0.6, delay: 0.1, ease: [0, 0.71, 0.2, 1.01] }}
+					>
+						{hasArrayValue(categories) &&
+							categories.map((item: any, index: number) => (
+								<span key={item._id || index} className="t-h-6 uppercase text-muted">
 									{item.title}
-								</motion.span>
-							);
-						})}
+								</span>
+							))}
+						{hasArrayValue(categories) && hasArrayValue(brands) && (
+							<span className="t-h-6 text-muted/40">·</span>
+						)}
+						{hasArrayValue(brands) &&
+							(brands as any[]).map((brand: any, index: number) => (
+								<span key={brand._id || index} className="t-h-6 uppercase text-muted">
+									{brand.title}
+								</span>
+							))}
+					</motion.div>
 
 					<motion.h1
 						className="t-h-2 uppercase"
@@ -110,6 +119,18 @@ export default function PageCuratedSingle({ data }: Props) {
 					>
 						{title}
 					</motion.h1>
+
+					{excerpt && (
+						<motion.p
+							className="t-b-1 text-muted max-w-sm"
+							initial="hide"
+							animate="show"
+							variants={fadeAnim}
+							transition={{ duration: 0.6, delay: 0.18, ease: [0, 0.71, 0.2, 1.01] }}
+						>
+							{excerpt}
+						</motion.p>
+					)}
 
 					{price && (
 						<motion.p
@@ -209,6 +230,11 @@ export default function PageCuratedSingle({ data }: Props) {
 										<h3 className="t-h-5 uppercase leading-tight">
 											{product.title}
 										</h3>
+										{(product as any).excerpt && (
+											<p className="t-b-2 text-muted line-clamp-2">
+												{(product as any).excerpt}
+											</p>
+										)}
 										{product.price && (
 											<p className="t-b-2 text-muted">{product.price}</p>
 										)}
