@@ -198,7 +198,7 @@
 			--s-vp-height: 100svh;
 		}
 
-		--h-main: calc(var(--s-vp-height) - var(--height-announcement, 0px) - var(--height-header) - var(--height-footer));
+		--h-main: calc(var(--s-vp-height) - var(--height-announcement, 0px) - var(--height-header) - var(--height-g-toolbar));
 	}
 
 	.dark {
