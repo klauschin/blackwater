@@ -114,7 +114,7 @@ export function WeatherWidget() {
 		// paint-time stagger to join. Kept short because the drift moves the
 		// element that owns the backdrop-filter, so the blur resamples for the
 		// duration -- cf. the header holding `backdrop-filter: none` over a wave.
-		<div className="text-foreground bg-background/85 backdrop-blur-xs border-foreground/36 right-contain animate-in fade-in slide-in-from-bottom-2 duration-500 ease-out motion-reduce:animate-none absolute bottom-[calc(var(--height-g-toolbar)+1rem)] lg:bottom-2.5 z-g-toolbar w-(--width-max) sm:max-w-64 border max-sm:left-contain">
+		<div className="text-foreground bg-background/85 backdrop-blur-xs border-foreground/36 right-contain animate-in fade-in slide-in-from-bottom-2 animation-duration-500 ease-out motion-reduce:animate-none absolute bottom-[calc(var(--height-g-toolbar)+1rem)] lg:bottom-2.5 z-g-toolbar w-(--width-max) sm:max-w-64 border max-sm:left-contain">
 			<button
 				type="button"
 				onClick={() => setIsOpen((open) => !open)}

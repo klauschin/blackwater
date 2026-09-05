@@ -106,9 +106,16 @@ export default function HeroBlock({
 			appearance={appearance}
 			className={cn(
 				'relative isolate flex flex-col justify-center overflow-hidden',
-				// The header height is ADDED back on the underlap arm: `--height-main`
-				// subtracts it, and a hero the header floats over gets that space back.
-				underlapsHeader ? 'min-h-[90vh]' : 'min-h-main',
+				// The underlap arm opens at 90% of the SMALL viewport, not `vh`: the
+				// header floats over this hero so no header height is involved, but
+				// `vh` is the LARGE viewport, which overflows the visible area while
+				// mobile browser chrome is expanded. The toolbar strip is subtracted
+				// below `lg` only, mirroring the two arms of `--h-main` -- `ToolBar`
+				// is `fixed bottom-0 lg:hidden`, so it covers that strip on mobile
+				// and does not exist above it.
+				underlapsHeader
+					? 'min-h-[calc(90svh-var(--height-g-toolbar))] lg:min-h-[90svh]'
+					: 'min-h-main',
 				className
 			)}
 		>
