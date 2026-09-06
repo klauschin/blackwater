@@ -1,83 +1,117 @@
-# Sanity + Next.js + Vercel Starter Template
+# Blackwater RC
 
-> A example of a Vercel-deployable project with a [Next.js](https://nextjs.org/) frontend and a [Sanity Studio](https://www.sanity.io) on /sanity
+The Blackwater RC website — a running club in Taipei. Next.js 16 (App Router)
+frontend with a Sanity v5 Studio embedded at `/sanity`, deployed on Vercel.
+Products are hybrid: Sanity owns everything editorial, Shopify owns commerce.
 
-### 1. Sanity
+Two locales, `en` and `zh_tw`. The site is the store; shoppers only leave at
+Shopify's hosted checkout.
 
-1. `npm install && npm create sanity@latest init --env`
-2. During Sanity's initialization, it will prompt you with a warning. Type Y or n and hit enter.
+> **Working on the code?** Read `CLAUDE.md` first. It is the architecture
+> reference — routing, localization, page modules, the type scale, commerce —
+> and it documents the constraints that the code alone won't teach you. This
+> file only covers getting the thing running.
 
-```
-? Select project to use... (Create new project)
-? Select organization to attach project to... (None)
-? Use the default dataset configuration? (Y)
-? Would you like to add configuration files for a Sanity project in this Next.js folder? (Y)
-? Do you want to use TypeScript? (n)
-? Would you like an embedded Sanity Studio? (Y)
-? What route do you want to use for the Studio? (/sanity)
-? File /src/app/sanity/[[...tool]]/page.jsx already exists. Do you want to overwrite it? (N)
-? File /sanity.config.js already exists. Do you want to overwrite it? (N)
-? File /sanity.cli.js already exists. Do you want to overwrite it? (N)
-? Select project template to use (Clean project with no predefined schemas)
-? File /src/sanity/env.js already exists. Do you want to overwrite it? (N)
-? File /src/sanity/lib/client.js already exists. Do you want to overwrite it? (N)
-? File /src/sanity/lib/live.js already exists. Do you want to overwrite it? (y/N)
-? File /src/sanity/lib/image.js already exists. Do you want to overwrite it? (N)
-? File /src/sanity/schemaTypes/index.js already exists. Do you want to overwrite it? (N)
-? File /src/sanity/structure.js already exists. Do you want to overwrite it? (N)
-? Would you like to add the project ID and dataset to your .env file? (Y)
+## Getting started
+
+```bash
+npm install
+cp .env.example .env.local   # then fill it in — see below
+npm run dev
 ```
 
-3. Add CORS Origins to your newly created Sanity project by visiting manage.sanity.io and navigating to Settings → API. Then, add your Studio URLs with credentials, such as http://localhost:3000.
+- Front end: <http://localhost:3001>
+- Sanity Studio: <http://localhost:3001/sanity>
 
-### 2. NextJS (App Router)
+The Studio is embedded, so it runs on the same port and the same dev server as
+the site. Port 3001 is set in the `dev` script, not a convention.
 
-1. Update or add the following variables in the `.env` file within the project folder:
+`predev` runs `npm run typegen` for you, so the first `npm run dev` after a
+schema change is already correct.
 
-   ```
-    NEXT_PUBLIC_SANITY_PROJECT_ID="XXXXXX"
-   	NEXT_PUBLIC_SANITY_DATASET="production"
+## Environment
 
-   	SITE_URL="http://localhost:3000"
-   	SANITY_API_READ_TOKEN="XXXXXX"
-   	SANITY_REVALIDATE_SECRET="XXXXXX"
+Copy `.env.example` to `.env.local`; every variable is documented there. The
+short version of what is mandatory:
 
-   	// Required for email sending:
-   	EMAIL_DISPLAY_NAME="Client Name"
-   	EMAIL_SERVER_USER="xxx@clientwebsite.com"
-   	EMAIL_SERVER_PASSWORD="****************"
-   	EMAIL_SERVER_HOST="smtp.gmail.com"
-   	EMAIL_SERVER_PORT="465"
-   	VS_API_URL="https://view-source-api.vercel.app"
-   ```
+| Variable | Why it's required |
+| --- | --- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `src/sanity/env.ts` throws on startup without it |
+| `NEXT_PUBLIC_SANITY_DATASET` | Same — use `dev` locally |
+| `SANITY_API_READ_TOKEN` | `src/sanity/lib/live.ts` throws immediately without it |
+| `SITE_URL` | Canonicals, JSON-LD, `robots.txt` and all three sitemaps build absolute URLs from it |
 
-2. Here's where to find each value:
+Everything else degrades gracefully. **The Shopify variables are all optional** —
+without `SHOPIFY_STORE_DOMAIN` plus a Storefront token the integration no-ops and
+products render from their manual Sanity fields. `docs/SHOPIFY-SETUP.md` is the
+walkthrough for wiring it up.
 
-- `NEXT_PUBLIC_SANITY_PROJECT_ID`: You can find this after initializing Sanity, either from the `studio/sanity.json` file or from your Sanity dashboard.
-- `SANITY_API_READ_TOKEN`: Generate an API token for your Sanity project. Access your project from the Sanity Manage dashboard and navigate to "Settings" → "API" → "Add New Token" button. Make sure to give it `read + write` access!
+Add the same variables to the Vercel project before deploying.
 
-- `EMAIL_SERVER_PASSWORD`: Set up the password here: https://security.google.com/settings/security/apppasswords. If the link leads to a 404 page, you need to enable 2-Step Verification first. Once you've set up 2-Step Verification, you can then create an app password.
+Sanity also needs CORS origins for local work: manage.sanity.io → your project →
+**API** → add `http://localhost:3001` **with credentials**.
 
-- `KLAVIYO_PRIVATE_API_KEY`: Create a Private API Key from your Klaviyo Account "Settings" → "API Keys"
-- `MAILCHIMP_API_KEY`: Create an API key from "Account → "Extras" → API Keys"
-- `MAILCHIMP_SERVER`: This is the server your account is from. It's in the URL when logged in and at the end of your API Key.
+## Scripts
 
-## 🛠️ Development
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Next dev server + Studio on port 3001 (runs `typegen` first) |
+| `npm run build` | Production build |
+| `npm start` | Serve a production build |
+| `npm run typegen` | Regenerates `schema.json` and `sanity.types.ts` |
+| `npm test` | Vitest, unit tests only (`src/**/*.test.ts`) |
+| `npm run test:watch` | Same, in watch mode |
+| `npm run lint` | ESLint |
 
-`npm run dev` in the project folder to start the front end locally.
+**Re-run `npm run typegen` after any Sanity schema change.** It extracts the
+schema to `schema.json` and regenerates `sanity.types.ts` from that plus the
+GROQ in `src/sanity/lib/queries.ts`. `predev` does it automatically; CI and
+`npm run build` do not, so a schema change committed without it leaves the
+generated types stale.
 
-- Your front end will be running on [http://localhost:3000](http://localhost:3000)
-- Your Sanity Studio will be running on [http://localhost:3000/sanity](http://localhost:3000/sanity)
+Note that `typegen` reads `tsconfig.json`'s `include` to resolve `@/` aliases.
+Several schema and desk-structure files are still `.js`/`.jsx`, so the `**/*.js`
+and `**/*.jsx` globs there are load-bearing — drop them and extraction fails with
+`Cannot find module '@/lib/i18n'`.
 
-## 🚀 Deployment
+## Testing
 
-### Vercel
+Vitest, `environment: 'node'`, `src/**/*.test.ts` only. There is deliberately no
+jsdom or React Testing Library setup: what these tests pin are the pure helpers
+whose edge cases are invisible at the call site — locale/path normalization,
+event dates, the sitemap and page-module guards, the type scale — not component
+rendering. See the comments in `vitest.config.ts`.
 
-This setup seamlessly integrates with Vercel, which I highly recommend as your preferred hosting provider. Follow the on-screen instructions to set up your new project. Be sure to **add the same `.env.local` variables to your Vercel Project.**
+Three of them are structural guards that fail when two hand-maintained things
+drift apart, so read the failure message before "fixing" the test:
 
-For further details, refer to our [Next.js deployment documentation](https://nextjs.org/docs/deployment).
+- `src/lib/type-scale.test.ts` — the nine `t-*` rungs in `globals.css` vs
+  `TYPE_SCALE_CLASSES` in `src/lib/utils.ts`, and it rejects responsive variants
+  on a rung (`lg:t-l-1` emits no CSS at all).
+- `src/lib/sitemaps.test.ts` — every routable type reaches a sitemap, and
+  everything a sitemap query dereferences is in its `SITEMAP_TAGS`.
+- `src/sanity/schemaTypes/objects/page-module.test.ts` — every `Rule.custom` on a
+  page module is wrapped in `moduleRule()`.
 
-## 🗄️ Sanity Datasets
+## Deployment
+
+Vercel. Push to the default branch; add the `.env.local` variables to the Vercel
+project first. `docs/SEO-LAUNCH.md` is the post-deploy checklist (indexing,
+Search Console, the content that has to exist in the Studio before any of it
+matters).
+
+## Documentation
+
+| File | What's in it |
+| --- | --- |
+| `CLAUDE.md` | Architecture reference. Start here. |
+| `.claude/rules/shopify-cart.md` | The rules governing `src/lib/shopify/`, `src/app/api/shopify/`, `src/components/cart/` and the product detail page. Several of its constraints look like inconsistencies begging to be tidied up and must not be. |
+| `docs/SHOPIFY-SETUP.md` | Setting up the Headless channel and tokens. |
+| `docs/SEO-LAUNCH.md` | Launch checklist for SEO/AEO. |
+| `docs/SHOPIFY-I18N-PLAN.md` | Archived. The completed Shopify + field-level-i18n plan, kept for the decision record. |
+| `migrations/README.md` | How Sanity migrations are authored and run. |
+
+## Sanity datasets
 
 This project uses two datasets: **`dev`** (where content is authored) and **`prod`** (what the deployed site reads). They are separate copies, so they drift apart as soon as either one is edited — re-clone `dev` → `prod` before a release.
 
@@ -166,83 +200,22 @@ npx sanity dataset create prod --visibility public
 npx sanity dataset import ~/sanity-backups/prod-pre-delete-<date>.tar.gz --dataset prod
 ```
 
-## 💡 Extras/Tips
+## Troubleshooting
 
-### Accessibility
+**`Error: Failed to communicate with the Sanity API`** — your CLI session
+expired. `npx sanity logout && npx sanity login`.
 
-- Use [`react-remove-scroll`](https://github.com/theKashey/react-remove-scroll) to disable scrolling wherever applicable
-- Use [`react-modal`](https://github.com/reactjs/react-modal) for modal and pop-up alike components
-- For scenario that `react-modal` is not applicable, like mega menu or contact form that needs to keep user inputs when closing, use the following custom hooks to manually set up `aria-hidden` and `tabindex`
+**`Missing environment variable: NEXT_PUBLIC_SANITY_DATASET`** (or `_PROJECT_ID`)
+— `src/sanity/env.ts` asserts both at import time. Check `.env.local` exists and
+that you restarted the dev server after editing it.
 
-<details>
-<summary><code>useAriaFocusNavigation()</code></summary>
+**Studio throws on startup about a read token** — `SANITY_API_READ_TOKEN` is
+unset. `src/sanity/lib/live.ts` requires it even in development.
 
-The `useAriaFocusNavigation` hook manages keyboard navigation within a container, restricting focus to the elements within the component when active. This is particularly useful for modals, sidebars, or other UI components that need focus to remain contained while open.
+**`The installed version of "@sanity/cli" is not compatible with the installed
+version of "sanity"`** — the two are versioned independently and must be
+upgraded together. `sanity` v5.25 needs `@sanity/cli` v8.
 
-### 1. Import the `useAriaFocusNavigation` Hook
-
-```js
-import useAriaFocusNavigation from '@/hooks/useAriaFocusNavigation';
-```
-
-### 2. Create a Container Reference
-
-Set up a `ref` for the container element that holds the focusable elements. This is the element the hook will target.
-
-```js
-const modalRef = useRef(null);
-```
-
-### 3. Use `useAriaFocusNavigation`
-
-Pass the container `ref`, an `isActive` boolean to toggle focus containment, and an optional `onExit` callback (to perform any cleanup or state updates when the component closes).
-
-```js
-useAriaFocusNavigation(modalRef, isModalOpen, handleModalClose);
-```
-
-- `containerRef` (required): Reference to the container holding the focusable elements.
-- `isActive` (required): A boolean that determines if focus trapping is active (usually tied to the component’s visibility).
-- `onExit` (optional): Callback function triggered when the focus navigation deactivates, often used to restore state or focus.
-
-### 4. Apply `tabindex` and `aria-hidden` as Needed
-
-Ensure that elements within the container are set up for focus management and are optionally hidden when inactive.
-
-```jsx
-<div ref={modalRef} aria-hidden={!isModalOpen}>
-	{/* Focusable elements go here */}
-</div>
-```
-
-### FAQ
-
-#### Q1: Can I use `useAriaFocusNavigation` with multiple components?
-
-Yes, each instance operates independently using its own `ref` and `isActive` state, making it suitable for multiple components within the same page.
-
-#### Q2: How does `useAriaFocusNavigation` handle tab key behavior?
-
-The hook traps tab key navigation within the focusable elements inside the container, cycling back to the first element when the last one is reached and vice versa. This ensures that users cannot tab outside the modal or component while it is open.
-
-#### Q3: What happens to focus when the component deactivates?
-
-When `isActive` becomes `false`, the hook restores focus to the last focused element before the component was activated. The optional `onExit` callback also allows additional cleanup if needed.
-
-</details>
-
-## ❓ FAQ
-
-<details>
-<summary>Q: I encounter <code>Error: Failed to communicate with the Sanity API</code></summary>
-
-If you encounter this error, log out and log back in again. Run `sanity logout` and then `sanity login` to resolve it.
-
-</details>
-
-<details>
-<summary>Q: How can I see the bundle size of my website?</summary>
-
-Run `npm run analyze` from your project folder. This will build your site and automatically display the [Webpack Bundle Analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer) for your site's build files.
-
-</details>
+**`Cannot find module '@/lib/i18n'` during `typegen`** — `tsconfig.json` lost its
+`**/*.js` / `**/*.jsx` include globs; the `.js` schema files can't resolve `@/`
+without them.

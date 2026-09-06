@@ -894,21 +894,11 @@ export const productSubmissionConfigQuery = defineQuery(`{
 	"logo": ${byLocale('pProductIndex')}[defined(confirmationEmail.logo.asset)][0].confirmationEmail.logo
 }`);
 
-export // `landingTitle` is not rendered: PageHome reads it only to tell "this dataset
-// predates the hero migration" from "this homepage has no modules yet", and the
-// migration unsets it, so it and the schema field retire together.
-//
-// `moduleCount` counts pageModules BEFORE `moduleVisible` filters it. Without it
-// the guard cannot separate "no modules authored" from "every module parked with
-// the eye toggle", so hiding the only module reproduced the unmigrated signature
-// and failed the production build.
-const pageHomeQuery = defineQuery(`
+export const pageHomeQuery = defineQuery(`
 	${byLocale('pHome')}[0]{
 		${baseFields},
 		${availableLocalesField},
 		"isHomepage": true,
-		landingTitle,
-		"moduleCount": count(pageModules),
 		"textColor": textColor->color,
 		pageModules[${moduleVisible}]{
 			${pageModuleFields}

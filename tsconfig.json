@@ -31,6 +31,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		"**/*.mts",
+		"**/*.js",
+		"**/*.jsx",
 		"src/app/sitemap.ts",
 		"sanity.types.ts"
 	],

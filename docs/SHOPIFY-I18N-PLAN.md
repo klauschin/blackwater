@@ -1,5 +1,11 @@
 # Shopify ↔ Sanity Product Integration Plan
 
+> **Archived — every stage below is complete and shipped.** Kept for the decision
+> record: why runtime Storefront fetches rather than syncing products into Sanity,
+> why the Admin API was dropped, and how the field-level i18n merges were
+> choreographed. The rules that still bind live code are in `CLAUDE.md` and
+> `.claude/rules/shopify-cart.md` — when this file and those disagree, they win.
+
 ## Goal
 
 Product detail pages reflect Shopify admin automatically (price, availability, purchase
