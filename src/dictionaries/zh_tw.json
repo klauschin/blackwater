@@ -68,8 +68,10 @@
 			"nextMonth": "下一個月",
 			"viewEvent": "查看 {title}",
 			"viewLocation": "{location}，於新分頁開啟地圖",
-			"switchToCalendar": "切換至日曆檢視",
-			"switchToList": "切換至列表檢視"
+			"switchTo": {
+				"calendar": "切換至日曆檢視",
+				"list": "切換至列表檢視"
+			}
 		},
 		"status": {
 			"today": "今天",

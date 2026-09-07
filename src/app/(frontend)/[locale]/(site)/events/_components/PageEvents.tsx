@@ -23,7 +23,7 @@ import {
 } from '@/lib/calendar';
 import { ArrowUpRight } from '@/components/SvgIcons';
 import { Button } from '@/components/ui/Button';
-import { tabsTriggerVariants } from '@/components/ui/Tabs';
+import { tabsTriggerVariants } from '@/components/ui/tabsTriggerVariants';
 import { fadeAnim } from '@/lib/animate';
 import { cn, hasArrayValue, OVERLAY_LINK_FOCUS } from '@/lib/utils';
 import { useLocale, useTranslations } from '@/components/LocaleProvider';
@@ -95,9 +95,9 @@ export function PageEvents({ data }: PageEventsProps) {
 		null
 	);
 	// The other half of the calendar's cursor. It lives here rather than in
-	// <EventsCalendar> because Radix unmounts the inactive tab panel, so a
-	// child-owned selection would be discarded every time the visitor looked at
-	// the list — the same "keeps your place" promise the month above makes.
+	// <EventsCalendar> because the inactive view is unmounted, so a child-owned
+	// selection would be discarded every time the visitor looked at the list —
+	// the same "keeps your place" promise the month above makes.
 	const [selectedDay, setSelectedDay] = useState<DayKey | null>(null);
 
 	useEffect(() => {
@@ -245,6 +245,10 @@ export function PageEvents({ data }: PageEventsProps) {
 
 	// From the month itself, not from an event inside it: an empty month has no
 	// event to take a name from, and the calendar can display one.
+	// The view the button switches TO — derived once, because the click, the
+	// aria-label and the visible label are three readings of one fact.
+	const nextView: EventsView = view === 'list' ? 'calendar' : 'list';
+
 	const monthYearDisplay = formatDayKey(
 		monthStartKey(fromMonthIndex(currentMonthIndex)),
 		t.monthYearFormat,
@@ -275,29 +279,22 @@ export function PageEvents({ data }: PageEventsProps) {
 					{monthYearDisplay}
 				</motion.p>
 				<div className="flex items-center gap-2 sm:gap-3">
-					{/* One control, and it names the view you GET rather than the
-					    one you are in — a lone button showing its own state cannot
-					    say which way it switches. It borrows `tabsTriggerVariants`
-					    rather than restating the site's pill: because a plain button
-					    never carries `data-active`, the variant's `not-data-active:`
-					    rules are the ones that match, which is exactly the outline
-					    pill this wants, and the `data-active:` fill never fires —
-					    correct, since an action button has no "on" state. */}
+					{/* One control, naming the view you GET rather than the one you
+					    are in: a lone button showing its own state cannot say which
+					    way it switches. It wears the site's pill by borrowing the
+					    variant — see `tabsTriggerVariants` for why a plain button
+					    gets the resting outline rather than the active fill. */}
 					<button
 						type="button"
-						onClick={() =>
-							setView((current) => (current === 'list' ? 'calendar' : 'list'))
-						}
-						// Names the action, not just the destination word, so the
+						onClick={() => setView(nextView)}
+						// A full action phrase, not the bare destination word, so the
 						// button is unambiguous out of context. The visible label is
-						// contained in it, which is what WCAG 2.5.3 asks and what
-						// keeps "click Calendar" working in voice control.
-						aria-label={
-							view === 'list' ? t.aria.switchToCalendar : t.aria.switchToList
-						}
+						// contained in it, which is what WCAG 2.5.3 asks and what keeps
+						// "click Calendar" working in voice control.
+						aria-label={t.aria.switchTo[nextView]}
 						className={tabsTriggerVariants({ variant: 'pill', size: 'sm' })}
 					>
-						{view === 'list' ? t.view.calendar : t.view.list}
+						{t.view[nextView]}
 					</button>
 					{hasEventsAnywhere && (
 						<div className="flex items-center justify-between gap-1">

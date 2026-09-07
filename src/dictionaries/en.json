@@ -68,8 +68,10 @@
 			"nextMonth": "Next",
 			"viewEvent": "View {title}",
 			"viewLocation": "{location}, opens map in a new tab",
-			"switchToCalendar": "Switch to calendar view",
-			"switchToList": "Switch to list view"
+			"switchTo": {
+				"calendar": "Switch to calendar view",
+				"list": "Switch to list view"
+			}
 		},
 		"status": {
 			"today": "today",
