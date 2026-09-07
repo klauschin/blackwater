@@ -67,7 +67,9 @@
 			"previousMonth": "上一個月",
 			"nextMonth": "下一個月",
 			"viewEvent": "查看 {title}",
-			"viewLocation": "{location}，於新分頁開啟地圖"
+			"viewLocation": "{location}，於新分頁開啟地圖",
+			"switchToCalendar": "切換至日曆檢視",
+			"switchToList": "切換至列表檢視"
 		},
 		"status": {
 			"today": "今天",
@@ -121,7 +123,6 @@
 		"dateFormat": "yyyy/MM/dd (iii) HH:mm",
 		"monthYearFormat": "yyyy年M月",
 		"view": {
-			"label": "活動檢視方式",
 			"list": "列表",
 			"calendar": "日曆"
 		},

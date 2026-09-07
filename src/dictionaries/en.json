@@ -67,7 +67,9 @@
 			"previousMonth": "Previous",
 			"nextMonth": "Next",
 			"viewEvent": "View {title}",
-			"viewLocation": "{location}, opens map in a new tab"
+			"viewLocation": "{location}, opens map in a new tab",
+			"switchToCalendar": "Switch to calendar view",
+			"switchToList": "Switch to list view"
 		},
 		"status": {
 			"today": "today",
@@ -121,7 +123,6 @@
 		"dateFormat": "iii, MM.dd.yy, h:mm aaa",
 		"monthYearFormat": "MMMM yyyy",
 		"view": {
-			"label": "Event view",
 			"list": "List",
 			"calendar": "Calendar"
 		},
