@@ -77,6 +77,13 @@ export const revalidate = 3600;
 
 function getEventsCutoff(): string {
 	const cutoff = new Date();
+	// To the FIRST of the month before shifting: the calendar's own past bound is
+	// a whole month index, so a cutoff that kept today's day-of-month left the
+	// earliest reachable month part-fetched — days 1..6 rendering as empty cells
+	// that assert nothing happened, which is the one claim that bound exists to
+	// prevent. Setting the date first also stops `setMonth` rolling off a short
+	// month when today is the 29th-31st.
+	cutoff.setDate(1);
 	cutoff.setMonth(cutoff.getMonth() - EVENTS_PAST_WINDOW_MONTHS);
 	cutoff.setHours(0, 0, 0, 0);
 	return cutoff.toISOString();

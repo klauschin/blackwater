@@ -108,9 +108,10 @@ const CELL_CLASS =
  * every phone calendar uses, and it means the small view loses no information,
  * only the space to show it all at once.
  *
- * Only days in the displayed month that HAVE events are focusable. An empty day
- * has nothing to select, and 42 tab stops per month would otherwise stand
- * between a keyboard visitor and the rest of the page.
+ * Only days that HAVE events are focusable — including the padding days a
+ * six-week grid always shows, which are real dates and keep their events. An
+ * empty day has nothing to select, and 42 tab stops per month would otherwise
+ * stand between a keyboard visitor and the rest of the page.
  */
 export function EventsCalendar({
 	monthIndex,
@@ -147,10 +148,9 @@ export function EventsCalendar({
 
 	// One pass builds the grid, attaches each day's events, and formats the
 	// accessible names — everything that depends on the month and the locale but
-	// not on the clock or the selection. `selectableDays` falls out of the same
-	// walk rather than a second flatten-and-filter over the 42 cells.
-	const { weeks, selectableDays, monthDays } = useMemo(() => {
-		const selectable: DayKey[] = [];
+	// not on the clock or the selection. `monthDays` falls out of the same walk
+	// rather than a second flatten-and-filter over the 42 cells.
+	const { weeks, monthDays } = useMemo(() => {
 		const inMonth: DayKey[] = [];
 		const prepared = buildMonthGrid(
 			fromMonthIndex(monthIndex),
@@ -176,9 +176,8 @@ export function EventsCalendar({
 				if (dayEvents.length === 0) {
 					return { ...day, events, label: null, total: 0 };
 				}
-				selectable.push(day.key);
-				// Only the displayed month's days are default candidates; a padding
-				// day stays clickable but must not be what a month opens on.
+				// A padding day stays clickable, but it is never a candidate for
+				// what this month opens on OR stays on — see `activeDay`.
 				if (day.isCurrentMonth) inMonth.push(day.key);
 				return {
 					...day,
@@ -197,7 +196,7 @@ export function EventsCalendar({
 				};
 			})
 		);
-		return { weeks: prepared, selectableDays: selectable, monthDays: inMonth };
+		return { weeks: prepared, monthDays: inMonth };
 	}, [monthIndex, weekStartsOn, eventsByDay, dateFnsLocale, t]);
 
 	// In the events' own timezone, not the viewer's: the ring has to land on the
@@ -205,25 +204,26 @@ export function EventsCalendar({
 	// day for anyone whose UTC offset differs.
 	const todayKey = getTodayKey(currentDate);
 
-	// Derived rather than reset when the month changes: last month's selection
-	// simply stops being selectable and the fallback takes over. Nothing to
-	// synchronise, and no frame where the panel shows a day the grid no longer
-	// displays.
+	// Derived rather than reset when the month changes, so there is no frame
+	// where the panel shows a day the grid no longer displays.
+	//
+	// Tested against `monthDays`, NOT every selectable day: adjacent six-week
+	// grids overlap by up to ten days, so a selection made in one month is often
+	// still ON SCREEN as a padding cell of the next. Accepting it there left the
+	// header reading OCTOBER while the panel headed SEPTEMBER 30 and the active
+	// fill sat on a greyed padding cell — exactly the state `selectDay` in
+	// `PageEvents` exists to prevent, re-entered through the month arrows.
 	//
 	// The fallback opens on the next day still to come, not on `monthDays[0]` —
 	// that is the month's EARLIEST event, so late in a busy month the calendar
 	// opened on a run that finished weeks ago, dimmed and inert. Day keys are
-	// zero-padded, so `>=` is a chronological comparison with no Intl work. Only
-	// days of the displayed month are candidates: a padding day stays clickable
-	// but must not be what the month opens on.
+	// zero-padded, so `>=` is a chronological comparison with no Intl work, and
+	// `monthDays` is ascending, so `find` returns `todayKey` itself when today
+	// is in this month.
 	const activeDay =
-		selectedDay && selectableDays.includes(selectedDay)
+		selectedDay && monthDays.includes(selectedDay)
 			? selectedDay
-			: monthDays.includes(todayKey)
-				? todayKey
-				: (monthDays.find((key) => key >= todayKey) ??
-					monthDays.at(-1) ??
-					null);
+			: (monthDays.find((key) => key >= todayKey) ?? monthDays.at(-1) ?? null);
 
 	const activeEvents = activeDay ? (eventsByDay.get(activeDay) ?? []) : [];
 
@@ -364,7 +364,7 @@ function DayCell({
 	const dayNumber = (
 		<span
 			className={cn(
-				't-b-2 grid size-6 shrink-0 place-items-center rounded-full tabular-nums transition-colors lg:size-5.5',
+				't-b-2 grid size-6 shrink-0 place-items-center rounded-full tabular-nums transition-[color,background-color,box-shadow] lg:size-5.5',
 				!day.isCurrentMonth && 'text-foreground/25',
 				isToday &&
 					!isActive &&
@@ -398,7 +398,7 @@ function DayCell({
 			aria-label={day.label ?? undefined}
 			className={cn(
 				CELL_CLASS,
-				'hover:bg-foreground/5 w-full cursor-pointer transition-colors',
+				'hover:bg-foreground/5 w-full cursor-pointer transition-[color,background-color,box-shadow]',
 				OVERLAY_LINK_FOCUS
 			)}
 		>
@@ -442,19 +442,36 @@ function DayCell({
 }
 
 /**
- * The start time an event shows, or the reason it has none.
+ * The start time an event shows, or the reason it has none — plus whether the
+ * date was real, because everything else that assumes a date needs the same
+ * answer.
  *
  * One gate for everything that assumes the date is real: a TBA, postponed or
  * cancelled event must not render a time. Shared by the chip and the panel row
  * so the same event cannot show a time in one and its status in the other.
+ *
+ * `isFirm` comes back rather than being re-derived by the caller: the panel row
+ * also counts down to the event, and reading the raw date there rendered
+ * "CANCELLED" in the time slot beside an "in 2 days" pill on the same row.
  */
-function useEventTimeLabel(event: EventListItem, formatStr: string): string {
+function useEventTimeLabel(
+	event: EventListItem,
+	formatStr: string
+): { label: string; isFirm: boolean } {
 	const t = useTranslations('events');
 	const locale = useLocale();
 	const status = resolveEventDateStatus(event.dateStatus, t);
-	return status.isFirm && event.eventDatetime
-		? formatRichDate(event.eventDatetime, formatStr, DATE_FNS_LOCALES[locale])
-		: status.label;
+	return {
+		isFirm: status.isFirm,
+		label:
+			status.isFirm && event.eventDatetime
+				? formatRichDate(
+						event.eventDatetime,
+						formatStr,
+						DATE_FNS_LOCALES[locale]
+					)
+				: status.label,
+	};
 }
 
 /**
@@ -478,7 +495,7 @@ function EventChip({
 	hasEnded: boolean;
 }) {
 	const t = useTranslations('events');
-	const timeLabel = useEventTimeLabel(event, t.calendar.timeFormat);
+	const { label: timeLabel } = useEventTimeLabel(event, t.calendar.timeFormat);
 
 	return (
 		<span
@@ -512,7 +529,10 @@ function DayEventRow({
 }) {
 	const locale = useLocale();
 	const t = useTranslations('events');
-	const timeLabel = useEventTimeLabel(event, t.calendar.timeFormat);
+	const { label: timeLabel, isFirm } = useEventTimeLabel(
+		event,
+		t.calendar.timeFormat
+	);
 
 	const { title, subtitle, slug, statusList, eventDatetime, endDatetime } =
 		event;
@@ -520,7 +540,11 @@ function DayEventRow({
 	const { name: displayLocation, mapLink: displayLocationLink } =
 		resolveEventLocation(event);
 	const hasEnded = isEventEnded(eventDatetime, endDatetime, currentDate);
-	const daysUntil = getDaysUntilEvent(eventDatetime, currentDate);
+	// Gated on the same firmness as the time label above: a cancelled event two
+	// days out must not answer CANCELLED and "in 2 days" in one row.
+	const daysUntil = isFirm
+		? getDaysUntilEvent(eventDatetime, currentDate)
+		: null;
 	// Through the route table rather than a hand-built path, so the event route
 	// lives in exactly one place.
 	const href = slug
@@ -537,7 +561,7 @@ function DayEventRow({
 				// `sticky … z-10` header and win on DOM order: scroll the panel up and
 				// the pills paint over the month name and the view toggle. Isolating
 				// scopes that `z-10` to the row, which is all it ever meant.
-				'reveal border-foreground/25 group relative isolate flex flex-col gap-2 border-b py-4',
+				'reveal border-foreground/25 relative isolate flex flex-col gap-2 border-b py-4',
 				hasEnded && 'pointer-events-none'
 			)}
 			// `reveal` with no delay, deliberately not `revealStagger`. These rows are
@@ -583,7 +607,7 @@ function DayEventRow({
 							})}
 						>
 							{displayLocation}
-							<span className="inline-block transition-transform group-hover/location:translate-x-0.5 group-hover/location:-translate-y-0.5">
+							<span className="inline-block transition-transform duration-300 ease-out group-hover/location:translate-x-0.5 group-hover/location:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover/location:translate-x-0 motion-reduce:group-hover/location:translate-y-0">
 								<ArrowUpRight className="size-2 inline-block" />
 							</span>
 						</CustomLink>

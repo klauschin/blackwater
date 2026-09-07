@@ -30,7 +30,7 @@ import { useLocale, useTranslations } from '@/components/LocaleProvider';
 import { formatDaysUntilLabel, interpolate } from '@/lib/dictionary';
 import { resolveEventLocation } from '@/lib/event-location';
 import { resolveEventDateStatus } from '@/lib/event-status';
-import { localizePath } from '@/lib/i18n';
+import { resolveHref } from '@/lib/routes';
 import { DATE_FNS_LOCALES } from '@/lib/dateFnsLocale';
 import EventStatusPill from '@/components/EventStatusPill';
 import { EventsCalendar } from './EventsCalendar';
@@ -237,9 +237,12 @@ export function PageEvents({ data }: PageEventsProps) {
 		window.scrollTo({ top: 0 });
 	};
 
-	// With nothing in the whole window there is no month worth stepping to, and
-	// the pre-toggle header hid these controls in exactly that case.
-	const hasEventsAnywhere = monthsWithEvents.length > 0;
+	// Derived from the same `stepMonth` the buttons call, so "can this control do
+	// anything" has ONE answer. The predicate this replaced was
+	// `monthsWithEvents.length > 0` — right for a list, which cannot render a
+	// month with no rows, but wrong for a grid: with an empty window `monthRange`
+	// is still today ± 12, so both arrows computed `true` and were then hidden,
+	// freezing the calendar on one month.
 	const hasPrevious = stepMonth(-1) !== null;
 	const hasNext = stepMonth(1) !== null;
 
@@ -296,7 +299,7 @@ export function PageEvents({ data }: PageEventsProps) {
 					>
 						{t.view[nextView]}
 					</button>
-					{hasEventsAnywhere && (
+					{(hasPrevious || hasNext) && (
 						<div className="flex items-center justify-between gap-1">
 							<Button
 								onClick={() => goToMonth(-1)}
@@ -387,6 +390,13 @@ export function PageEvents({ data }: PageEventsProps) {
 								dateStatus,
 							} = item || {};
 
+							// Through the route table, like the calendar panel: the
+							// hand-built path this replaces linked to `/events/null`
+							// whenever an event had no slug.
+							const href = slug
+								? resolveHref({ documentType: 'pEvent', slug, locale })
+								: null;
+
 							const { name: displayLocation, mapLink: displayLocationLink } =
 								resolveEventLocation(item);
 
@@ -395,8 +405,12 @@ export function PageEvents({ data }: PageEventsProps) {
 								endDatetime,
 								currentDate
 							);
-							const daysUntil = getDaysUntilEvent(eventDatetime, currentDate);
 							const dateStatusInfo = resolveEventDateStatus(dateStatus, t);
+							// Gated on firmness, like the calendar's panel row: reading the
+							// raw date here put "in 2 days" beside CANCELLED on one row.
+							const daysUntil = dateStatusInfo.isFirm
+								? getDaysUntilEvent(eventDatetime, currentDate)
+								: null;
 
 							return (
 								<motion.div
@@ -449,13 +463,15 @@ export function PageEvents({ data }: PageEventsProps) {
 												)
 											: dateStatusInfo.label}
 
-										<Link
-											className={cn('p-fill', OVERLAY_LINK_FOCUS)}
-											href={localizePath(`/events/${slug}`, locale)}
-											aria-label={interpolate(t.aria.viewEvent, {
-												title: title || '',
-											})}
-										/>
+										{href && (
+											<Link
+												className={cn('p-fill', OVERLAY_LINK_FOCUS)}
+												href={href}
+												aria-label={interpolate(t.aria.viewEvent, {
+													title: title || '',
+												})}
+											/>
+										)}
 									</Td>
 									<Td
 										className={cn(

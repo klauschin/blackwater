@@ -35,14 +35,18 @@ const resolvedTimezones = new Map<string, string>();
  * reader below runs during render — so one of them took the whole page to its
  * error boundary rather than degrading the single row it belongs to.
  *
- * The broad one is DRAFT MODE, and it is not bad data at all. `timezone` is not
- * on `filterDefault`'s denylist (which lists `status`, not `timezone`) and is
- * neither date-like nor URL-like, so the Presentation tool encodes invisible
- * characters into it for EVERY event — the same trap `resolveEventDateStatus`
- * (`event-status.ts`) documents one field over, and the same rule: clean wherever a value is used
- * as a KEY rather than rendered. Cleaning before judging is also what keeps a
- * Los Angeles event in Los Angeles for editors; treating every encoded value as
- * unusable would quietly move it to Taipei, trading a crash for a wrong answer.
+ * DRAFT MODE was the broad cause, and it is now fixed at its source: the stega
+ * `filter` in `sanity/lib/client.ts` opts `timezone` out of encoding entirely,
+ * so no reader sees an encoded value — and `defineLive` shares that client, so
+ * the Presentation tool is covered by the same arm. Before that, `timezone` was
+ * not on `filterDefault`'s denylist (which lists `status`), so every event in
+ * draft mode carried invisible characters and `/events` hit its error boundary
+ * on any dataset.
+ *
+ * The `stegaClean` below stays as a BACKSTOP rather than the fix. It is one
+ * cheap call, and without it a future change to that filter would not crash —
+ * it would quietly resolve a Los Angeles event in Taipei, which is the worse of
+ * the two failures. That is also why it cleans BEFORE judging validity.
  *
  * The narrow one is a stored value that was never IANA — `GMT+8`, `Taipei`,
  * `UTC+08:00` from a hand-edit or an import. Nothing cheap tells those apart
