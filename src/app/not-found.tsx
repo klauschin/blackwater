@@ -1,3 +1,4 @@
+import { draftMode } from 'next/headers';
 import { LocaleProvider } from '@/components/LocaleProvider';
 import { Layout } from '@/components/layout';
 import HtmlShell from '@/components/layout/HtmlShell';
@@ -12,6 +13,12 @@ import { PageNotFound } from './(frontend)/[locale]/_components/PageNotFound';
 // (e.g. a bad /email-signature/* subpath). Self-contained <html> via HtmlShell.
 // The data-not-found marker hides Newsletter/Footer via globals.css.
 export default async function NotFound() {
+	// Read the real flag rather than hardcoding false: `sanityFetch` below derives
+	// stega from its own `draftMode()` read, so an editor arriving here in draft
+	// mode gets stega-encoded copy whatever this says — and with the trio
+	// suppressed there is no overlay to consume the markers and no toast to leave
+	// draft mode from.
+	const { isEnabled: isDraftModeEnabled } = await draftMode();
 	const [{ data: siteData }, { data }, dictionary] = await Promise.all([
 		getCachedSiteData(DEFAULT_LOCALE),
 		sanityFetch({
@@ -27,7 +34,7 @@ export default async function NotFound() {
 			locale={DEFAULT_LOCALE}
 			siteData={siteData}
 			consentFallback={dictionary.consent}
-			isDraftModeEnabled={false}
+			isDraftModeEnabled={isDraftModeEnabled}
 		>
 			<LocaleProvider locale={DEFAULT_LOCALE} dictionary={dictionary}>
 				<Layout siteData={pickLayoutData(siteData)}>
