@@ -1,32 +1,31 @@
 'use client';
 
 import { VisualEditing } from 'next-sanity/visual-editing';
-import { SanityLive } from '@/sanity/lib/live';
 import DraftModeToast from '@/components/DraftModeToast';
 
 /**
- * The draft-mode-only trio, in one module so `HtmlShell` can load it lazily.
+ * The draft-mode-only CLIENT pair, split into its own module so that
+ * `DraftModeTools` — not HtmlShell — can hold it behind a `lazy()`.
  *
- * These were previously static imports in HtmlShell, rendered behind
- * `{isDraftModeEnabled && …}`. The condition gated *rendering*, not *bundling*:
- * the imports are resolved at build time, so every published visitor downloaded
- * the Visual Editing machinery (@sanity/comlink and its channel/overlay code) and
- * never executed a line of it. Lighthouse measured that chunk at 78KB raw /
- * ~24KB transferred and **99% unused** on /products.
+ * Both were once static imports in HtmlShell rendered behind
+ * `{isDraftModeEnabled && …}`, and for a **client** component that gates
+ * *rendering*, not *bundling*: the import is resolved at build time, so every
+ * published visitor downloaded the Visual Editing machinery and never executed a
+ * line of it. Lighthouse measured 78KB raw / ~24KB transferred, **99% unused** on
+ * /products for that static-import shape. Behind the `lazy()` it is fetched only
+ * when draft mode is on.
  *
- * Behind next/dynamic in HtmlShell this chunk is only requested when draft mode
- * is actually on.
- *
- * Live Content API: only subscribe in draft mode. For published traffic content
- * stays fresh via the /api/revalidate-tag webhook. Rendering <SanityLive> for
- * anonymous visitors on Next.js 16 + next-sanity 12 triggers a
- * prefetch/revalidate cascade (4–10x request overage).
- * See https://www.sanity.io/docs/help/nextjs-16-sanitylive-status
+ * That reasoning does NOT extend to `<SanityLive>`, which is why HtmlShell still
+ * has a `{isDraftModeEnabled && …}` of its own — do not read it as an unreverted
+ * regression and move it back in here. It is a Server Component and ships no
+ * client reference of its own to defer; `src/sanity/lib/live.ts` has the
+ * mechanism, and importing it from this 'use client' module is what threw
+ * "defineLive can only be used in React Server Components" and took Presentation
+ * down.
  */
-export default function DraftModeTools() {
+export default function DraftModeToolsInner() {
 	return (
 		<>
-			<SanityLive refreshOnFocus />
 			<DraftModeToast />
 			<VisualEditing />
 		</>

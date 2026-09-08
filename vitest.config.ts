@@ -8,6 +8,14 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
+			// `server-only` resolves its throwing `default` entry outside a
+			// react-server condition, which vitest has no reason to set. Without this
+			// the first test to reach src/sanity/lib/live.ts (pickLayoutData in
+			// siteData.ts is one import away) fails with a message about Client
+			// Components, naming the wrong problem entirely.
+			'server-only': fileURLToPath(
+				new URL('./node_modules/server-only/empty.js', import.meta.url)
+			),
 		},
 	},
 	test: {

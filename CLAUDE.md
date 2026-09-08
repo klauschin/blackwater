@@ -52,13 +52,17 @@ This is a **Next.js 16 (App Router) + Sanity v5** project. Content is managed in
 
 **GROQ queries** are centralized in `src/sanity/lib/queries.ts` using `defineQuery()` from `next-sanity`. Composed from reusable fragments: `baseFields`, `linkFields`, `menuFields`, `imageMetaFields`, `imageBlockMetaFields`, `callToActionFields`, `portableTextContentFields`, `freeformField`, `faqBlockField`, `gFaqItemFields`, `gSizeChartFields`, `pageModuleFields`, `formField`.
 
-**Data fetching** uses `sanityFetch` from `src/sanity/lib/live.ts` (wraps `defineLive` from `next-sanity`). This enables live content updates. Usage pattern in pages:
+**Data fetching** uses `sanityFetch` from `src/sanity/lib/live.ts` (wraps `defineLive` from `next-sanity`). Usage pattern in pages:
 
 ```ts
 const { data } = await sanityFetch({ query: someQuery, tags: ['docType'] });
 ```
 
-**Visual Editing / Draft Mode** is enabled via Sanity Presentation Tool. When draft mode is active, `<VisualEditing />` and `<DraftModeToast />` are rendered. The presentation resolver at `src/sanity/lib/presentation-resolver.ts` maps routes to Sanity document types.
+**Visual Editing / Draft Mode** is enabled via Sanity Presentation Tool. The presentation resolver at `src/sanity/lib/presentation-resolver.ts` maps routes to Sanity document types. Three components render in draft mode and they do **not** all sit on the same side of the RSC boundary — getting that wrong is what took Presentation down with *"defineLive can only be used in React Server Components"*:
+
+- **`<SanityLive>` is an async Server Component** — `next-sanity`'s `./live` export is conditional (`react-server` resolves the real module, `default` a stub that only throws), and it awaits `draftMode()`/`cookies()` before rendering its own client half with the `browserToken`. So it renders from `layout/HtmlShell.tsx`, never from a `'use client'` module. `src/sanity/lib/live.ts` carries `import 'server-only'` so a client import fails the build, naming the boundary, rather than throwing in the browser.
+- **`<VisualEditing />` and `<DraftModeToast />` are client components** behind the `lazy()` gate in `DraftModeTools.tsx` → `DraftModeToolsInner.tsx`. What the gate needs is to sit in a **client module** — a client reference held by the server tree is listed in the route's client manifest and loads with the page, so gating from `HtmlShell` defers execution but not the download. `React.lazy` is not the requirement, and `DraftModeTools` is the odd one out for using it: the four `*Lazy.tsx` wrappers do the same job with `next/dynamic` inside a `'use client'` file (see the `LocationCurrentTime` note below) and get `loading`/`ssr` with it. Two separate measurements live in those files and should not be conflated — `DraftModeTools.tsx` has ~23KB transferred for the `next/dynamic`-in-HtmlShell shape, `DraftModeToolsInner.tsx` has 78KB raw / ~24KB transferred for the fully-static shape.
+- **Both are gated on `isDraftModeEnabled`**, in two places, and the reason is **request volume, not static generation**. `sanityFetch` does not subscribe anything by itself; rendering `<SanityLive>` for anonymous visitors on Next 16 + next-sanity 12 causes a prefetch/revalidate cascade (4–10x request overage), fixed upstream in next-sanity v13 — this repo pins 12.0.5. It is *not* about Dynamic APIs: `draftMode()` does not opt a subtree out of SSG, and `SanityLive` reaches `cookies()` only in draft mode — but so does `sanityFetch`, on every page, so that could never have been the reason. Published freshness comes from `/api/revalidate-tag` **while nobody is editing**: whenever `SanityLive` is mounted, next-sanity's `revalidateSyncTags` Server Action expires shared `sanity:*` tags on every live event, so an open Presentation session also invalidates prerendered pages for anonymous traffic.
 
 ### Page Architecture
 
