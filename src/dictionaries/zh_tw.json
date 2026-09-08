@@ -137,6 +137,8 @@
 			"timeFormat": "HH:mm",
 			"today": "今天",
 			"dayPanelLabel": "所選日期的活動",
+			"selectDayPrompt": "選擇日期以查看當日活動",
+			"close": "關閉",
 			"selectDay": "{day}，{events}",
 			"eventCount": { "one": "{count} 個活動", "other": "{count} 個活動" },
 			"moreEvents": "還有 {count} 個"

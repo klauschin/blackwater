@@ -6,6 +6,8 @@ import {
 	FALLBACK_TIMEZONE,
 	formatRichDate,
 	getDaysUntilEvent,
+	getNextDayStartInstant,
+	getNextEventClockTransition,
 	getRichDateDayKey,
 	getRichDateYearMonth,
 	resolveEventTimezone,
@@ -214,6 +216,226 @@ describe('getTodayKey', () => {
 		expect(getTodayKey(new Date('2026-09-04T20:00:00Z'), TZ)).toBe(
 			'2026-09-05'
 		);
+	});
+});
+
+describe('getNextDayStartInstant', () => {
+	it("returns the next midnight in the events' timezone, not the runtime one", () => {
+		// Already the 5th in Taipei, so the next rollover there is the 6th —
+		// 2026-09-05T16:00 UTC, well before the runtime's own next midnight.
+		expect(
+			getNextDayStartInstant(new Date('2026-09-04T20:00:00Z'), TZ).toISOString()
+		).toBe('2026-09-05T16:00:00.000Z');
+	});
+
+	it('carries across a month end', () => {
+		expect(
+			getNextDayStartInstant(new Date('2026-09-30T12:00:00Z'), TZ).toISOString()
+		).toBe('2026-09-30T16:00:00.000Z');
+	});
+
+	it('carries across a year end', () => {
+		// 14:00 on 12-31 in Taipei, so the +1 day is the one that has to carry the
+		// year: Date.UTC(2026, 11, 32) normalises to 2027-01-01. Picking a `now`
+		// that is already January there would never reach the carry.
+		expect(
+			getNextDayStartInstant(new Date('2026-12-31T06:00:00Z'), TZ).toISOString()
+		).toBe('2026-12-31T16:00:00.000Z');
+	});
+
+	it('is 23 hours away on the day a zone springs forward', () => {
+		// Los Angeles moves to DST at 02:00 local on 2026-03-08, so that civil day
+		// is 23 hours long. Naive "now + 24h" arithmetic would overshoot the
+		// rollover by an hour and leave a day-count stale.
+		expect(
+			getNextDayStartInstant(
+				new Date('2026-03-08T08:00:00Z'),
+				'America/Los_Angeles'
+			).toISOString()
+		).toBe('2026-03-09T07:00:00.000Z');
+	});
+
+	it('starts the next day at the jump in a zone that skips midnight', () => {
+		// America/Havana springs forward 2026-03-08 00:00 -> 01:00, so local
+		// midnight never happens. `fromZonedTime` resolves the missing time
+		// backwards, to 23:00 on the 7th (2026-03-08T04:00Z) — an hour BEFORE the
+		// day it was asked for. The real first instant of the 8th is the jump.
+		const next = getNextDayStartInstant(
+			new Date('2026-03-07T20:00:00Z'),
+			'America/Havana'
+		);
+		expect(next.toISOString()).toBe('2026-03-08T05:00:00.000Z');
+		expect(formatInTimeZone(next, 'America/Havana', 'yyyy-MM-dd HH:mm')).toBe(
+			'2026-03-08 01:00'
+		);
+	});
+
+	it('stays ahead of the clock through a midnight jump', () => {
+		// The hour after the jump is where the backwards resolution put the answer
+		// behind `now`, which is what a caller re-arming from it cannot survive.
+		for (const iso of [
+			'2026-03-08T03:59:59.999Z',
+			'2026-03-08T04:00:00.000Z',
+			'2026-03-08T04:30:00.000Z',
+			'2026-03-08T04:59:59.999Z',
+		]) {
+			const now = new Date(iso);
+			expect(
+				getNextDayStartInstant(now, 'America/Havana').getTime()
+			).toBeGreaterThan(now.getTime());
+		}
+	});
+
+	it('defaults to the club timezone, not the runtime one', () => {
+		// Pinned to a literal rather than cross-called against an explicit
+		// FALLBACK_TIMEZONE: that comparison holds even if both answers are wrong,
+		// and the one thing worth pinning is that the default is not the runtime's.
+		expect(
+			getNextDayStartInstant(new Date('2026-09-04T20:00:00Z')).toISOString()
+		).toBe('2026-09-05T16:00:00.000Z');
+	});
+
+	it('is always strictly ahead of the clock it was given', () => {
+		// What the /events wake-up schedule rests on: each transition is later
+		// than the last, so rescheduling from it walks forward instead of looping.
+		for (const iso of [
+			'2026-09-05T15:59:59.999Z',
+			'2026-09-05T16:00:00.000Z',
+			'2026-09-05T16:00:00.001Z',
+		]) {
+			const now = new Date(iso);
+			expect(getNextDayStartInstant(now, TZ).getTime()).toBeGreaterThan(
+				now.getTime()
+			);
+		}
+	});
+});
+
+describe('getNextEventClockTransition', () => {
+	// Taipei midnight, the rollover every case below is measured against.
+	const NEXT_MIDNIGHT = Date.parse('2026-09-05T16:00:00.000Z');
+
+	it('returns the millisecond after an event ends, not the end itself', () => {
+		// `isEventEnded` compares `end < now`, so the rendered answer changes one
+		// millisecond after the end instant. Returning the boundary itself is what
+		// made a settling pad necessary.
+		const now = new Date('2026-09-05T02:00:00Z');
+		const events = [
+			{
+				eventDatetime: taipei('2026-09-05T13:00'),
+				endDatetime: taipei('2026-09-05T15:00'),
+			},
+		];
+		expect(getNextEventClockTransition(events, now)).toBe(
+			Date.parse('2026-09-05T07:00:00.000Z') + 1
+		);
+	});
+
+	it('ignores ends already behind the clock', () => {
+		const now = new Date('2026-09-05T02:00:00Z');
+		const events = [
+			{
+				eventDatetime: taipei('2026-09-01T13:00'),
+				endDatetime: taipei('2026-09-01T15:00'),
+			},
+		];
+		// Nothing left to finish today, so the next change is the day rolling over.
+		expect(getNextEventClockTransition(events, now)).toBe(NEXT_MIDNIGHT);
+	});
+
+	it('takes the earliest of several pending ends', () => {
+		const now = new Date('2026-09-05T02:00:00Z');
+		const events = [
+			{
+				eventDatetime: taipei('2026-09-05T20:00'),
+				endDatetime: taipei('2026-09-05T22:00'),
+			},
+			{
+				eventDatetime: taipei('2026-09-05T11:00'),
+				endDatetime: taipei('2026-09-05T12:00'),
+			},
+		];
+		expect(getNextEventClockTransition(events, now)).toBe(
+			Date.parse('2026-09-05T04:00:00.000Z') + 1
+		);
+	});
+
+	it('falls back to the day rollover with no events at all', () => {
+		expect(
+			getNextEventClockTransition([], new Date('2026-09-05T02:00:00Z'))
+		).toBe(NEXT_MIDNIGHT);
+		expect(
+			getNextEventClockTransition(null, new Date('2026-09-05T02:00:00Z'))
+		).toBe(NEXT_MIDNIGHT);
+	});
+
+	it('reads the rollover in each event timezone, not only the club one', () => {
+		// A Los Angeles event counts its days in its own zone, so its midnight is
+		// a transition too — and on this clock it comes before Taipei's.
+		const la = {
+			_type: 'richDate' as const,
+			local: '2026-09-04T20:00',
+			utc: '2026-09-05T03:00:00.000Z',
+			timezone: 'America/Los_Angeles',
+			offset: -420,
+		} as never;
+		const now = new Date('2026-09-05T02:00:00Z');
+		const result = getNextEventClockTransition(
+			[{ eventDatetime: la, endDatetime: null }],
+			now
+		);
+		expect(result).toBe(Date.parse('2026-09-05T07:00:00.000Z'));
+		expect(result).toBeLessThan(NEXT_MIDNIGHT);
+	});
+
+	it('never answers with a past instant for a midnight-jump zone', () => {
+		// The re-arm loop this guards: a past transition makes the caller's delay
+		// zero, and the next scan returns the same past instant again.
+		const events = [
+			{
+				eventDatetime: {
+					_type: 'richDate',
+					utc: '2026-06-01T05:00:00.000Z',
+					timezone: 'America/Havana',
+					local: '2026-06-01T01:00',
+					offset: -240,
+				} as unknown as RichDate,
+				endDatetime: null,
+			},
+		];
+		for (const iso of [
+			'2026-03-08T04:00:00.000Z',
+			'2026-03-08T04:30:00.000Z',
+			'2026-03-08T04:59:59.999Z',
+		]) {
+			const now = new Date(iso);
+			const next = getNextEventClockTransition(events, now);
+			expect(Number.isFinite(next)).toBe(true);
+			expect(next).toBeGreaterThan(now.getTime());
+		}
+	});
+
+	it('is always strictly ahead of the clock, so re-arming cannot loop', () => {
+		// The invariant the whole schedule rests on. Sampled either side of a real
+		// transition, including exactly ON it.
+		const events = [
+			{
+				eventDatetime: taipei('2026-09-05T13:00'),
+				endDatetime: taipei('2026-09-05T15:00'),
+			},
+		];
+		for (const iso of [
+			'2026-09-05T06:59:59.999Z',
+			'2026-09-05T07:00:00.000Z',
+			'2026-09-05T07:00:00.001Z',
+			'2026-09-05T15:59:59.999Z',
+			'2026-09-05T16:00:00.000Z',
+		]) {
+			const now = new Date(iso);
+			expect(getNextEventClockTransition(events, now)).toBeGreaterThan(
+				now.getTime()
+			);
+		}
 	});
 });
 

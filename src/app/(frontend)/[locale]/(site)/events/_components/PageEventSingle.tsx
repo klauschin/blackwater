@@ -6,7 +6,6 @@ import {
 import { resolveEventDateStatus } from '@/lib/event-status';
 import CustomPortableText from '@/components/CustomPortableText';
 import ImageBlock from '@/components/ImageBlock';
-import { LocationCurrentTime } from '@/components/LocationCurrentTimeLazy';
 import EventStatusPill from '@/components/EventStatusPill';
 import { cn, hasArrayValue } from '@/lib/utils';
 import {
@@ -218,21 +217,13 @@ function EventSpecs({
 		displayLocation && {
 			label: t.spec.venue,
 			value: (
-				<>
-					<ExternalTextLink
-						label={displayLocation}
-						href={displayLocationLink}
-						ariaLabel={interpolate(t.aria.viewLocation, {
-							location: displayLocation,
-						})}
-					/>
-					{/* The venue as a place rather than a string. Imported from the
-					    Lazy wrapper on purpose -- the clock carries date-fns plus both
-					    locale bundles. */}
-					<span className="t-spec text-foreground/60 mt-1.5 block uppercase">
-						<LocationCurrentTime />
-					</span>
-				</>
+				<ExternalTextLink
+					label={displayLocation}
+					href={displayLocationLink}
+					ariaLabel={interpolate(t.aria.viewLocation, {
+						location: displayLocation,
+					})}
+				/>
 			),
 		},
 		typeof distanceKm === 'number' && {

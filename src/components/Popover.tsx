@@ -13,6 +13,14 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
 	return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
+// Unstyled on purpose: a close control's box is the call site's business (the
+// day popover's is a square in a header row, not a chrome-height label), and
+// what this is here for is Base UI's own close wiring plus `finalFocus`, which
+// returns focus to the trigger.
+function PopoverClose({ ...props }: PopoverPrimitive.Close.Props) {
+	return <PopoverPrimitive.Close data-slot="popover-close" {...props} />;
+}
+
 // Placement props go to the Positioner, and so does the z-index: it is the
 // positioned element, so a `z-*` on the Popup would not take part in stacking.
 // `z-popover` because every popover has to clear the site header (z-header).
@@ -28,7 +36,15 @@ function PopoverContent({
 	Pick<
 		PopoverPrimitive.Positioner.Props,
 		'align' | 'alignOffset' | 'side' | 'sideOffset' | 'collisionPadding'
-	>) {
+	> & {
+		// `Popup.Props` omits `ref` (the primitive carries it via
+		// `RefAttributes` on the component, not in its props interface), but this
+		// is a plain function component under React 19, so a `ref` prop arrives
+		// in `props` and the spread below forwards it to the Popup for free —
+		// only the type stood in the way. `initialFocus`/`finalFocus` take a ref,
+		// and pointing either at the popup itself needs one.
+		ref?: React.Ref<HTMLDivElement>;
+	}) {
 	return (
 		<PopoverPrimitive.Portal>
 			<PopoverPrimitive.Positioner
@@ -89,6 +105,7 @@ function PopoverDescription({
 
 export {
 	Popover,
+	PopoverClose,
 	PopoverContent,
 	PopoverDescription,
 	PopoverHeader,
