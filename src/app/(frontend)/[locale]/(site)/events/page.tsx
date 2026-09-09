@@ -11,7 +11,7 @@ import defineMetadata, {
 import { resolveHref } from '@/lib/routes';
 import { formatUrl } from '@/lib/utils';
 import { buildEventName } from '@/lib/buildEventName';
-import { formatRichDate } from '@/lib/event-date';
+import { resolveEventLocation } from '@/lib/event-location';
 import JsonLd from '@/components/JsonLd';
 import { type Locale, htmlLangFor } from '@/lib/i18n';
 import type { PEventsQueryResult } from 'sanity.types';
@@ -30,7 +30,11 @@ function defineEventsItemListJsonLd(
 ): Record<string, unknown> | null {
 	const itemListElement = (eventList || [])
 		.map((event, i) => {
-			const href = resolveHref({ documentType: 'pEvent', slug: event?.slug, locale });
+			const href = resolveHref({
+				documentType: 'pEvent',
+				slug: event?.slug,
+				locale,
+			});
 			if (!event?.title || !href) return null;
 			return {
 				'@type': 'ListItem',
@@ -39,7 +43,7 @@ function defineEventsItemListJsonLd(
 					{
 						title: event.title,
 						subtitle: event.subtitle,
-						location: event.locationRef?.name || event.location,
+						location: resolveEventLocation(event).name,
 						eventDatetime: event.eventDatetime?.utc,
 						timezone: event.eventDatetime?.timezone,
 					},
@@ -73,6 +77,13 @@ export const revalidate = 3600;
 
 function getEventsCutoff(): string {
 	const cutoff = new Date();
+	// To the FIRST of the month before shifting: the calendar's own past bound is
+	// a whole month index, so a cutoff that kept today's day-of-month left the
+	// earliest reachable month part-fetched — days 1..6 rendering as empty cells
+	// that assert nothing happened, which is the one claim that bound exists to
+	// prevent. Setting the date first also stops `setMonth` rolling off a short
+	// month when today is the 29th-31st.
+	cutoff.setDate(1);
 	cutoff.setMonth(cutoff.getMonth() - EVENTS_PAST_WINDOW_MONTHS);
 	cutoff.setHours(0, 0, 0, 0);
 	return cutoff.toISOString();
@@ -114,24 +125,6 @@ export default async function Page(props: Props) {
 	if (!data) return <NotFoundContent locale={locale} />;
 
 	const { eventList } = data || {};
-	const groupedEvents = eventList.reduce(
-		(
-			acc: Record<string, (typeof eventList)[number][]>,
-			event: (typeof eventList)[number]
-		) => {
-			const key =
-				formatRichDate(event.eventDatetime, 'yyyy_MMMM').toLowerCase() ||
-				'unknown';
-
-			if (!acc[key]) {
-				acc[key] = [];
-			}
-			acc[key].push(event);
-
-			return acc;
-		},
-		{}
-	);
 
 	const cleanList = stegaClean(eventList);
 	const itemListJsonLd = defineEventsItemListJsonLd(
@@ -142,7 +135,7 @@ export default async function Page(props: Props) {
 	return (
 		<>
 			{itemListJsonLd && <JsonLd data={itemListJsonLd} />}
-			<PageEvents data={omitPageMetadata({ ...data, groupedEvents })} />
+			<PageEvents data={omitPageMetadata(data)} />
 		</>
 	);
 }

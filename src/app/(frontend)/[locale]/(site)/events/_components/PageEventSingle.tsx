@@ -6,7 +6,6 @@ import {
 import { resolveEventDateStatus } from '@/lib/event-status';
 import CustomPortableText from '@/components/CustomPortableText';
 import ImageBlock from '@/components/ImageBlock';
-import { LocationCurrentTime } from '@/components/LocationCurrentTimeLazy';
 import EventStatusPill from '@/components/EventStatusPill';
 import { cn, hasArrayValue } from '@/lib/utils';
 import {
@@ -17,6 +16,7 @@ import {
 import { DATE_FNS_LOCALES } from '@/lib/dateFnsLocale';
 import { REVEAL_SOFT } from '@/lib/animate';
 import type { Locale } from '@/lib/i18n';
+import { resolveEventLocation } from '@/lib/event-location';
 import type { PageEventSingleQueryResult } from 'sanity.types';
 import EventStations, { type EventStationsData } from './EventStations';
 import ExternalTextLink from './ExternalTextLink';
@@ -194,19 +194,10 @@ function EventSpecs({
 	dateFnsLocale: (typeof DATE_FNS_LOCALES)[Locale];
 	t: EventDict;
 }) {
-	const {
-		locationRef,
-		location,
-		locationLink,
-		distanceKm,
-		eventType,
-		isFree,
-		endDatetime,
-		dateStatus,
-	} = data;
+	const { distanceKm, eventType, isFree, endDatetime, dateStatus } = data;
 
-	const displayLocation = locationRef?.name || location;
-	const displayLocationLink = locationRef?.mapLink || locationLink;
+	const { name: displayLocation, mapLink: displayLocationLink } =
+		resolveEventLocation(data);
 	// Gated on the same firmness as every other date on this page: without it a
 	// cancelled event's masthead reads CANCELLED while the band below states
 	// when it finishes.
@@ -226,21 +217,13 @@ function EventSpecs({
 		displayLocation && {
 			label: t.spec.venue,
 			value: (
-				<>
-					<ExternalTextLink
-						label={displayLocation}
-						href={displayLocationLink}
-						ariaLabel={interpolate(t.aria.viewLocation, {
-							location: displayLocation,
-						})}
-					/>
-					{/* The venue as a place rather than a string. Imported from the
-					    Lazy wrapper on purpose -- the clock carries date-fns plus both
-					    locale bundles. */}
-					<span className="t-spec text-foreground/60 mt-1.5 block uppercase">
-						<LocationCurrentTime />
-					</span>
-				</>
+				<ExternalTextLink
+					label={displayLocation}
+					href={displayLocationLink}
+					ariaLabel={interpolate(t.aria.viewLocation, {
+						location: displayLocation,
+					})}
+				/>
 			),
 		},
 		typeof distanceKm === 'number' && {

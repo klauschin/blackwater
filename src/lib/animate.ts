@@ -35,6 +35,14 @@ export function revealStagger(index: number): CSSProperties {
 	} as CSSProperties;
 }
 
+/**
+ * Confident expo ease-out. Shared because two entrances are meant to decelerate
+ * alike — the /events row cascade and the calendar's month slide — and each
+ * carried its own copy of the tuple with a comment asserting they matched,
+ * which is exactly how that stops being true on the next retune.
+ */
+export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
+
 export const fadeAnim = {
 	show: {
 		opacity: 1,
