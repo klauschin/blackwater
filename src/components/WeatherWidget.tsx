@@ -121,12 +121,12 @@ export function WeatherWidget() {
 				aria-expanded={isOpen}
 				aria-controls={panelId}
 				className={cn(
-					'flex w-full items-center justify-between gap-2 p-2.5 text-left transition-[opacity,box-shadow] hover:opacity-60 cursor-pointer',
+					'flex w-full items-center gap-2 p-2.5 text-left transition-[opacity,box-shadow] hover:opacity-60 cursor-pointer',
 					OVERLAY_LINK_FOCUS
 				)}
 			>
 				<span className="t-b-2 uppercase">{t.label}</span>
-				<span className="mx-auto flex items-center">
+				<span className="mr-auto flex items-center gap-1">
 					<span className="t-b-2 tabular-nums">
 						{Math.round(temperature)}
 						{t.units.celsius}
@@ -163,7 +163,7 @@ export function WeatherWidget() {
 							</div>
 						))}
 					</dl>
-					<p className="t-b-2 text-foreground/60 px-2.5 pt-2 pb-2.5 text-center">
+					<p className="t-b-2 text-foreground/60 px-2.5 pt-5 pb-2.5 text-center">
 						{interpolate(t.observedAt, { time: observedAt })}
 					</p>
 				</div>
